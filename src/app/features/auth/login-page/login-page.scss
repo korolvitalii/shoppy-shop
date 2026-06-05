@@ -1,1 +1,227 @@
-// Visual design is added in the styling phase after the login behaviour is green.
+:host {
+  --page-background: #f7f2e9;
+  --card-background: rgba(255, 253, 248, 0.92);
+  --card-border: rgba(22, 33, 62, 0.12);
+  --text-primary: #16213e;
+  --text-secondary: #65708a;
+  --accent: #6842e8;
+  --accent-hover: #5431ce;
+  --accent-soft: #eee9ff;
+  --danger: #c63f4d;
+  --success: #167b5b;
+
+  display: block;
+}
+
+.login-page {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: clamp(1rem, 4vw, 3rem);
+  color: var(--text-primary);
+  background:
+    radial-gradient(circle at 12% 18%, rgba(104, 66, 232, 0.14), transparent 30rem),
+    radial-gradient(circle at 88% 82%, rgba(239, 106, 103, 0.15), transparent 27rem),
+    var(--page-background);
+}
+
+.login-card {
+  width: min(100%, 27rem);
+  padding: clamp(1.5rem, 6vw, 2.75rem);
+  border: 1px solid var(--card-border);
+  border-radius: 1.5rem;
+  background: var(--card-background);
+  box-shadow: 0 1.5rem 4rem rgba(22, 33, 62, 0.14);
+  backdrop-filter: blur(1rem);
+}
+
+.login-header {
+  margin-bottom: 2rem;
+  text-align: center;
+
+  h1 {
+    margin: 1.5rem 0 0.5rem;
+    font-size: clamp(1.75rem, 6vw, 2.25rem);
+    line-height: 1.1;
+    letter-spacing: -0.035em;
+    font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+  }
+}
+
+.brand {
+  display: inline-flex;
+  color: var(--accent);
+  font-family: 'Avenir Next', 'Segoe UI Variable', 'Trebuchet MS', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 750;
+  letter-spacing: 0.14em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+form,
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+form {
+  gap: 0.9rem;
+}
+
+.field {
+  gap: 0.45rem;
+
+  label {
+    font-size: 0.875rem;
+    font-weight: 650;
+  }
+
+  input {
+    min-height: 3rem;
+    padding: 0.75rem 0.9rem;
+    border: 1px solid rgba(22, 33, 62, 0.2);
+    border-radius: 0.75rem;
+    outline: none;
+    color: var(--text-primary);
+    background: #ffffff;
+    transition:
+      border-color 150ms ease,
+      box-shadow 150ms ease;
+
+    &::placeholder {
+      color: #8a91a3;
+    }
+
+    &:focus-visible {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(104, 66, 232, 0.15);
+    }
+
+    &[aria-invalid='true'] {
+      border-color: var(--danger);
+    }
+  }
+}
+
+.field-error {
+  min-height: 1.1rem;
+  color: var(--danger);
+  font-size: 0.75rem;
+}
+
+.form-message {
+  margin: 0;
+  padding: 0.75rem;
+  border: 1px solid currentColor;
+  border-radius: 0.75rem;
+  font-size: 0.8125rem;
+  text-align: center;
+
+  &--error {
+    color: var(--danger);
+    background: rgba(239, 106, 103, 0.09);
+  }
+
+  &--success {
+    color: var(--success);
+    background: rgba(22, 123, 91, 0.08);
+  }
+}
+
+.submit-button {
+  min-height: 3.1rem;
+  border: 0;
+  border-radius: 0.8rem;
+  color: #ffffff;
+  background: var(--accent);
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    background 150ms ease,
+    transform 150ms ease;
+
+  &:hover:not(:disabled) {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+  }
+
+  &:focus-visible {
+    outline: 3px solid rgba(104, 66, 232, 0.24);
+    outline-offset: 3px;
+  }
+
+  &:disabled {
+    cursor: wait;
+    opacity: 0.65;
+  }
+}
+
+.demo-account {
+  margin-top: 1.25rem;
+  padding: 0.9rem;
+  border: 1px solid var(--card-border);
+  border-radius: 0.8rem;
+  color: var(--text-secondary);
+  background: var(--accent-soft);
+  text-align: center;
+
+  p {
+    margin: 0 0 0.4rem;
+    font-size: 0.75rem;
+  }
+
+  button {
+    border: 0;
+    padding: 0;
+    color: var(--accent);
+    background: transparent;
+    font: inherit;
+    font-size: 0.75rem;
+    font-weight: 650;
+    cursor: pointer;
+    overflow-wrap: anywhere;
+
+    &:hover {
+      color: var(--accent-hover);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+    }
+  }
+}
+
+@media (max-width: 30rem) {
+  .login-page {
+    place-items: stretch;
+    padding: 0;
+  }
+
+  .login-card {
+    width: 100%;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 0;
+    border-radius: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

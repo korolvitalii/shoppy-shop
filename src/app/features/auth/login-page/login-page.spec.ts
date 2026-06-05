@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 
 import { AuthenticationService } from '../data-access/authentication.service';
 import { LoginPage } from './login-page';
@@ -46,6 +46,10 @@ describe('LoginPage', () => {
 
     expect((fixture.nativeElement as HTMLElement).textContent).toContain('Email is required');
     expect((fixture.nativeElement as HTMLElement).textContent).toContain('Password is required');
+    expect(fixture.nativeElement.querySelector('#email').getAttribute('aria-invalid')).toBe('true');
+    expect(fixture.nativeElement.querySelector('#password').getAttribute('aria-invalid')).toBe(
+      'true',
+    );
     expect(authenticationService.login).not.toHaveBeenCalled();
   });
 
@@ -67,7 +71,9 @@ describe('LoginPage', () => {
     const fixture = TestBed.createComponent(LoginPage);
     fixture.detectChanges();
 
-    (fixture.nativeElement.querySelector('[data-testid="demo-account"]') as HTMLButtonElement).click();
+    (
+      fixture.nativeElement.querySelector('[data-testid="demo-account"]') as HTMLButtonElement
+    ).click();
 
     expect(fixture.componentInstance.form.getRawValue()).toEqual({
       email: 'demo@shoppyshop.test',
@@ -84,5 +90,52 @@ describe('LoginPage', () => {
     fixture.componentInstance.submit();
 
     expect(authenticationService.login).toHaveBeenCalledWith(credentials);
+  });
+
+  it('announces rejected credentials as an alert', () => {
+    authenticationService.login.mockReturnValue(
+      of({ success: false, error: 'The email or password is incorrect.' }),
+    );
+    const fixture = TestBed.createComponent(LoginPage);
+    fixture.detectChanges();
+    fixture.componentInstance.form.setValue({
+      email: 'customer@example.com',
+      password: 'incorrect-password',
+    });
+
+    fixture.componentInstance.submit();
+    fixture.detectChanges();
+
+    const alert = fixture.nativeElement.querySelector('[role="alert"]') as HTMLElement;
+    expect(alert.textContent).toContain('The email or password is incorrect.');
+  });
+
+  it('prevents duplicate submissions while authentication is pending', () => {
+    const result = new Subject<{
+      success: true;
+      user: { id: string; email: string };
+    }>();
+    authenticationService.login.mockReturnValue(result);
+    const fixture = TestBed.createComponent(LoginPage);
+    fixture.detectChanges();
+    fixture.componentInstance.form.setValue({
+      email: 'demo@shoppyshop.test',
+      password: 'ShoppyShop123!',
+    });
+
+    fixture.componentInstance.submit();
+    fixture.detectChanges();
+
+    const submitButton = fixture.nativeElement.querySelector(
+      'button[type="submit"]',
+    ) as HTMLButtonElement;
+    expect(submitButton.disabled).toBe(true);
+    expect(submitButton.textContent).toContain('Signing in');
+
+    result.next({ success: true, user: { id: 'customer-1', email: 'demo@shoppyshop.test' } });
+    result.complete();
+    fixture.detectChanges();
+
+    expect(submitButton.disabled).toBe(false);
   });
 });

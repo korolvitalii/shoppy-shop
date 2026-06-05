@@ -2,10 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize, take } from 'rxjs';
 
-import {
-  AuthenticationService,
-  LoginCredentials,
-} from '../data-access/authentication.service';
+import { AuthenticationService, LoginCredentials } from '../data-access/authentication.service';
 
 interface LoginForm {
   email: FormControl<string>;

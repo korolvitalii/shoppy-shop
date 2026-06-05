@@ -12,8 +12,7 @@ export interface AuthenticatedUser {
 }
 
 export type LoginResult =
-  | { success: true; user: AuthenticatedUser }
-  | { success: false; error: string };
+  { success: true; user: AuthenticatedUser } | { success: false; error: string };
 
 const DEMO_CREDENTIALS: LoginCredentials = {
   email: 'demo@shoppyshop.test',
