@@ -1,0 +1,52 @@
+<main class="catalogue-page">
+  <header class="page-header">
+    <p class="eyebrow">The ShoppyShop edit</p>
+    <h1>Shop products</h1>
+    <p>Explore thoughtfully selected products for everyday life and memorable journeys.</p>
+  </header>
+
+  @switch (status()) {
+    @case ('loading') {
+      <section class="state-panel" role="status" aria-live="polite">
+        <span class="loader" aria-hidden="true"></span>
+        <p>Loading product categories…</p>
+      </section>
+    }
+    @case ('error') {
+      <section class="state-panel state-panel--error" role="alert">
+        <h2>We could not load the product categories</h2>
+        <p>Check your connection and try again.</p>
+        <button type="button" (click)="load()">Try again</button>
+      </section>
+    }
+    @case ('success') {
+      @if (groups().length === 0) {
+        <section class="state-panel">
+          <h2>No product categories are available yet</h2>
+          <p>New collections will appear here soon.</p>
+        </section>
+      } @else {
+        <section class="groups-grid" aria-label="Product categories">
+          @for (group of groups(); track group.id) {
+            <a class="group-card" [routerLink]="['/products', group.id]">
+              <div class="image-frame">
+                <img [src]="group.imageUrl" [alt]="group.name" loading="lazy" />
+                @if (group.badge) {
+                  <span class="badge">{{ group.badge }}</span>
+                }
+              </div>
+              <div class="card-content">
+                <h2>{{ group.name }}</h2>
+                <p>{{ group.description }}</p>
+                <span class="card-meta">
+                  {{ productCount(group) }}
+                  <span aria-hidden="true">→</span>
+                </span>
+              </div>
+            </a>
+          }
+        </section>
+      }
+    }
+  }
+</main>

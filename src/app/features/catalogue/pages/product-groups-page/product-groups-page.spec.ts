@@ -17,10 +17,7 @@ describe('ProductGroupsPage', () => {
 
     await TestBed.configureTestingModule({
       imports: [ProductGroupsPage],
-      providers: [
-        provideRouter([]),
-        { provide: ProductGroupsRepository, useValue: repository },
-      ],
+      providers: [provideRouter([]), { provide: ProductGroupsRepository, useValue: repository }],
     }).compileComponents();
   });
 
