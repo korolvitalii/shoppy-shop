@@ -1,53 +1,105 @@
 .catalogue-page {
   width: min(100% - 2rem, 75rem);
   margin-inline: auto;
-  padding-block: 3rem;
+  padding-block: clamp(2.5rem, 7vw, 5.5rem);
 }
 
 .page-header {
-  max-width: 42rem;
-  margin-bottom: 2rem;
+  max-width: 44rem;
+  margin-bottom: clamp(2rem, 5vw, 3.5rem);
+
+  .eyebrow {
+    margin: 0 0 0.75rem;
+    color: #6842e8;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    margin: 0;
+    color: #16213e;
+    font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+    font-size: clamp(2.5rem, 8vw, 4.75rem);
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+  }
+
+  > p:last-child {
+    max-width: 38rem;
+    margin: 1.25rem 0 0;
+    color: #65708a;
+    font-size: clamp(1rem, 2vw, 1.125rem);
+    line-height: 1.65;
+  }
 }
 
 .groups-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  gap: clamp(1rem, 3vw, 1.5rem);
 }
 
-.group-card {
-  display: block;
-  overflow: hidden;
-  border: 1px solid rgba(22, 33, 62, 0.12);
-  border-radius: 1.25rem;
-  color: inherit;
-  background: #fffdf8;
-  text-decoration: none;
-}
+.state-panel {
+  display: grid;
+  justify-items: center;
+  gap: 0.75rem;
+  padding: clamp(2rem, 8vw, 5rem);
+  border: 1px dashed rgba(22, 33, 62, 0.2);
+  border-radius: 1.35rem;
+  color: #65708a;
+  background: rgba(255, 253, 248, 0.7);
+  text-align: center;
 
-.image-frame {
-  position: relative;
-  aspect-ratio: 16 / 10;
-  overflow: hidden;
+  h2,
+  p {
+    margin: 0;
+  }
 
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  h2 {
+    color: #16213e;
+    font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+  }
+
+  button {
+    margin-top: 0.5rem;
+    padding: 0.75rem 1.1rem;
+    border: 0;
+    border-radius: 0.7rem;
+    color: #ffffff;
+    background: #6842e8;
+    font-weight: 750;
+    cursor: pointer;
+
+    &:hover {
+      background: #5431ce;
+    }
+
+    &:focus-visible {
+      outline: 3px solid rgba(104, 66, 232, 0.25);
+      outline-offset: 3px;
+    }
   }
 }
 
-.badge {
-  position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
+.loader {
+  width: 2rem;
+  aspect-ratio: 1;
+  border: 3px solid #eee9ff;
+  border-top-color: #6842e8;
+  border-radius: 50%;
+  animation: spin 700ms linear infinite;
 }
 
-.card-content,
-.state-panel {
-  padding: 1.25rem;
+@keyframes spin {
+  to {
+    transform: rotate(1turn);
+  }
 }
 
-.state-panel {
-  text-align: center;
+@media (prefers-reduced-motion: reduce) {
+  .loader {
+    animation-duration: 2s;
+  }
 }

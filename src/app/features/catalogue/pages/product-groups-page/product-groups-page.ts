@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { RouterLink } from '@angular/router';
 import { take } from 'rxjs';
 
+import { ProductGroupCard } from '../../components/product-group-card/product-group-card';
 import { ProductGroupsRepository } from '../../data-access/product-groups.repository';
 import { ProductGroup } from '../../models/product-group';
 
@@ -10,7 +10,7 @@ type RequestStatus = 'loading' | 'success' | 'error';
 
 @Component({
   selector: 'app-product-groups-page',
-  imports: [RouterLink],
+  imports: [ProductGroupCard],
   templateUrl: './product-groups-page.html',
   styleUrl: './product-groups-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,9 +38,5 @@ export class ProductGroupsPage {
         },
         error: () => this.status.set('error'),
       });
-  }
-
-  productCount(group: ProductGroup): string {
-    return `${group.itemCount} ${group.itemCount === 1 ? 'product' : 'products'}`;
   }
 }

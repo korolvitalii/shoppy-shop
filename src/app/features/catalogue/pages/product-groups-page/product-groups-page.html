@@ -28,22 +28,7 @@
       } @else {
         <section class="groups-grid" aria-label="Product categories">
           @for (group of groups(); track group.id) {
-            <a class="group-card" [routerLink]="['/products', group.id]">
-              <div class="image-frame">
-                <img [src]="group.imageUrl" [alt]="group.name" loading="lazy" />
-                @if (group.badge) {
-                  <span class="badge">{{ group.badge }}</span>
-                }
-              </div>
-              <div class="card-content">
-                <h2>{{ group.name }}</h2>
-                <p>{{ group.description }}</p>
-                <span class="card-meta">
-                  {{ productCount(group) }}
-                  <span aria-hidden="true">→</span>
-                </span>
-              </div>
-            </a>
+            <app-product-group-card [group]="group" />
           }
         </section>
       }
