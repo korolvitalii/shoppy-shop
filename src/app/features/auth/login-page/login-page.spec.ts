@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { of, Subject } from 'rxjs';
 
 import { AuthenticationService } from '../data-access/authentication.service';
@@ -92,6 +92,21 @@ describe('LoginPage', () => {
     expect(authenticationService.login).toHaveBeenCalledWith(credentials);
   });
 
+  it('redirects to the catalogue after successful authentication', () => {
+    const router = TestBed.inject(Router);
+    const navigate = vi.spyOn(router, 'navigateByUrl');
+    const fixture = TestBed.createComponent(LoginPage);
+    fixture.detectChanges();
+    fixture.componentInstance.form.setValue({
+      email: 'demo@shoppyshop.test',
+      password: 'ShoppyShop123!',
+    });
+
+    fixture.componentInstance.submit();
+
+    expect(navigate).toHaveBeenCalledWith('/products', { replaceUrl: true });
+  });
+
   it('announces rejected credentials as an alert', () => {
     authenticationService.login.mockReturnValue(
       of({ success: false, error: 'The email or password is incorrect.' }),
@@ -108,6 +123,7 @@ describe('LoginPage', () => {
 
     const alert = fixture.nativeElement.querySelector('[role="alert"]') as HTMLElement;
     expect(alert.textContent).toContain('The email or password is incorrect.');
+    expect(fixture.componentInstance.successMessage()).toBeNull();
   });
 
   it('prevents duplicate submissions while authentication is pending', () => {
