@@ -8,7 +8,6 @@
   --accent-hover: #5431ce;
   --accent-soft: #eee9ff;
   --danger: #c63f4d;
-  --success: #167b5b;
 
   display: block;
 }
@@ -128,11 +127,6 @@ form {
   &--error {
     color: var(--danger);
     background: rgba(239, 106, 103, 0.09);
-  }
-
-  &--success {
-    color: var(--success);
-    background: rgba(22, 123, 91, 0.08);
   }
 }
 

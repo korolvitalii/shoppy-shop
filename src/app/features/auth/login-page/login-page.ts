@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { finalize, take } from 'rxjs';
 
 import { AuthenticationService, LoginCredentials } from '../data-access/authentication.service';
@@ -23,6 +24,7 @@ const DEMO_CREDENTIALS: LoginCredentials = {
 })
 export class LoginPage {
   private readonly authenticationService = inject(AuthenticationService);
+  private readonly router = inject(Router);
 
   readonly form = new FormGroup<LoginForm>({
     email: new FormControl('', {
@@ -37,7 +39,6 @@ export class LoginPage {
 
   readonly isSubmitting = signal(false);
   readonly authenticationError = signal<string | null>(null);
-  readonly successMessage = signal<string | null>(null);
 
   useDemoAccount(): void {
     this.form.setValue(DEMO_CREDENTIALS);
@@ -47,8 +48,6 @@ export class LoginPage {
 
   submit(): void {
     this.authenticationError.set(null);
-    this.successMessage.set(null);
-
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -63,7 +62,7 @@ export class LoginPage {
       )
       .subscribe((result) => {
         if (result.success) {
-          this.successMessage.set(`Welcome, ${result.user.email}.`);
+          void this.router.navigateByUrl('/products', { replaceUrl: true });
           return;
         }
 

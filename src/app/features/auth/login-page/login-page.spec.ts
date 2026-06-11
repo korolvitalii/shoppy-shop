@@ -21,6 +21,8 @@ describe('LoginPage', () => {
         { provide: AuthenticationService, useValue: authenticationService },
       ],
     }).compileComponents();
+
+    vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
   });
 
   it('presents an accessible sign-in form', () => {
@@ -93,8 +95,7 @@ describe('LoginPage', () => {
   });
 
   it('redirects to the catalogue after successful authentication', () => {
-    const router = TestBed.inject(Router);
-    const navigate = vi.spyOn(router, 'navigateByUrl');
+    const navigate = vi.mocked(TestBed.inject(Router).navigateByUrl);
     const fixture = TestBed.createComponent(LoginPage);
     fixture.detectChanges();
     fixture.componentInstance.form.setValue({
@@ -108,6 +109,7 @@ describe('LoginPage', () => {
   });
 
   it('announces rejected credentials as an alert', () => {
+    const navigate = vi.mocked(TestBed.inject(Router).navigateByUrl);
     authenticationService.login.mockReturnValue(
       of({ success: false, error: 'The email or password is incorrect.' }),
     );
@@ -123,7 +125,7 @@ describe('LoginPage', () => {
 
     const alert = fixture.nativeElement.querySelector('[role="alert"]') as HTMLElement;
     expect(alert.textContent).toContain('The email or password is incorrect.');
-    expect(fixture.componentInstance.successMessage()).toBeNull();
+    expect(navigate).not.toHaveBeenCalled();
   });
 
   it('prevents duplicate submissions while authentication is pending', () => {
