@@ -1,0 +1,23 @@
+<article class="product-card">
+  <a [routerLink]="['/products', product().groupId, product().id]">
+    <div class="image-frame">
+      <img [src]="product().imageUrl" [alt]="product().name" loading="lazy" />
+      @if (discount(); as amount) {
+        <span class="discount">Save {{ amount }}%</span>
+      }
+      @if (!product().inStock) {
+        <span class="stock">Out of stock</span>
+      }
+    </div>
+    <div class="content">
+      <p class="brand">{{ product().brand }}</p>
+      <h2>{{ product().name }}</h2>
+      <div class="pricing">
+        <strong>{{ effectivePrice() | currency: 'GBP' }}</strong>
+        @if (product().salePrice) {
+          <del>{{ product().price | currency: 'GBP' }}</del>
+        }
+      </div>
+    </div>
+  </a>
+</article>

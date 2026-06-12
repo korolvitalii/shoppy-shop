@@ -1,0 +1,58 @@
+<main class="listing-page">
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a routerLink="/products">Products</a><span>/</span><span>{{ groupId() }}</span>
+  </nav>
+  <header>
+    <p class="eyebrow">Curated collection</p>
+    <h1>{{ groupId() }}</h1>
+    <p>{{ products().length }} {{ products().length === 1 ? 'product' : 'products' }}</p>
+  </header>
+  <section class="toolbar" aria-label="Product filters">
+    <label
+      >Search <input type="search" [formControl]="searchControl" placeholder="Search products"
+    /></label>
+    <label
+      >Price
+      <select [value]="query().price" (change)="updateFilter('price', $event)">
+        <option value="all">All prices</option>
+        <option value="0-50">Under £50</option>
+        <option value="50-200">£50–£200</option>
+        <option value="200+">£200 and over</option>
+      </select></label
+    >
+    <label
+      >Sort
+      <select [value]="query().sort" (change)="updateFilter('sort', $event)">
+        <option value="featured">Featured</option>
+        <option value="price-asc">Price: low to high</option>
+        <option value="price-desc">Price: high to low</option>
+        <option value="name">Name</option>
+      </select></label
+    >
+  </section>
+  @switch (status()) {
+    @case ('loading') {
+      <section class="state" role="status">Loading products…</section>
+    }
+    @case ('error') {
+      <section class="state" role="alert">
+        <h2>Products are unavailable</h2>
+        <button type="button" (click)="retry()">Try again</button>
+      </section>
+    }
+    @case ('success') {
+      @if (products().length === 0) {
+        <section class="state">
+          <h2>No products match your filters</h2>
+          <button type="button" (click)="clearFilters()">Clear filters</button>
+        </section>
+      } @else {
+        <section class="product-grid" aria-label="Products">
+          @for (product of products(); track product.id) {
+            <app-product-card [product]="product" />
+          }
+        </section>
+      }
+    }
+  }
+</main>

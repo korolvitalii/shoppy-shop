@@ -4,6 +4,10 @@ import {
   ApiProductGroupsRepository,
   ProductGroupsRepository,
 } from './features/catalogue/data-access/product-groups.repository';
+import {
+  ApiProductsRepository,
+  ProductsRepository,
+} from './features/catalogue/data-access/products.repository';
 
 export const routes: Routes = [
   {
@@ -14,7 +18,10 @@ export const routes: Routes = [
   },
   {
     path: 'products',
-    providers: [{ provide: ProductGroupsRepository, useClass: ApiProductGroupsRepository }],
+    providers: [
+      { provide: ProductGroupsRepository, useClass: ApiProductGroupsRepository },
+      { provide: ProductsRepository, useClass: ApiProductsRepository },
+    ],
     children: [
       {
         path: '',
@@ -22,6 +29,14 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/catalogue/pages/product-groups-page/product-groups-page').then(
             ({ ProductGroupsPage }) => ProductGroupsPage,
+          ),
+      },
+      {
+        path: ':groupId',
+        title: 'Collection | ShoppyShop',
+        loadComponent: () =>
+          import('./features/catalogue/pages/product-listing-page/product-listing-page').then(
+            ({ ProductListingPage }) => ProductListingPage,
           ),
       },
     ],
