@@ -1,0 +1,160 @@
+.details-page {
+  width: min(100% - 2rem, 75rem);
+  margin-inline: auto;
+  padding-block: 2.5rem 5rem;
+  color: #16213e;
+}
+.breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  color: #65708a;
+  font-size: 0.8rem;
+}
+.breadcrumbs a {
+  color: #6842e8;
+}
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(19rem, 0.9fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+.image-frame {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  background: #eee9ff;
+}
+.image-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.sale {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  color: #fff;
+  background: #ef6a67;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+.information {
+  padding-top: 1rem;
+}
+.brand {
+  color: #6842e8;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+h1 {
+  margin: 0.5rem 0 1.25rem;
+  font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+  font-size: clamp(2.3rem, 5vw, 4rem);
+  line-height: 1;
+}
+.pricing {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+.pricing strong {
+  font-size: 1.75rem;
+}
+.pricing del {
+  color: #7b8397;
+}
+.description {
+  margin-block: 1.5rem;
+  color: #65708a;
+  line-height: 1.7;
+}
+.availability {
+  color: #167b5b;
+  font-weight: 750;
+}
+.availability.unavailable {
+  color: #c63f4d;
+}
+.purchase {
+  display: flex;
+  gap: 1rem;
+  margin-block: 1.5rem;
+}
+.quantity {
+  display: inline-grid;
+  grid-template-columns: 2.6rem 2.6rem 2.6rem;
+  overflow: hidden;
+  border: 1px solid rgba(22, 33, 62, 0.18);
+  border-radius: 0.75rem;
+}
+.quantity button,
+.quantity output {
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: #fff;
+}
+.quantity button {
+  cursor: pointer;
+  font-size: 1.15rem;
+}
+.quantity button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.add-button {
+  flex: 1;
+  min-height: 3rem;
+  border: 0;
+  border-radius: 0.75rem;
+  color: #fff;
+  background: #6842e8;
+  font-weight: 800;
+  cursor: pointer;
+}
+.add-button:hover:not(:disabled) {
+  background: #5431ce;
+}
+.add-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.benefits {
+  display: grid;
+  gap: 0.6rem;
+  padding: 1.2rem 1.2rem 1.2rem 2.5rem;
+  border: 1px solid rgba(22, 33, 62, 0.1);
+  border-radius: 1rem;
+  color: #65708a;
+  background: #fffdf8;
+  font-size: 0.85rem;
+}
+.state {
+  padding: 5rem 1rem;
+  text-align: center;
+}
+.state a {
+  color: #6842e8;
+  font-weight: 750;
+}
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid rgba(104, 66, 232, 0.25);
+  outline-offset: 3px;
+}
+@media (max-width: 48rem) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  .purchase {
+    flex-direction: column;
+  }
+}

@@ -32,6 +32,14 @@ export const routes: Routes = [
           ),
       },
       {
+        path: ':groupId/:productId',
+        title: 'Product | ShoppyShop',
+        loadComponent: () =>
+          import('./features/catalogue/pages/product-details-page/product-details-page').then(
+            ({ ProductDetailsPage }) => ProductDetailsPage,
+          ),
+      },
+      {
         path: ':groupId',
         title: 'Collection | ShoppyShop',
         loadComponent: () =>

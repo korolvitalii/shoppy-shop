@@ -38,4 +38,11 @@ export const handlers = [
 
     return HttpResponse.json(products);
   }),
+  http.get('/api/product-groups/:groupId/products/:productId', async ({ params }) => {
+    await delay(250);
+    const product = mockProducts.find(
+      (item) => item.groupId === params['groupId'] && item.id === params['productId'],
+    );
+    return HttpResponse.json(product ?? null);
+  }),
 ];

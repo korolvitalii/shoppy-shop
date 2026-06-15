@@ -7,6 +7,7 @@ import { Product, ProductSearchQuery } from '../models/product';
 @Injectable()
 export abstract class ProductsRepository {
   abstract search(groupId: string, query: ProductSearchQuery): Observable<readonly Product[]>;
+  abstract getById(groupId: string, productId: string): Observable<Product | null>;
 }
 
 @Injectable()
@@ -19,5 +20,9 @@ export class ApiProductsRepository implements ProductsRepository {
       .set('sort', query.sort)
       .set('price', query.price);
     return this.http.get<readonly Product[]>(`/api/product-groups/${groupId}/products`, { params });
+  }
+
+  getById(groupId: string, productId: string): Observable<Product | null> {
+    return this.http.get<Product | null>(`/api/product-groups/${groupId}/products/${productId}`);
   }
 }

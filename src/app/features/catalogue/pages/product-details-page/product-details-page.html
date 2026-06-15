@@ -1,0 +1,85 @@
+<main class="details-page">
+  @switch (status()) {
+    @case ('loading') {
+      <section class="state" role="status">Loading product…</section>
+    }
+    @case ('error') {
+      <section class="state" role="alert">
+        <h1>Product unavailable</h1>
+        <a routerLink="/products">Browse products</a>
+      </section>
+    }
+    @case ('not-found') {
+      <section class="state">
+        <h1>Product not found</h1>
+        <p>This product may have been removed.</p>
+        <a routerLink="/products">Browse products</a>
+      </section>
+    }
+    @case ('success') {
+      @if (product(); as item) {
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <a routerLink="/products">Products</a><span>/</span
+          ><a [routerLink]="['/products', item.groupId]">{{ item.groupId }}</a
+          ><span>/</span><span>{{ item.name }}</span>
+        </nav>
+        <div class="layout">
+          <div class="image-frame">
+            <img [src]="item.imageUrl" [alt]="item.name" />
+            @if (saving()) {
+              <span class="sale">Save {{ saving() | currency: 'GBP' }}</span>
+            }
+          </div>
+          <section class="information">
+            <p class="brand">{{ item.brand }}</p>
+            <h1>{{ item.name }}</h1>
+            <div class="pricing">
+              <strong>{{ effectivePrice() | currency: 'GBP' }}</strong>
+              @if (item.salePrice) {
+                <del>{{ item.price | currency: 'GBP' }}</del>
+              }
+            </div>
+            <p class="description">{{ item.description }}</p>
+            <p class="availability" [class.unavailable]="!item.inStock">
+              {{ item.inStock ? 'In stock' : 'Currently unavailable' }}
+            </p>
+            <div class="purchase">
+              <div class="quantity" aria-label="Quantity selector">
+                <button
+                  type="button"
+                  aria-label="Decrease quantity"
+                  [disabled]="quantity() === 1"
+                  (click)="decrement()"
+                >
+                  −</button
+                ><output aria-live="polite">{{ quantity() }}</output
+                ><button
+                  type="button"
+                  aria-label="Increase quantity"
+                  [disabled]="quantity() === 10"
+                  (click)="increment()"
+                >
+                  +
+                </button>
+              </div>
+              <button
+                class="add-button"
+                data-testid="add-to-basket"
+                type="button"
+                [disabled]="!item.inStock"
+                (click)="addToBasket()"
+              >
+                {{ added() ? 'Added to basket' : 'Add to basket' }}
+              </button>
+            </div>
+            <ul class="benefits">
+              <li>Secure checkout</li>
+              <li>30-day returns</li>
+              <li>Carefully packed and tracked</li>
+            </ul>
+          </section>
+        </div>
+      }
+    }
+  }
+</main>
