@@ -49,6 +49,14 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: 'basket',
+    title: 'Basket | ShoppyShop',
+    loadComponent: () =>
+      import('./features/basket/pages/basket-page/basket-page').then(
+        ({ BasketPage }) => BasketPage,
+      ),
+  },
   { path: '', pathMatch: 'full', redirectTo: 'products' },
   { path: '**', redirectTo: 'login' },
 ];

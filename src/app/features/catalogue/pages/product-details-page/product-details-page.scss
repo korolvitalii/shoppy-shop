@@ -120,6 +120,11 @@ h1 {
   font-weight: 800;
   cursor: pointer;
 }
+.basket-link {
+  align-self: center;
+  color: #6842e8;
+  font-weight: 750;
+}
 .add-button:hover:not(:disabled) {
   background: #5431ce;
 }

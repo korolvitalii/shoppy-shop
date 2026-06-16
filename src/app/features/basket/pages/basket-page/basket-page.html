@@ -1,0 +1,72 @@
+<main class="basket-page">
+  @if (basket.items().length === 0) {
+    <section class="empty-state">
+      <p class="eyebrow">Your selection</p>
+      <h1>Your basket is empty</h1>
+      <p>Discover something considered, useful, or unexpectedly delightful.</p>
+      <a routerLink="/products">Browse products</a>
+    </section>
+  } @else {
+    <header>
+      <p class="eyebrow">Your selection</p>
+      <h1>Shopping basket</h1>
+      <p>{{ basket.itemCount() }} {{ basket.itemCount() === 1 ? 'item' : 'items' }}</p>
+    </header>
+
+    <div class="layout">
+      <section class="items" aria-label="Basket items">
+        @for (item of basket.items(); track item.productId) {
+          <article class="item">
+            <a class="image" [routerLink]="['/products', item.groupId, item.productId]">
+              <img [src]="item.imageUrl" [alt]="item.name" />
+            </a>
+            <div class="details">
+              <a [routerLink]="['/products', item.groupId, item.productId]"
+                ><h2>{{ item.name }}</h2></a
+              >
+              <p>{{ item.unitPrice | currency: 'GBP' }} each</p>
+              <div class="quantity">
+                <button
+                  type="button"
+                  [attr.aria-label]="'Decrease ' + item.name + ' quantity'"
+                  (click)="basket.updateQuantity(item.productId, item.quantity - 1)"
+                >
+                  −
+                </button>
+                <output [attr.aria-label]="item.name + ' quantity'">{{ item.quantity }}</output>
+                <button
+                  type="button"
+                  [attr.aria-label]="'Increase ' + item.name + ' quantity'"
+                  (click)="basket.updateQuantity(item.productId, item.quantity + 1)"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+            <div class="item-summary">
+              <strong>{{ item.unitPrice * item.quantity | currency: 'GBP' }}</strong>
+              <button
+                class="remove"
+                type="button"
+                [attr.aria-label]="'Remove ' + item.name"
+                (click)="basket.remove(item.productId)"
+              >
+                Remove
+              </button>
+            </div>
+          </article>
+        }
+      </section>
+
+      <aside class="summary" aria-labelledby="summary-title">
+        <h2 id="summary-title">Order summary</h2>
+        <div>
+          <span>Subtotal</span><strong>{{ basket.subtotal() | currency: 'GBP' }}</strong>
+        </div>
+        <p>Delivery and discounts are calculated at checkout.</p>
+        <a class="checkout" routerLink="/checkout">Proceed to checkout</a>
+        <a class="continue" routerLink="/products">Continue shopping</a>
+      </aside>
+    </div>
+  }
+</main>

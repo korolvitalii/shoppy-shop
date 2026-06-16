@@ -24,6 +24,9 @@ export class BasketService {
   readonly itemCount = computed(() =>
     this.itemsState().reduce((total, item) => total + item.quantity, 0),
   );
+  readonly subtotal = computed(() =>
+    this.itemsState().reduce((total, item) => total + item.unitPrice * item.quantity, 0),
+  );
 
   add(product: Product, quantity = 1): void {
     const current = this.itemsState();
@@ -43,6 +46,24 @@ export class BasketService {
             quantity,
           },
         ];
+    this.itemsState.set(items);
+    this.persist(items);
+  }
+
+  updateQuantity(productId: string, quantity: number): void {
+    if (quantity <= 0) {
+      this.remove(productId);
+      return;
+    }
+    const items = this.itemsState().map((item) =>
+      item.productId === productId ? { ...item, quantity } : item,
+    );
+    this.itemsState.set(items);
+    this.persist(items);
+  }
+
+  remove(productId: string): void {
+    const items = this.itemsState().filter((item) => item.productId !== productId);
     this.itemsState.set(items);
     this.persist(items);
   }
