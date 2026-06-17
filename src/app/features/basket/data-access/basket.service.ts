@@ -1,24 +1,14 @@
 import { computed, Injectable, signal } from '@angular/core';
-import { z } from 'zod/mini';
 
 import { Product } from '../../catalogue/models/product';
 import { BasketItem } from '../models/basket-item';
 
 const STORAGE_KEY = 'shoppyshop.basket.v1';
-const basketSchema = z.array(
-  z.object({
-    productId: z.string().check(z.minLength(1)),
-    groupId: z.string().check(z.minLength(1)),
-    name: z.string().check(z.minLength(1)),
-    imageUrl: z.string().check(z.minLength(1)),
-    unitPrice: z.number().check(z.nonnegative()),
-    quantity: z.int().check(z.positive()),
-  }),
-);
 
 @Injectable({ providedIn: 'root' })
 export class BasketService {
-  private readonly itemsState = signal<readonly BasketItem[]>(this.restore());
+  private readonly itemsState = signal<readonly BasketItem[]>([]);
+  private revision = 0;
 
   readonly items = this.itemsState.asReadonly();
   readonly itemCount = computed(() =>
@@ -27,6 +17,10 @@ export class BasketService {
   readonly subtotal = computed(() =>
     this.itemsState().reduce((total, item) => total + item.unitPrice * item.quantity, 0),
   );
+
+  constructor() {
+    void this.restore();
+  }
 
   add(product: Product, quantity = 1): void {
     const current = this.itemsState();
@@ -46,8 +40,7 @@ export class BasketService {
             quantity,
           },
         ];
-    this.itemsState.set(items);
-    this.persist(items);
+    this.commit(items);
   }
 
   updateQuantity(productId: string, quantity: number): void {
@@ -55,27 +48,45 @@ export class BasketService {
       this.remove(productId);
       return;
     }
-    const items = this.itemsState().map((item) =>
-      item.productId === productId ? { ...item, quantity } : item,
+    this.commit(
+      this.itemsState().map((item) =>
+        item.productId === productId ? { ...item, quantity } : item,
+      ),
     );
-    this.itemsState.set(items);
-    this.persist(items);
   }
 
   remove(productId: string): void {
-    const items = this.itemsState().filter((item) => item.productId !== productId);
+    this.commit(this.itemsState().filter((item) => item.productId !== productId));
+  }
+
+  private commit(items: readonly BasketItem[]): void {
+    this.revision += 1;
     this.itemsState.set(items);
     this.persist(items);
   }
 
-  private restore(): readonly BasketItem[] {
+  private async restore(): Promise<void> {
     try {
       const value = localStorage.getItem(STORAGE_KEY);
-      if (!value) return [];
+      if (!value) return;
+      const initialRevision = this.revision;
+      const { z } = await import('zod/mini');
+      const basketSchema = z.array(
+        z.object({
+          productId: z.string().check(z.minLength(1)),
+          groupId: z.string().check(z.minLength(1)),
+          name: z.string().check(z.minLength(1)),
+          imageUrl: z.string().check(z.minLength(1)),
+          unitPrice: z.number().check(z.nonnegative()),
+          quantity: z.int().check(z.positive()),
+        }),
+      );
       const result = basketSchema.safeParse(JSON.parse(value) as unknown);
-      return result.success ? result.data : [];
+      if (result.success && this.revision === initialRevision) {
+        this.itemsState.set(result.data);
+      }
     } catch {
-      return [];
+      // Invalid or unavailable storage is treated as an empty basket.
     }
   }
 

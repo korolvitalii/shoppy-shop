@@ -22,8 +22,9 @@ describe('AppHeader', () => {
 
     expect(element.querySelector('[aria-label="ShoppyShop home"]')).toBeTruthy();
     expect(element.querySelector('nav[aria-label="Primary navigation"]')).toBeTruthy();
-    expect(element.querySelector('a[href="/products"]')?.textContent).toContain('Products');
-    expect(element.querySelector('a[href="/basket"]')?.textContent).toContain('3');
+    const navigation = element.querySelector('nav[aria-label="Primary navigation"]') as HTMLElement;
+    expect(navigation.querySelector('a[href="/products"]')?.textContent).toContain('Products');
+    expect(navigation.querySelector('a[href="/basket"]')?.textContent).toContain('3');
   });
 
   it('exposes an accessible mobile-menu state', () => {

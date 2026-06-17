@@ -1,1 +1,6 @@
-<router-outlet />
+@if (showHeader()) {
+  <app-header />
+}
+<main id="main-content">
+  <router-outlet />
+</main>
