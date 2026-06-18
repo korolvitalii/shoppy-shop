@@ -1,0 +1,29 @@
+.tablist {
+  display: flex;
+  gap: 0.25rem;
+  border-bottom: 1px solid rgba(22, 33, 62, 0.14);
+  overflow: auto;
+}
+.tablist button {
+  padding: 0.8rem 1rem;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  color: #65708a;
+  background: none;
+  font-weight: 750;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.tablist button[aria-selected='true'] {
+  border-color: #6842e8;
+  color: #16213e;
+}
+.tablist button:focus-visible {
+  outline: 3px solid rgba(104, 66, 232, 0.25);
+  outline-offset: -3px;
+}
+[role='tabpanel'] {
+  padding-block: 1.5rem;
+  color: #65708a;
+  line-height: 1.7;
+}
