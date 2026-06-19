@@ -39,7 +39,6 @@
                 <del>{{ item.price | currency: 'GBP' }}</del>
               }
             </div>
-            <p class="description">{{ item.description }}</p>
             <p class="availability" [class.unavailable]="!item.inStock">
               {{ item.inStock ? 'In stock' : 'Currently unavailable' }}
             </p>
@@ -73,11 +72,33 @@
               </button>
               <a class="basket-link" routerLink="/basket">View basket</a>
             </div>
-            <ul class="benefits">
-              <li>Secure checkout</li>
-              <li>30-day returns</li>
-              <li>Carefully packed and tracked</li>
-            </ul>
+            <app-tabs label="Product information">
+              <app-tab id="description" label="Description"
+                ><p>{{ item.description }}</p></app-tab
+              >
+              <app-tab id="delivery" label="Delivery & returns"
+                ><p>
+                  Tracked UK delivery with simple 30-day returns. Items are carefully packed and
+                  dispatch estimates appear at checkout.
+                </p></app-tab
+              >
+              <app-tab id="specifications" label="Specifications"
+                ><dl>
+                  <div>
+                    <dt>Brand</dt>
+                    <dd>{{ item.brand }}</dd>
+                  </div>
+                  <div>
+                    <dt>Availability</dt>
+                    <dd>{{ item.inStock ? 'In stock' : 'Unavailable' }}</dd>
+                  </div>
+                  <div>
+                    <dt>Category</dt>
+                    <dd>{{ item.groupId }}</dd>
+                  </div>
+                </dl></app-tab
+              >
+            </app-tabs>
           </section>
         </div>
       }

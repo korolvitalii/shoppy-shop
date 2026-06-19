@@ -14,12 +14,14 @@ import { catchError, map, of, switchMap, tap } from 'rxjs';
 import { BasketService } from '../../../basket/data-access/basket.service';
 import { ProductsRepository } from '../../data-access/products.repository';
 import { Product } from '../../models/product';
+import { UiTab } from '../../../../shared/ui/tabs/ui-tab';
+import { UiTabs } from '../../../../shared/ui/tabs/ui-tabs';
 
 type DetailStatus = 'loading' | 'success' | 'not-found' | 'error';
 
 @Component({
   selector: 'app-product-details-page',
-  imports: [CurrencyPipe, RouterLink],
+  imports: [CurrencyPipe, RouterLink, UiTab, UiTabs],
   templateUrl: './product-details-page.html',
   styleUrl: './product-details-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
