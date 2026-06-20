@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { finalize, take } from 'rxjs';
 
 import { AuthenticationService, LoginCredentials } from '../data-access/authentication.service';
+import { AuthenticationSessionService } from '../data-access/authentication-session.service';
 
 interface LoginForm {
   email: FormControl<string>;
@@ -25,6 +26,8 @@ const DEMO_CREDENTIALS: LoginCredentials = {
 export class LoginPage {
   private readonly authenticationService = inject(AuthenticationService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly session = inject(AuthenticationSessionService);
 
   readonly form = new FormGroup<LoginForm>({
     email: new FormControl('', {
@@ -62,7 +65,11 @@ export class LoginPage {
       )
       .subscribe((result) => {
         if (result.success) {
-          void this.router.navigateByUrl('/products', { replaceUrl: true });
+          this.session.start(result.user);
+          const requested = this.route.snapshot.queryParamMap.get('returnUrl');
+          const target =
+            requested?.startsWith('/') && !requested.startsWith('//') ? requested : '/products';
+          void this.router.navigateByUrl(target, { replaceUrl: true });
           return;
         }
 
