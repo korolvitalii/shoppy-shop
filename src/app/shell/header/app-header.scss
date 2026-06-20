@@ -29,6 +29,20 @@
   align-items: center;
   gap: 2rem;
 }
+.logout,
+.mobile-logout {
+  border: 0;
+  color: #c63f4d;
+  background: none;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 750;
+  cursor: pointer;
+}
+.mobile-logout {
+  padding: 0.85rem;
+  text-align: left;
+}
 .desktop-navigation a,
 .mobile-navigation a {
   position: relative;

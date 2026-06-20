@@ -13,6 +13,7 @@
           }}</span>
         }
       </a>
+      <button class="logout" type="button" (click)="logout()">Log out</button>
     </nav>
 
     <a class="basket-shortcut" routerLink="/basket" aria-label="Open basket">
@@ -40,6 +41,7 @@
       <a routerLink="/basket" routerLinkActive="active">
         Basket <span>{{ basket.itemCount() }} items</span>
       </a>
+      <button class="mobile-logout" type="button" (click)="logout()">Log out</button>
     </nav>
   }
 </header>

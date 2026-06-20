@@ -4,6 +4,7 @@ import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/ro
 import { filter } from 'rxjs';
 
 import { BasketService } from '../../features/basket/data-access/basket.service';
+import { AuthenticationSessionService } from '../../features/auth/data-access/authentication-session.service';
 
 @Component({
   selector: 'app-header',
@@ -15,6 +16,8 @@ import { BasketService } from '../../features/basket/data-access/basket.service'
 export class AppHeader {
   protected readonly basket = inject(BasketService);
   protected readonly menuOpen = signal(false);
+  private readonly session = inject(AuthenticationSessionService);
+  private readonly router = inject(Router);
 
   constructor() {
     inject(Router)
@@ -27,5 +30,9 @@ export class AppHeader {
 
   protected toggleMenu(): void {
     this.menuOpen.update((open) => !open);
+  }
+  protected logout(): void {
+    this.session.end();
+    void this.router.navigateByUrl('/login', { replaceUrl: true });
   }
 }

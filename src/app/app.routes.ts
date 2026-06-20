@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authenticationGuard } from './features/auth/guards/authentication.guard';
 
 import {
   ApiProductGroupsRepository,
@@ -51,6 +52,7 @@ export const routes: Routes = [
   },
   {
     path: 'basket',
+    canActivate: [authenticationGuard],
     title: 'Basket | ShoppyShop',
     loadComponent: () =>
       import('./features/basket/pages/basket-page/basket-page').then(
