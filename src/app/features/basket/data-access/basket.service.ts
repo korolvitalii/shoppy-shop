@@ -58,6 +58,9 @@ export class BasketService {
   remove(productId: string): void {
     this.commit(this.itemsState().filter((item) => item.productId !== productId));
   }
+  clear(): void {
+    this.commit([]);
+  }
 
   private commit(items: readonly BasketItem[]): void {
     this.revision += 1;
