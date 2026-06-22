@@ -1,5 +1,10 @@
 import { Routes } from '@angular/router';
 import { authenticationGuard } from './features/auth/guards/authentication.guard';
+import { CheckoutFacade } from './features/checkout/data-access/checkout.facade';
+import {
+  ApiOrdersRepository,
+  OrdersRepository,
+} from './features/checkout/data-access/orders.repository';
 
 import {
   ApiProductGroupsRepository,
@@ -58,6 +63,21 @@ export const routes: Routes = [
       import('./features/basket/pages/basket-page/basket-page').then(
         ({ BasketPage }) => BasketPage,
       ),
+  },
+  {
+    path: 'checkout',
+    canActivate: [authenticationGuard],
+    providers: [CheckoutFacade, { provide: OrdersRepository, useClass: ApiOrdersRepository }],
+    children: [
+      { path: '', pathMatch: 'full', redirectTo: 'delivery' },
+      {
+        path: 'delivery',
+        loadComponent: () =>
+          import('./features/checkout/pages/delivery-page/delivery-page').then(
+            (m) => m.DeliveryPage,
+          ),
+      },
+    ],
   },
   { path: '', pathMatch: 'full', redirectTo: 'products' },
   { path: '**', redirectTo: 'login' },

@@ -1,2 +1,21 @@
-import { TestBed } from '@angular/core/testing'; import { provideRouter } from '@angular/router'; import { CheckoutFacade } from '../../data-access/checkout.facade'; import { DeliveryPage } from './delivery-page';
-describe('DeliveryPage',()=>{const facade={setDelivery:vi.fn()}; beforeEach(async()=>TestBed.configureTestingModule({imports:[DeliveryPage],providers:[provideRouter([]),{provide:CheckoutFacade,useValue:facade}]}).compileComponents()); it('requires typed delivery fields before continuing',()=>{const f=TestBed.createComponent(DeliveryPage);f.detectChanges();f.componentInstance.continue();f.detectChanges();expect(facade.setDelivery).not.toHaveBeenCalled();expect(f.nativeElement.textContent).toContain('Name is required');});});
+import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { CheckoutFacade } from '../../data-access/checkout.facade';
+import { DeliveryPage } from './delivery-page';
+describe('DeliveryPage', () => {
+  const facade = { setDelivery: vi.fn() };
+  beforeEach(async () =>
+    TestBed.configureTestingModule({
+      imports: [DeliveryPage],
+      providers: [provideRouter([]), { provide: CheckoutFacade, useValue: facade }],
+    }).compileComponents(),
+  );
+  it('requires typed delivery fields before continuing', () => {
+    const f = TestBed.createComponent(DeliveryPage);
+    f.detectChanges();
+    f.componentInstance.continue();
+    f.detectChanges();
+    expect(facade.setDelivery).not.toHaveBeenCalled();
+    expect(f.nativeElement.textContent).toContain('Name is required');
+  });
+});

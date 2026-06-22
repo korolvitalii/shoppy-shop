@@ -1,0 +1,20 @@
+<main class="checkout">
+  <p class="step">Step 1 of 3</p>
+  <h1>Delivery details</h1>
+  <form [formGroup]="form" (ngSubmit)="continue()" novalidate>
+    @for (field of ['name', 'email', 'address', 'city', 'postcode', 'country']; track field) {
+      <label [for]="field"
+        >{{ field
+        }}<input
+          [id]="field"
+          [type]="field === 'email' ? 'email' : 'text'"
+          [formControlName]="$any(field)"
+        />
+        @if (form.get(field)?.touched && form.get(field)?.invalid) {
+          <span>{{ field === 'name' ? 'Name is required' : 'Enter a valid ' + field }}</span>
+        }
+      </label>
+    }
+    <button type="submit">Continue to payment</button>
+  </form>
+</main>
