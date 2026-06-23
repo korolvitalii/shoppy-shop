@@ -1,0 +1,24 @@
+<main class="checkout">
+  <p class="step">Step 2 of 3</p>
+  <h1>Payment</h1>
+  <p>Simulated payment—no real charge is made and card details are never stored.</p>
+  <form [formGroup]="form" (ngSubmit)="continue()" novalidate>
+    <label>Cardholder name<input autocomplete="cc-name" formControlName="name" /></label
+    ><label
+      >Card number<input
+        inputmode="numeric"
+        autocomplete="cc-number"
+        formControlName="card"
+        maxlength="16" /></label
+    ><label
+      >Expiry<input autocomplete="cc-exp" formControlName="expiry" placeholder="MM/YY" /></label
+    ><label
+      >CVV<input
+        type="password"
+        inputmode="numeric"
+        autocomplete="cc-csc"
+        formControlName="cvv"
+        maxlength="4" /></label
+    ><button type="submit">Review order</button>
+  </form>
+</main>

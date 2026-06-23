@@ -77,6 +77,11 @@ export const routes: Routes = [
             (m) => m.DeliveryPage,
           ),
       },
+      {
+        path: 'payment',
+        loadComponent: () =>
+          import('./features/checkout/pages/payment-page/payment-page').then((m) => m.PaymentPage),
+      },
     ],
   },
   { path: '', pathMatch: 'full', redirectTo: 'products' },
