@@ -2,6 +2,8 @@ import { delay, http, HttpResponse } from 'msw';
 
 import { mockProductGroups } from './data/product-groups';
 import { mockProducts } from './data/products';
+import { CreateOrderRequest, Order } from '../app/features/checkout/models/checkout.models';
+const orders = new Map<string, Order>();
 
 export const handlers = [
   http.get('/api/product-groups', async () => {
@@ -44,5 +46,22 @@ export const handlers = [
       (item) => item.groupId === params['groupId'] && item.id === params['productId'],
     );
     return HttpResponse.json(product ?? null);
+  }),
+  http.post('/api/orders', async ({ request }) => {
+    await delay(500);
+    const body = (await request.json()) as CreateOrderRequest;
+    const id = `ORD-${String(orders.size + 1).padStart(5, '0')}`;
+    const order: Order = {
+      ...body,
+      id,
+      createdAt: new Date('2026-06-23T18:40:00Z').toISOString(),
+      status: 'confirmed',
+    };
+    orders.set(id, order);
+    return HttpResponse.json(order, { status: 201 });
+  }),
+  http.get('/api/orders/:orderId', async ({ params }) => {
+    await delay(200);
+    return HttpResponse.json(orders.get(String(params['orderId'])) ?? null);
   }),
 ];
