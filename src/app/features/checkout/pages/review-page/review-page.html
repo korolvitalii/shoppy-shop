@@ -1,0 +1,26 @@
+<main class="checkout">
+  <p class="step">Step 3 of 3</p>
+  <h1>Review order</h1>
+  <section>
+    @for (item of facade.items(); track item.productId) {
+      <p>
+        {{ item.name }} × {{ item.quantity }}
+        <strong>{{ item.unitPrice * item.quantity | currency: 'GBP' }}</strong>
+      </p>
+    }
+  </section>
+  <p>Deliver to {{ facade.delivery()?.name }}, {{ facade.delivery()?.postcode }}</p>
+  <p>
+    Subtotal <strong>{{ facade.subtotal() | currency: 'GBP' }}</strong>
+  </p>
+  <p>
+    Delivery <strong>{{ facade.deliveryCharge() | currency: 'GBP' }}</strong>
+  </p>
+  <h2>Total {{ facade.total() | currency: 'GBP' }}</h2>
+  @if (error()) {
+    <p role="alert">{{ error() }}</p>
+  }
+  <button type="button" [disabled]="submitting()" (click)="submit()">
+    {{ submitting() ? 'Placing order…' : 'Place order' }}
+  </button>
+</main>

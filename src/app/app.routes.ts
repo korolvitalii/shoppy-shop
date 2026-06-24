@@ -5,6 +5,11 @@ import {
   ApiOrdersRepository,
   OrdersRepository,
 } from './features/checkout/data-access/orders.repository';
+import {
+  basketRequiredGuard,
+  deliveryRequiredGuard,
+  paymentRequiredGuard,
+} from './features/checkout/guards/checkout.guards';
 
 import {
   ApiProductGroupsRepository,
@@ -67,6 +72,7 @@ export const routes: Routes = [
   {
     path: 'checkout',
     canActivate: [authenticationGuard],
+    canActivateChild: [basketRequiredGuard],
     providers: [CheckoutFacade, { provide: OrdersRepository, useClass: ApiOrdersRepository }],
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'delivery' },
@@ -79,10 +85,26 @@ export const routes: Routes = [
       },
       {
         path: 'payment',
+        canActivate: [deliveryRequiredGuard],
         loadComponent: () =>
           import('./features/checkout/pages/payment-page/payment-page').then((m) => m.PaymentPage),
       },
+      {
+        path: 'review',
+        canActivate: [deliveryRequiredGuard, paymentRequiredGuard],
+        loadComponent: () =>
+          import('./features/checkout/pages/review-page/review-page').then((m) => m.ReviewPage),
+      },
     ],
+  },
+  {
+    path: 'orders/:orderId/confirmation',
+    canActivate: [authenticationGuard],
+    providers: [{ provide: OrdersRepository, useClass: ApiOrdersRepository }],
+    loadComponent: () =>
+      import('./features/checkout/pages/order-confirmation-page/order-confirmation-page').then(
+        (m) => m.OrderConfirmationPage,
+      ),
   },
   { path: '', pathMatch: 'full', redirectTo: 'products' },
   { path: '**', redirectTo: 'login' },

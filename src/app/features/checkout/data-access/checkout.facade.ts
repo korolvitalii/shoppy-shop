@@ -16,6 +16,7 @@ export class CheckoutFacade {
   readonly paymentToken = signal<CheckoutPaymentToken | null>(null);
   readonly deliveryCharge = signal(4.99);
   readonly subtotal = this.basket.subtotal;
+  readonly items = this.basket.items;
   readonly total = computed(() => this.subtotal() + this.deliveryCharge());
   setDelivery(value: DeliveryAddress) {
     this.delivery.set(value);
