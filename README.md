@@ -1063,3 +1063,18 @@ ShoppyShop demonstrates the ability to:
 ## Project Status
 
 The project is under active development and is being built as a portfolio application to demonstrate professional Angular engineering skills, architectural decision-making, and real-world e-commerce development.
+
+### Implemented Foundation
+
+The current Angular 22 application includes:
+
+* Accessible signal-based tabs with keyboard navigation
+* Mock authentication session restoration and functional route guards
+* Lazy product catalogue, filtering, details, and persistent basket flows
+* Route-backed delivery, payment, and order-review checkout steps
+* Mock payment tokenization that never persists raw card data
+* MSW-backed order creation and refresh-safe order confirmation
+* Responsive application navigation with active states and basket count
+* Vitest unit and integration coverage for UI, repositories, guards, and state services
+
+NgRx remains intentionally deferred until a stable release officially supports Angular 22. State boundaries use facades and repository abstractions so NgRx can be introduced without rewriting page components.
