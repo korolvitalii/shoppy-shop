@@ -1,0 +1,53 @@
+.mobile-tabs {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 150;
+  display: none;
+  grid-template-columns: repeat(2, 1fr);
+  padding: 0.35rem 1rem calc(0.35rem + env(safe-area-inset-bottom));
+  border-top: 1px solid rgba(22, 33, 62, 0.12);
+  background: rgba(255, 253, 248, 0.95);
+  backdrop-filter: blur(1rem);
+}
+a {
+  position: relative;
+  display: grid;
+  min-height: 3.5rem;
+  place-items: center;
+  align-content: center;
+  gap: 0.1rem;
+  border-radius: 0.7rem;
+  color: #65708a;
+  font-size: 0.7rem;
+  font-weight: 750;
+  text-decoration: none;
+}
+a.active {
+  color: #6842e8;
+  background: #eee9ff;
+}
+.tab-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+.badge {
+  position: absolute;
+  top: 0.25rem;
+  left: calc(50% + 0.55rem);
+  display: grid;
+  min-width: 1.15rem;
+  height: 1.15rem;
+  padding-inline: 0.25rem;
+  place-items: center;
+  border-radius: 999px;
+  color: #fff;
+  background: #ef6a67;
+  font-size: 0.6rem;
+}
+@media (max-width: 42rem) {
+  .mobile-tabs {
+    display: grid;
+  }
+}

@@ -4,10 +4,11 @@ import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs';
 
 import { AppHeader } from './shell/header/app-header';
+import { MobileNavigation } from './shell/mobile-navigation/mobile-navigation';
 
 @Component({
   selector: 'app-root',
-  imports: [AppHeader, RouterOutlet],
+  imports: [AppHeader, MobileNavigation, RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -8,7 +8,10 @@ describe('MobileNavigation', () => {
   it('shows mobile route tabs and the basket count', async () => {
     await TestBed.configureTestingModule({
       imports: [MobileNavigation],
-      providers: [provideRouter([]), { provide: BasketService, useValue: { itemCount: signal(2) } }],
+      providers: [
+        provideRouter([]),
+        { provide: BasketService, useValue: { itemCount: signal(2) } },
+      ],
     }).compileComponents();
     const fixture = TestBed.createComponent(MobileNavigation);
     fixture.detectChanges();

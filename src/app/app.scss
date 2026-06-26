@@ -1,0 +1,5 @@
+@media (max-width: 42rem) {
+  #main-content {
+    padding-bottom: calc(4.2rem + env(safe-area-inset-bottom));
+  }
+}
