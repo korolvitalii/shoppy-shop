@@ -12,23 +12,23 @@ The main purpose of this project is to demonstrate how a modern Angular applicat
 
 This project demonstrates practical knowledge of:
 
-* Modern Angular architecture
-* Standalone components and APIs
-* Angular Signals
-* RxJS and reactive programming
-* NgRx state management
-* Lazy-loaded routes
-* Smart and presentational components
-* Feature-based project structure
-* Facade and Repository patterns
-* Typed reactive forms
-* API communication
-* Error handling
-* Authentication and authorization
-* Performance optimization
-* Accessibility
-* Unit and end-to-end testing
-* CI/CD and professional Git workflows
+- Modern Angular architecture
+- Standalone components and APIs
+- Angular Signals
+- RxJS and reactive programming
+- NgRx state management
+- Lazy-loaded routes
+- Smart and presentational components
+- Feature-based project structure
+- Facade and Repository patterns
+- Typed reactive forms
+- API communication
+- Error handling
+- Authentication and authorization
+- Performance optimization
+- Accessibility
+- Unit and end-to-end testing
+- CI/CD and professional Git workflows
 
 ---
 
@@ -36,80 +36,80 @@ This project demonstrates practical knowledge of:
 
 ### Product Catalogue
 
-* Product listing with pagination
-* Category filtering
-* Price filtering
-* Rating filtering
-* Sorting by price, popularity, rating, and newest
-* Debounced product search
-* Product availability indicators
-* Responsive product grid
-* Skeleton loaders during data fetching
-* Empty-state and error-state handling
+- Product listing with pagination
+- Category filtering
+- Price filtering
+- Rating filtering
+- Sorting by price, popularity, rating, and newest
+- Debounced product search
+- Product availability indicators
+- Responsive product grid
+- Skeleton loaders during data fetching
+- Empty-state and error-state handling
 
 ### Product Details
 
-* Detailed product information
-* Product image gallery
-* Product variants
-* Stock availability
-* Customer reviews
-* Related products
-* Add-to-cart functionality
-* Add-to-wishlist functionality
-* Recently viewed products
+- Detailed product information
+- Product image gallery
+- Product variants
+- Stock availability
+- Customer reviews
+- Related products
+- Add-to-cart functionality
+- Add-to-wishlist functionality
+- Recently viewed products
 
 ### Shopping Cart
 
-* Add and remove products
-* Update product quantity
-* Calculate subtotal, discounts, tax, and total price
-* Persist cart state between sessions
-* Validate stock before checkout
-* Optimistic UI updates
-* Clear cart functionality
+- Add and remove products
+- Update product quantity
+- Calculate subtotal, discounts, tax, and total price
+- Persist cart state between sessions
+- Validate stock before checkout
+- Optimistic UI updates
+- Clear cart functionality
 
 ### Checkout
 
-* Multi-step checkout process
-* Shipping address form
-* Delivery method selection
-* Payment method selection
-* Order summary
-* Promo code support
-* Form validation
-* Order confirmation page
+- Multi-step checkout process
+- Shipping address form
+- Delivery method selection
+- Payment method selection
+- Order summary
+- Promo code support
+- Form validation
+- Order confirmation page
 
 ### Authentication
 
-* User registration
-* User login
-* Logout
-* Refresh-token flow
-* Protected routes
-* Role-based authorization
-* Authentication state restoration
-* HTTP interceptor for access tokens
+- User registration
+- User login
+- Logout
+- Refresh-token flow
+- Protected routes
+- Role-based authorization
+- Authentication state restoration
+- HTTP interceptor for access tokens
 
 ### User Account
 
-* Profile management
-* Saved addresses
-* Order history
-* Order details
-* Wishlist
-* Password update
-* Notification preferences
+- Profile management
+- Saved addresses
+- Order history
+- Order details
+- Wishlist
+- Password update
+- Notification preferences
 
 ### Administration
 
-* Product management
-* Category management
-* Inventory management
-* Order management
-* User management
-* Sales dashboard
-* Role-based access control
+- Product management
+- Category management
+- Inventory management
+- Order management
+- User management
+- Sales dashboard
+- Role-based access control
 
 ---
 
@@ -117,46 +117,46 @@ This project demonstrates practical knowledge of:
 
 ### Front End
 
-* Angular
-* TypeScript
-* RxJS
-* Angular Signals
-* NgRx
-* SCSS
-* Angular Material or a custom design system
-* Reactive Forms
-* Angular Router
-* Angular CDK
+- Angular
+- TypeScript
+- RxJS
+- Angular Signals
+- NgRx
+- SCSS
+- Angular Material or a custom design system
+- Reactive Forms
+- Angular Router
+- Angular CDK
 
 ### Testing
 
-* Jest
-* Angular Testing Library
-* Playwright
-* API mocking
-* Component tests
-* Integration tests
-* End-to-end tests
+- Jest
+- Angular Testing Library
+- Playwright
+- API mocking
+- Component tests
+- Integration tests
+- End-to-end tests
 
 ### Development Tools
 
-* ESLint
-* Prettier
-* Husky
-* lint-staged
-* Commitlint
-* Docker
-* GitHub Actions
-* Storybook
+- ESLint
+- Prettier
+- Husky
+- lint-staged
+- Commitlint
+- Docker
+- GitHub Actions
+- Storybook
 
 ### Optional Back End
 
 The Angular application can be connected to:
 
-* ASP.NET Core Web API
-* Node.js and NestJS
-* Mock Service Worker
-* JSON Server during early development
+- ASP.NET Core Web API
+- Node.js and NestJS
+- Mock Service Worker
+- JSON Server during early development
 
 ---
 
@@ -165,6 +165,18 @@ The Angular application can be connected to:
 The project follows a feature-first architecture with clear separation of responsibilities.
 
 Each business feature owns its UI, state, data-access logic, models, routes, and tests.
+
+### Error handling
+
+Application failures use a single safe error contract under `src/app/core/errors`:
+
+- `apiErrorInterceptor` converts `HttpClient` failures into typed `AppError` values.
+- Stable codes (`NETWORK_ERROR`, `UNAUTHORIZED`, `NOT_FOUND`, `RATE_LIMITED`, `SERVER_ERROR`, and others) support diagnostics without exposing backend details.
+- `GlobalErrorHandler` catches unexpected Angular and browser errors.
+- `ErrorNotificationService` provides signal-based notification state.
+- The accessible global banner announces friendly messages and can be dismissed.
+
+Raw API messages, stack traces, credentials, and server implementation details are never displayed to customers. Recoverable feature views can still keep their contextual retry controls while the shared error contract provides consistent messages and codes.
 
 ```text
 src/
@@ -248,18 +260,18 @@ This reduces unnecessary module configuration and simplifies lazy loading, testi
 
 Container components are responsible for:
 
-* Retrieving state
-* Dispatching actions
-* Handling route parameters
-* Coordinating business logic
-* Communicating with facades
+- Retrieving state
+- Dispatching actions
+- Handling route parameters
+- Coordinating business logic
+- Communicating with facades
 
 Presentational components are responsible for:
 
-* Rendering data
-* Receiving typed inputs
-* Emitting user actions
-* Remaining reusable and independent from application state
+- Rendering data
+- Receiving typed inputs
+- Emitting user actions
+- Remaining reusable and independent from application state
 
 Example:
 
@@ -303,10 +315,10 @@ export class CartFacade {
 
 Benefits:
 
-* Components stay simple
-* State implementation can change without rewriting UI components
-* Business operations are easier to test
-* Store selectors and actions are hidden from the presentation layer
+- Components stay simple
+- State implementation can change without rewriting UI components
+- Business operations are easier to test
+- Store selectors and actions are hidden from the presentation layer
 
 ### Repository Pattern
 
@@ -314,9 +326,7 @@ HTTP communication is isolated inside repository services.
 
 ```ts
 export abstract class ProductRepository {
-  abstract getProducts(
-    query: ProductSearchQuery
-  ): Observable<PaginatedResult<Product>>;
+  abstract getProducts(query: ProductSearchQuery): Observable<PaginatedResult<Product>>;
 
   abstract getProductById(id: string): Observable<Product>;
 
@@ -331,9 +341,7 @@ The concrete API implementation:
 export class ApiProductRepository implements ProductRepository {
   private readonly http = inject(HttpClient);
 
-  getProducts(
-    query: ProductSearchQuery
-  ): Observable<PaginatedResult<Product>> {
+  getProducts(query: ProductSearchQuery): Observable<PaginatedResult<Product>> {
     return this.http.get<PaginatedResult<Product>>('/api/products', {
       params: buildHttpParams(query),
     });
@@ -361,12 +369,12 @@ The application uses different state-management tools depending on the type of s
 
 Angular Signals are used for simple UI state:
 
-* Open and closed menus
-* Selected tabs
-* Form visibility
-* Loading indicators local to a component
-* Selected images
-* Temporary UI preferences
+- Open and closed menus
+- Selected tabs
+- Form visibility
+- Loading indicators local to a component
+- Selected images
+- Temporary UI preferences
 
 ```ts
 readonly selectedImageIndex = signal(0);
@@ -377,13 +385,13 @@ readonly isDescriptionExpanded = signal(false);
 
 NgRx is used for complex shared feature state:
 
-* Product catalogue
-* Shopping cart
-* Authentication
-* Checkout
-* Orders
-* User profile
-* Administration
+- Product catalogue
+- Shopping cart
+- Authentication
+- Checkout
+- Orders
+- User profile
+- Administration
 
 ### Server State
 
@@ -403,10 +411,10 @@ Example:
 
 This makes filtered views:
 
-* Shareable
-* Bookmarkable
-* Restorable after refresh
-* Compatible with browser navigation
+- Shareable
+- Bookmarkable
+- Restorable after refresh
+- Compatible with browser navigation
 
 ---
 
@@ -416,13 +424,13 @@ RxJS is used for asynchronous workflows and event composition.
 
 Examples include:
 
-* Debounced search
-* Request cancellation
-* Authentication refresh
-* Route parameter handling
-* Combining filters
-* Loading related products
-* Checkout workflows
+- Debounced search
+- Request cancellation
+- Authentication refresh
+- Route parameter handling
+- Combining filters
+- Loading related products
+- Checkout workflows
 
 Product search example:
 
@@ -452,37 +460,30 @@ export const appRoutes: Routes = [
     path: '',
     loadComponent: () =>
       import('./features/home/pages/home-page.component').then(
-        (component) => component.HomePageComponent
+        (component) => component.HomePageComponent,
       ),
   },
   {
     path: 'products',
     loadChildren: () =>
-      import('./features/catalogue/catalogue.routes').then(
-        (routes) => routes.CATALOGUE_ROUTES
-      ),
+      import('./features/catalogue/catalogue.routes').then((routes) => routes.CATALOGUE_ROUTES),
   },
   {
     path: 'cart',
-    loadChildren: () =>
-      import('./features/cart/cart.routes').then(
-        (routes) => routes.CART_ROUTES
-      ),
+    loadChildren: () => import('./features/cart/cart.routes').then((routes) => routes.CART_ROUTES),
   },
   {
     path: 'checkout',
     canActivate: [authenticationGuard],
     loadChildren: () =>
-      import('./features/checkout/checkout.routes').then(
-        (routes) => routes.CHECKOUT_ROUTES
-      ),
+      import('./features/checkout/checkout.routes').then((routes) => routes.CHECKOUT_ROUTES),
   },
   {
     path: 'admin',
     canMatch: [adminGuard],
     loadChildren: () =>
       import('./features/administration/administration.routes').then(
-        (routes) => routes.ADMINISTRATION_ROUTES
+        (routes) => routes.ADMINISTRATION_ROUTES,
       ),
   },
 ];
@@ -490,10 +491,10 @@ export const appRoutes: Routes = [
 
 Route guards are used for:
 
-* Authentication
-* Role-based access
-* Unsaved checkout changes
-* Administrative permissions
+- Authentication
+- Role-based access
+- Unsaved checkout changes
+- Administrative permissions
 
 ---
 
@@ -505,18 +506,15 @@ The application uses typed API contracts and centralized HTTP handling.
 
 Interceptors are responsible for:
 
-* Adding access tokens
-* Adding correlation identifiers
-* Handling API errors
-* Refreshing expired tokens
-* Tracking request duration
-* Retrying selected requests
+- Adding access tokens
+- Adding correlation identifiers
+- Handling API errors
+- Refreshing expired tokens
+- Tracking request duration
+- Retrying selected requests
 
 ```ts
-export const authenticationInterceptor: HttpInterceptorFn = (
-  request,
-  next
-) => {
+export const authenticationInterceptor: HttpInterceptorFn = (request, next) => {
   const authService = inject(AuthenticationService);
   const token = authService.accessToken();
 
@@ -547,12 +545,12 @@ export interface ApplicationError {
 
 The application provides:
 
-* Global error notifications
-* Inline form validation
-* Retry actions
-* Dedicated error pages
-* Logging with correlation IDs
-* User-friendly messages
+- Global error notifications
+- Inline form validation
+- Retry actions
+- Dedicated error pages
+- Logging with correlation IDs
+- User-friendly messages
 
 ---
 
@@ -573,13 +571,13 @@ interface ShippingAddressForm {
 
 Forms include:
 
-* Reusable validators
-* Async validation
-* Cross-field validation
-* Server validation errors
-* Accessible error messages
-* Disabled submission during requests
-* Unsaved changes protection
+- Reusable validators
+- Async validation
+- Cross-field validation
+- Server validation errors
+- Accessible error messages
+- Disabled submission during requests
+- Unsaved changes protection
 
 ---
 
@@ -587,29 +585,26 @@ Forms include:
 
 The project includes several performance-focused techniques:
 
-* Lazy-loaded routes
-* OnPush change detection
-* Signals for efficient UI updates
-* `trackBy` or Angular tracking expressions
-* Deferred loading for non-critical content
-* Image optimization
-* Route-level code splitting
-* Virtual scrolling for large lists
-* Request cancellation
-* Memoized selectors
-* Cached API responses
-* Prefetching important routes
-* Skeleton loading
-* Optimized production builds
+- Lazy-loaded routes
+- OnPush change detection
+- Signals for efficient UI updates
+- `trackBy` or Angular tracking expressions
+- Deferred loading for non-critical content
+- Image optimization
+- Route-level code splitting
+- Virtual scrolling for large lists
+- Request cancellation
+- Memoized selectors
+- Cached API responses
+- Prefetching important routes
+- Skeleton loading
+- Optimized production builds
 
 Example:
 
 ```html
 @for (product of products(); track product.id) {
-  <app-product-card
-    [product]="product"
-    (addToCart)="addToCart($event)"
-  />
+<app-product-card [product]="product" (addToCart)="addToCart($event)" />
 }
 ```
 
@@ -617,9 +612,9 @@ Non-critical sections can be deferred:
 
 ```html
 @defer (on viewport) {
-  <app-related-products [productId]="productId()" />
+<app-related-products [productId]="productId()" />
 } @placeholder {
-  <app-product-grid-skeleton />
+<app-product-grid-skeleton />
 }
 ```
 
@@ -631,15 +626,15 @@ The application can use server-side rendering or prerendering for public store p
 
 SEO features include:
 
-* Dynamic page titles
-* Dynamic meta descriptions
-* Canonical URLs
-* Open Graph metadata
-* Structured product data
-* Semantic HTML
-* Server-rendered product pages
-* Sitemap generation
-* Robots configuration
+- Dynamic page titles
+- Dynamic meta descriptions
+- Canonical URLs
+- Open Graph metadata
+- Structured product data
+- Semantic HTML
+- Server-rendered product pages
+- Sitemap generation
+- Robots configuration
 
 ---
 
@@ -649,16 +644,16 @@ The project follows accessibility best practices.
 
 Implemented areas include:
 
-* Semantic HTML
-* Keyboard navigation
-* Visible focus states
-* Accessible forms
-* Proper labels
-* ARIA attributes where required
-* Focus management in dialogs
-* Accessible error messages
-* Sufficient contrast
-* Screen-reader-friendly navigation
+- Semantic HTML
+- Keyboard navigation
+- Visible focus states
+- Accessible forms
+- Proper labels
+- ARIA attributes where required
+- Focus management in dialogs
+- Accessible error messages
+- Sufficient contrast
+- Screen-reader-friendly navigation
 
 ---
 
@@ -666,17 +661,17 @@ Implemented areas include:
 
 The application demonstrates front-end security practices such as:
 
-* Route protection
-* Role-based authorization
-* Token expiration handling
-* Refresh-token flow
-* Avoiding sensitive data in local storage
-* Input validation
-* Output escaping
-* Content Security Policy compatibility
-* Secure HTTP-only cookie support
-* Prevention of open redirects
-* Protection against duplicate submissions
+- Route protection
+- Role-based authorization
+- Token expiration handling
+- Refresh-token flow
+- Avoiding sensitive data in local storage
+- Input validation
+- Output escaping
+- Content Security Policy compatibility
+- Secure HTTP-only cookie support
+- Prevention of open redirects
+- Protection against duplicate submissions
 
 Authorization is always treated as a back-end responsibility. Front-end guards improve user experience but are not considered a security boundary.
 
@@ -690,49 +685,49 @@ The project follows a testing pyramid.
 
 Used for:
 
-* Reducers
-* Selectors
-* Effects
-* Facades
-* Validators
-* Utility functions
-* Pipes
-* Services
+- Reducers
+- Selectors
+- Effects
+- Facades
+- Validators
+- Utility functions
+- Pipes
+- Services
 
 ### Component Tests
 
 Used for:
 
-* Product cards
-* Filters
-* Forms
-* Cart components
-* Checkout steps
-* Error states
-* Loading states
+- Product cards
+- Filters
+- Forms
+- Cart components
+- Checkout steps
+- Error states
+- Loading states
 
 ### Integration Tests
 
 Used for:
 
-* Component and facade interaction
-* Router behavior
-* HTTP communication
-* Authentication flows
-* Store effects
+- Component and facade interaction
+- Router behavior
+- HTTP communication
+- Authentication flows
+- Store effects
 
 ### End-to-End Tests
 
 Playwright tests cover:
 
-* Product search
-* Product filtering
-* Add-to-cart flow
-* Cart quantity updates
-* Checkout process
-* Login and logout
-* Protected routes
-* Admin product creation
+- Product search
+- Product filtering
+- Add-to-cart flow
+- Cart quantity updates
+- Checkout process
+- Login and logout
+- Protected routes
+- Admin product creation
 
 Example test scenario:
 
@@ -740,11 +735,7 @@ Example test scenario:
 test('user can add a product to the cart', async ({ page }) => {
   await page.goto('/products');
 
-  await page
-    .getByRole('article')
-    .first()
-    .getByRole('button', { name: 'Add to cart' })
-    .click();
+  await page.getByRole('article').first().getByRole('button', { name: 'Add to cart' }).click();
 
   await expect(page.getByTestId('cart-items-count')).toHaveText('1');
 });
@@ -758,29 +749,29 @@ Reusable UI components are documented in Storybook.
 
 Examples include:
 
-* Buttons
-* Inputs
-* Selects
-* Dialogs
-* Product cards
-* Price components
-* Rating components
-* Badges
-* Notifications
-* Skeletons
-* Pagination
-* Empty states
-* Error states
+- Buttons
+- Inputs
+- Selects
+- Dialogs
+- Product cards
+- Price components
+- Rating components
+- Badges
+- Notifications
+- Skeletons
+- Pagination
+- Empty states
+- Error states
 
 Design tokens are used for:
 
-* Colours
-* Typography
-* Spacing
-* Border radius
-* Breakpoints
-* Shadows
-* Animation duration
+- Colours
+- Typography
+- Spacing
+- Border radius
+- Breakpoints
+- Shadows
+- Animation duration
 
 ---
 
@@ -808,13 +799,13 @@ Component styles remain encapsulated and avoid unnecessary global selectors.
 
 The project uses:
 
-* Responsive design
-* Mobile-first styling
-* CSS custom properties
-* SCSS mixins
-* Consistent spacing
-* Reusable design tokens
-* Dark and light themes
+- Responsive design
+- Mobile-first styling
+- CSS custom properties
+- SCSS mixins
+- Consistent spacing
+- Reusable design tokens
+- Dark and light themes
 
 ---
 
@@ -822,19 +813,19 @@ The project uses:
 
 The project follows strict development rules:
 
-* Strict TypeScript configuration
-* No implicit `any`
-* Typed API responses
-* Small and focused functions
-* Single-responsibility classes
-* Immutable state updates
-* Dependency inversion
-* Early returns
-* Clear naming
-* No business logic inside templates
-* No direct store access from presentational components
-* No duplicated API logic
-* No magic strings or numbers
+- Strict TypeScript configuration
+- No implicit `any`
+- Typed API responses
+- Small and focused functions
+- Single-responsibility classes
+- Immutable state updates
+- Dependency inversion
+- Early returns
+- Clear naming
+- No business logic inside templates
+- No direct store access from presentational components
+- No duplicated API logic
+- No magic strings or numbers
 
 ---
 
@@ -864,16 +855,16 @@ Business logic depends on repository abstractions rather than concrete HTTP impl
 
 ## Patterns Used
 
-* Facade Pattern
-* Repository Pattern
-* Smart and Presentational Components
-* Adapter Pattern
-* Strategy Pattern
-* Builder Pattern
-* Dependency Injection
-* Unidirectional Data Flow
-* Feature Slices
-* Container and Presenter Pattern
+- Facade Pattern
+- Repository Pattern
+- Smart and Presentational Components
+- Adapter Pattern
+- Strategy Pattern
+- Builder Pattern
+- Dependency Injection
+- Unidirectional Data Flow
+- Feature Slices
+- Container and Presenter Pattern
 
 ---
 
@@ -920,11 +911,11 @@ Deployment
 
 Branch protection can require:
 
-* Successful pipeline execution
-* Code review approval
-* No unresolved comments
-* Updated tests
-* Conventional commit messages
+- Successful pipeline execution
+- Code review approval
+- No unresolved comments
+- Updated tests
+- Conventional commit messages
 
 ---
 
@@ -957,69 +948,69 @@ test(checkout): add shipping form integration tests
 
 ### Phase 1 — Foundation
 
-* Configure Angular project
-* Configure ESLint and Prettier
-* Create application shell
-* Add routing
-* Create design tokens
-* Configure mock API
+- Configure Angular project
+- Configure ESLint and Prettier
+- Create application shell
+- Add routing
+- Create design tokens
+- Configure mock API
 
 ### Phase 2 — Product Catalogue
 
-* Product listing
-* Product filtering
-* Product sorting
-* Search
-* Pagination
-* Product details
+- Product listing
+- Product filtering
+- Product sorting
+- Search
+- Pagination
+- Product details
 
 ### Phase 3 — Shopping Cart
 
-* Cart state
-* Cart persistence
-* Price calculation
-* Quantity management
-* Stock validation
+- Cart state
+- Cart persistence
+- Price calculation
+- Quantity management
+- Stock validation
 
 ### Phase 4 — Authentication
 
-* Login
-* Registration
-* Route guards
-* Token interceptor
-* Refresh-token flow
+- Login
+- Registration
+- Route guards
+- Token interceptor
+- Refresh-token flow
 
 ### Phase 5 — Checkout
 
-* Shipping address
-* Delivery method
-* Payment method
-* Order summary
-* Order confirmation
+- Shipping address
+- Delivery method
+- Payment method
+- Order summary
+- Order confirmation
 
 ### Phase 6 — User Account
 
-* Profile
-* Addresses
-* Orders
-* Wishlist
+- Profile
+- Addresses
+- Orders
+- Wishlist
 
 ### Phase 7 — Administration
 
-* Product management
-* Inventory
-* Orders
-* Users
-* Analytics
+- Product management
+- Inventory
+- Orders
+- Users
+- Analytics
 
 ### Phase 8 — Production Readiness
 
-* SSR or prerendering
-* Accessibility audit
-* Performance audit
-* End-to-end tests
-* CI/CD
-* Docker deployment
+- SSR or prerendering
+- Accessibility audit
+- Performance audit
+- End-to-end tests
+- CI/CD
+- Docker deployment
 
 ---
 
@@ -1027,36 +1018,36 @@ test(checkout): add shipping form integration tests
 
 ShoppyShop demonstrates the ability to:
 
-* Design scalable Angular architecture
-* Build complex reactive user interfaces
-* Manage local and global application state
-* Create reusable components
-* Work with asynchronous APIs
-* Apply RxJS operators correctly
-* Implement secure authentication flows
-* Optimize performance
-* Write maintainable and testable code
-* Apply SOLID principles and design patterns
-* Build features using real production-style workflows
-* Deliver a complete application from architecture to deployment
+- Design scalable Angular architecture
+- Build complex reactive user interfaces
+- Manage local and global application state
+- Create reusable components
+- Work with asynchronous APIs
+- Apply RxJS operators correctly
+- Implement secure authentication flows
+- Optimize performance
+- Write maintainable and testable code
+- Apply SOLID principles and design patterns
+- Build features using real production-style workflows
+- Deliver a complete application from architecture to deployment
 
 ---
 
 ## Future Improvements
 
-* Real payment-provider integration
-* Product recommendation engine
-* Real-time inventory updates
-* WebSocket order notifications
-* Internationalization
-* Multi-currency support
-* Offline mode
-* PWA installation
-* Advanced analytics dashboard
-* Feature flags
-* Micro-frontend experiment
-* Full ASP.NET Core back end
-* Kubernetes deployment
+- Real payment-provider integration
+- Product recommendation engine
+- Real-time inventory updates
+- WebSocket order notifications
+- Internationalization
+- Multi-currency support
+- Offline mode
+- PWA installation
+- Advanced analytics dashboard
+- Feature flags
+- Micro-frontend experiment
+- Full ASP.NET Core back end
+- Kubernetes deployment
 
 ---
 
@@ -1068,13 +1059,13 @@ The project is under active development and is being built as a portfolio applic
 
 The current Angular 22 application includes:
 
-* Accessible signal-based tabs with keyboard navigation
-* Mock authentication session restoration and functional route guards
-* Lazy product catalogue, filtering, details, and persistent basket flows
-* Route-backed delivery, payment, and order-review checkout steps
-* Mock payment tokenization that never persists raw card data
-* MSW-backed order creation and refresh-safe order confirmation
-* Responsive application navigation with active states and basket count
-* Vitest unit and integration coverage for UI, repositories, guards, and state services
+- Accessible signal-based tabs with keyboard navigation
+- Mock authentication session restoration and functional route guards
+- Lazy product catalogue, filtering, details, and persistent basket flows
+- Route-backed delivery, payment, and order-review checkout steps
+- Mock payment tokenization that never persists raw card data
+- MSW-backed order creation and refresh-safe order confirmation
+- Responsive application navigation with active states and basket count
+- Vitest unit and integration coverage for UI, repositories, guards, and state services
 
 NgRx remains intentionally deferred until a stable release officially supports Angular 22. State boundaries use facades and repository abstractions so NgRx can be introduced without rewriting page components.

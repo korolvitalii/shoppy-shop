@@ -1,0 +1,55 @@
+.error-banner {
+  position: fixed;
+  top: 5.25rem;
+  right: 1rem;
+  z-index: 300;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  width: min(calc(100% - 2rem), 28rem);
+  gap: 0.8rem;
+  align-items: start;
+  padding: 1rem;
+  border: 1px solid #d95260;
+  border-radius: 0.8rem;
+  color: #4b1720;
+  background: #fff8f6;
+  box-shadow: 0 1rem 2.5rem rgba(22, 33, 62, 0.18);
+}
+.icon {
+  display: grid;
+  width: 1.6rem;
+  height: 1.6rem;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: #c63f4d;
+  font-weight: 800;
+}
+strong,
+p,
+small {
+  display: block;
+}
+p {
+  margin: 0.2rem 0 0.35rem;
+  line-height: 1.45;
+}
+small {
+  color: #7c4c53;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+}
+button {
+  padding: 0;
+  border: 0;
+  color: #4b1720;
+  background: transparent;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+@media (max-width: 42rem) {
+  .error-banner {
+    top: 4.75rem;
+  }
+}

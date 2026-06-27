@@ -1,0 +1,11 @@
+@if (errors.current(); as error) {
+  <aside class="error-banner" role="alert" aria-live="assertive">
+    <span class="icon" aria-hidden="true">!</span>
+    <div>
+      <strong>We hit a problem</strong>
+      <p>{{ error.userMessage }}</p>
+      <small>Error code: {{ error.code }}</small>
+    </div>
+    <button type="button" aria-label="Dismiss error message" (click)="errors.dismiss()">×</button>
+  </aside>
+}

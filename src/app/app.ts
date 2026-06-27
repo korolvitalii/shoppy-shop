@@ -5,10 +5,11 @@ import { filter, map } from 'rxjs';
 
 import { AppHeader } from './shell/header/app-header';
 import { MobileNavigation } from './shell/mobile-navigation/mobile-navigation';
+import { ErrorBanner } from './shared/ui/error-banner/error-banner';
 
 @Component({
   selector: 'app-root',
-  imports: [AppHeader, MobileNavigation, RouterOutlet],
+  imports: [AppHeader, ErrorBanner, MobileNavigation, RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
