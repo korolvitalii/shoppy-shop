@@ -1,10 +1,11 @@
 <main class="listing-page">
   <nav class="breadcrumbs" aria-label="Breadcrumb">
-    <a routerLink="/products">Products</a><span>/</span><span>{{ groupId() }}</span>
+    <a routerLink="/products">Products</a><span>/</span
+    ><span>{{ groupId() === 'all' ? 'Search' : groupId() }}</span>
   </nav>
   <header>
     <p class="eyebrow">Curated collection</p>
-    <h1>{{ groupId() }}</h1>
+    <h1>{{ groupId() === 'all' ? 'All products' : groupId() }}</h1>
     <p>{{ products().length }} {{ products().length === 1 ? 'product' : 'products' }}</p>
   </header>
   <section class="toolbar" aria-label="Product filters">

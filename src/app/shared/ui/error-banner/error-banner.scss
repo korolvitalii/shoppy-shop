@@ -1,6 +1,6 @@
 .error-banner {
   position: fixed;
-  top: 5.25rem;
+  top: 9rem;
   right: 1rem;
   z-index: 300;
   display: grid;
@@ -50,6 +50,6 @@ button {
 }
 @media (max-width: 42rem) {
   .error-banner {
-    top: 4.75rem;
+    top: 7.75rem;
   }
 }

@@ -10,35 +10,13 @@ export const handlers = [
     await delay(350);
     return HttpResponse.json(mockProductGroups);
   }),
+  http.get('/api/products', async ({ request }) => {
+    await delay(300);
+    return HttpResponse.json(filterProducts(request));
+  }),
   http.get('/api/product-groups/:groupId/products', async ({ params, request }) => {
     await delay(300);
-    const url = new URL(request.url);
-    const search = (url.searchParams.get('search') ?? '').toLowerCase();
-    const price = url.searchParams.get('price') ?? 'all';
-    const sort = url.searchParams.get('sort') ?? 'featured';
-
-    const effectivePrice = (product: (typeof mockProducts)[number]) =>
-      product.salePrice ?? product.price;
-    let products = mockProducts.filter(
-      (product) =>
-        product.groupId === params['groupId'] &&
-        `${product.name} ${product.brand}`.toLowerCase().includes(search),
-    );
-    products = products.filter((product) => {
-      const amount = effectivePrice(product);
-      if (price === '0-50') return amount < 50;
-      if (price === '50-200') return amount >= 50 && amount < 200;
-      if (price === '200+') return amount >= 200;
-      return true;
-    });
-    products = [...products].sort((left, right) => {
-      if (sort === 'price-asc') return effectivePrice(left) - effectivePrice(right);
-      if (sort === 'price-desc') return effectivePrice(right) - effectivePrice(left);
-      if (sort === 'name') return left.name.localeCompare(right.name);
-      return 0;
-    });
-
-    return HttpResponse.json(products);
+    return HttpResponse.json(filterProducts(request, String(params['groupId'])));
   }),
   http.get('/api/product-groups/:groupId/products/:productId', async ({ params }) => {
     await delay(250);
@@ -65,3 +43,31 @@ export const handlers = [
     return HttpResponse.json(orders.get(String(params['orderId'])) ?? null);
   }),
 ];
+
+function filterProducts(request: Request, groupId?: string) {
+  const url = new URL(request.url);
+  const search = (url.searchParams.get('search') ?? '').toLowerCase();
+  const price = url.searchParams.get('price') ?? 'all';
+  const sort = url.searchParams.get('sort') ?? 'featured';
+  const effectivePrice = (product: (typeof mockProducts)[number]) =>
+    product.salePrice ?? product.price;
+
+  let products = mockProducts.filter(
+    (product) =>
+      (!groupId || product.groupId === groupId) &&
+      `${product.name} ${product.brand}`.toLowerCase().includes(search),
+  );
+  products = products.filter((product) => {
+    const amount = effectivePrice(product);
+    if (price === '0-50') return amount < 50;
+    if (price === '50-200') return amount >= 50 && amount < 200;
+    if (price === '200+') return amount >= 200;
+    return true;
+  });
+  return [...products].sort((left, right) => {
+    if (sort === 'price-asc') return effectivePrice(left) - effectivePrice(right);
+    if (sort === 'price-desc') return effectivePrice(right) - effectivePrice(left);
+    if (sort === 'name') return left.name.localeCompare(right.name);
+    return 0;
+  });
+}

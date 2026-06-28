@@ -43,6 +43,14 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'search',
+        title: 'Search products | ShoppyShop',
+        loadComponent: () =>
+          import('./features/catalogue/pages/product-listing-page/product-listing-page').then(
+            ({ ProductListingPage }) => ProductListingPage,
+          ),
+      },
+      {
         path: ':groupId/:productId',
         title: 'Product | ShoppyShop',
         loadComponent: () =>

@@ -44,7 +44,7 @@ export class ProductListingPage {
     combineLatest([this.route.paramMap, this.route.queryParamMap, this.refresh])
       .pipe(
         map(([params, queryParams]) => ({
-          groupId: params.get('groupId') ?? '',
+          groupId: params.get('groupId') ?? 'all',
           query: {
             search: queryParams.get('search') ?? '',
             sort: (queryParams.get('sort') ?? 'featured') as ProductSort,

@@ -1,43 +1,106 @@
 <header class="site-header">
   <a class="skip-link" href="#main-content">Skip to content</a>
-  <div class="header-inner">
-    <a class="brand" routerLink="/products" aria-label="ShoppyShop home">ShoppyShop</a>
-
-    <nav class="desktop-navigation" aria-label="Primary navigation">
-      <a routerLink="/products" routerLinkActive="active">Products</a>
-      <a routerLink="/basket" routerLinkActive="active">
-        Basket
-        @if (basket.itemCount() > 0) {
-          <span class="badge" aria-label="Basket items">{{
-            basket.itemCount() > 99 ? '99+' : basket.itemCount()
-          }}</span>
-        }
+  <div class="header-main">
+    <div class="header-inner">
+      <a class="brand" routerLink="/products" aria-label="ShoppyShop home">
+        <svg viewBox="0 0 40 40" aria-hidden="true">
+          <path class="brand-bag" d="M9 13.5h22l-1.8 20H10.8L9 13.5Z" />
+          <path class="brand-handle" d="M14.5 14v-2.5a5.5 5.5 0 0 1 11 0V14" />
+          <path class="brand-smile" d="M15 23c2.8 3.4 7.2 3.4 10 0" />
+          <path
+            class="brand-spark"
+            d="m31.5 5 .7 2.3 2.3.7-2.3.7-.7 2.3-.7-2.3-2.3-.7 2.3-.7.7-2.3Z"
+          />
+        </svg>
+        <span>Shoppy<span>Shop</span></span>
       </a>
-      <button class="logout" type="button" (click)="logout()">Log out</button>
-    </nav>
 
-    <a class="basket-shortcut" routerLink="/basket" aria-label="Open basket">
-      <span aria-hidden="true">Bag</span>
-      @if (basket.itemCount() > 0) {
-        <span class="badge">{{ basket.itemCount() > 99 ? '99+' : basket.itemCount() }}</span>
+      <form class="search-form" role="search" [formGroup]="searchForm" (ngSubmit)="search()">
+        <label class="visually-hidden" for="site-search">Search products</label>
+        <input
+          id="site-search"
+          type="search"
+          formControlName="query"
+          placeholder="Search products, brands and more"
+          autocomplete="off"
+        />
+        <label class="visually-hidden" for="search-category">Search category</label>
+        <select id="search-category" formControlName="category">
+          <option value="all">All categories</option>
+          @for (category of categories; track category.id) {
+            <option [value]="category.id">{{ category.label }}</option>
+          }
+        </select>
+        <button class="search-button" type="submit">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="10.7" cy="10.7" r="6.7" />
+            <path d="m16 16 4 4" />
+          </svg>
+          <span>Search</span>
+        </button>
+      </form>
+
+      <div class="header-actions">
+        <a class="action-link" routerLink="/basket" aria-label="Open basket">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 8h14l-1 12H6L5 8Z" />
+            <path d="M9 9V7a3 3 0 0 1 6 0v2" />
+          </svg>
+          <span>Basket</span>
+          @if (basket.itemCount() > 0) {
+            <span class="badge" aria-label="Basket items">{{
+              basket.itemCount() > 99 ? '99+' : basket.itemCount()
+            }}</span>
+          }
+        </a>
+        <button class="account-button" type="button" (click)="logout()">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="8" r="3.5" />
+            <path d="M5.5 20c.6-4 2.8-6 6.5-6s5.9 2 6.5 6" />
+          </svg>
+          <span>Log out</span>
+        </button>
+      </div>
+
+      <button
+        class="menu-button"
+        type="button"
+        aria-label="Toggle navigation"
+        aria-controls="mobile-navigation"
+        [attr.aria-expanded]="menuOpen()"
+        (click)="toggleMenu()"
+      >
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="navigation-bar">
+    <nav class="desktop-navigation" aria-label="Primary navigation">
+      <a
+        class="all-categories"
+        routerLink="/products"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <span class="grid-icon" aria-hidden="true">⌘</span> All categories
+      </a>
+      @for (category of categories; track category.id) {
+        <a [routerLink]="['/products', category.id]" routerLinkActive="active">{{
+          category.label
+        }}</a>
       }
-    </a>
-
-    <button
-      class="menu-button"
-      type="button"
-      aria-label="Toggle navigation"
-      aria-controls="mobile-navigation"
-      [attr.aria-expanded]="menuOpen()"
-      (click)="toggleMenu()"
-    >
-      <span></span><span></span><span></span>
-    </button>
+    </nav>
   </div>
 
   @if (menuOpen()) {
     <nav id="mobile-navigation" class="mobile-navigation" aria-label="Mobile navigation">
-      <a routerLink="/products" routerLinkActive="active">Products</a>
+      <a routerLink="/products" routerLinkActive="active">All categories</a>
+      @for (category of categories; track category.id) {
+        <a [routerLink]="['/products', category.id]" routerLinkActive="active">{{
+          category.label
+        }}</a>
+      }
       <a routerLink="/basket" routerLinkActive="active">
         Basket <span>{{ basket.itemCount() }} items</span>
       </a>

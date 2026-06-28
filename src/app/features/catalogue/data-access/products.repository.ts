@@ -19,7 +19,9 @@ export class ApiProductsRepository implements ProductsRepository {
       .set('search', query.search)
       .set('sort', query.sort)
       .set('price', query.price);
-    return this.http.get<readonly Product[]>(`/api/product-groups/${groupId}/products`, { params });
+    const endpoint =
+      groupId === 'all' ? '/api/products' : `/api/product-groups/${groupId}/products`;
+    return this.http.get<readonly Product[]>(endpoint, { params });
   }
 
   getById(groupId: string, productId: string): Observable<Product | null> {
