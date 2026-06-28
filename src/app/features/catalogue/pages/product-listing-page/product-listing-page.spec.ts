@@ -48,6 +48,19 @@ describe('ProductListingPage', () => {
     );
   });
 
+  it('uses the all-products collection for the global search route', () => {
+    params.next(convertToParamMap({}));
+    queryParams.next(convertToParamMap({ search: 'gift' }));
+    const fixture = TestBed.createComponent(ProductListingPage);
+    fixture.detectChanges();
+
+    expect(repository.search).toHaveBeenCalledWith('all', {
+      search: 'gift',
+      sort: 'featured',
+      price: 'all',
+    });
+  });
+
   it('renders products returned by the repository', () => {
     const fixture = TestBed.createComponent(ProductListingPage);
     fixture.detectChanges();
