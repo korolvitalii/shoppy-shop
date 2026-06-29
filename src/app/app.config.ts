@@ -5,11 +5,12 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { apiErrorInterceptor } from './core/errors/api-error.interceptor';
 import { GlobalErrorHandler } from './core/errors/global-error.handler';
+import { loadingInterceptor } from './core/loading/loading.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideHttpClient(withFetch(), withInterceptors([apiErrorInterceptor])),
+    provideHttpClient(withFetch(), withInterceptors([loadingInterceptor, apiErrorInterceptor])),
     provideRouter(routes),
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
   ],

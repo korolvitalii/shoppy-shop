@@ -6,10 +6,11 @@ import { filter, map } from 'rxjs';
 import { AppHeader } from './shell/header/app-header';
 import { MobileNavigation } from './shell/mobile-navigation/mobile-navigation';
 import { ErrorBanner } from './shared/ui/error-banner/error-banner';
+import { LoadingIndicator } from './shared/ui/loading-indicator/loading-indicator';
 
 @Component({
   selector: 'app-root',
-  imports: [AppHeader, ErrorBanner, MobileNavigation, RouterOutlet],
+  imports: [AppHeader, ErrorBanner, LoadingIndicator, MobileNavigation, RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -178,6 +178,10 @@ Application failures use a single safe error contract under `src/app/core/errors
 
 Raw API messages, stack traces, credentials, and server implementation details are never displayed to customers. Recoverable feature views can still keep their contextual retry controls while the shared error contract provides consistent messages and codes.
 
+### Global loading
+
+HTTP activity is tracked by a signal-based `LoadingService` and functional interceptor. A reference counter keeps the indicator visible until all concurrent requests complete, while a 200 ms display delay prevents flashes for fast responses. Requests such as silent background refreshes can opt out with the `SKIP_GLOBAL_LOADING` HTTP context token. Feature pages retain their local skeletons and loading states for contextual feedback.
+
 ```text
 src/
 ├── app/
