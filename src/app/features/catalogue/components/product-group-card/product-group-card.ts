@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { ProductGroup } from '../../models/product-group';
+import { type ProductGroup } from '../../models/product-group';
 
 @Component({
   selector: 'app-product-group-card',

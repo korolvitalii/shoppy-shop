@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { Product } from '../../catalogue/models/product';
+import { type Product } from '../../catalogue/models/product';
 import { BasketService } from './basket.service';
 
 describe('BasketService', () => {

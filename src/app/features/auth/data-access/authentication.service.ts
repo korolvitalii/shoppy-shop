@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { delay, Observable, of } from 'rxjs';
+import { delay, type Observable, of } from 'rxjs';
 
 export interface LoginCredentials {
   email: string;

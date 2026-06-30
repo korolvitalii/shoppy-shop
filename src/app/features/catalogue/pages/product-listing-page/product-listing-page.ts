@@ -16,7 +16,12 @@ import {
 
 import { ProductCard } from '../../components/product-card/product-card';
 import { ProductsRepository } from '../../data-access/products.repository';
-import { PriceRange, Product, ProductSearchQuery, ProductSort } from '../../models/product';
+import {
+  type PriceRange,
+  type Product,
+  type ProductSearchQuery,
+  type ProductSort,
+} from '../../models/product';
 
 type RequestStatus = 'loading' | 'success' | 'error';
 

@@ -4,7 +4,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 
 import { BasketService } from '../../../basket/data-access/basket.service';
 import { ProductsRepository } from '../../data-access/products.repository';
-import { Product } from '../../models/product';
+import { type Product } from '../../models/product';
 import { ProductDetailsPage } from './product-details-page';
 
 describe('ProductDetailsPage', () => {

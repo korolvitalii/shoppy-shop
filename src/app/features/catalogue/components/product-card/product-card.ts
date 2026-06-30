@@ -2,7 +2,7 @@ import { CurrencyPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { Product } from '../../models/product';
+import { type Product } from '../../models/product';
 
 @Component({
   selector: 'app-product-card',

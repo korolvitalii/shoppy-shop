@@ -1,4 +1,4 @@
-import { BasketItem } from '../../basket/models/basket-item';
+import { type BasketItem } from '../../basket/models/basket-item';
 export interface DeliveryAddress {
   name: string;
   email: string;
@@ -13,7 +13,7 @@ export interface CheckoutPaymentToken {
   brand: string;
   last4: string;
 }
-export interface OrderLine extends BasketItem {}
+export type OrderLine = BasketItem;
 export interface CreateOrderRequest {
   lines: readonly OrderLine[];
   delivery: DeliveryAddress;

@@ -1,11 +1,12 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { Observable } from 'rxjs';
+import { type Observable } from 'rxjs';
+
 import { BasketService } from '../../basket/data-access/basket.service';
 import {
-  CheckoutPaymentToken,
-  CreateOrderRequest,
-  DeliveryAddress,
-  Order,
+  type CheckoutPaymentToken,
+  type CreateOrderRequest,
+  type DeliveryAddress,
+  type Order,
 } from '../models/checkout.models';
 import { OrdersRepository } from './orders.repository';
 @Injectable()
@@ -18,12 +19,15 @@ export class CheckoutFacade {
   readonly subtotal = this.basket.subtotal;
   readonly items = this.basket.items;
   readonly total = computed(() => this.subtotal() + this.deliveryCharge());
+
   setDelivery(value: DeliveryAddress) {
     this.delivery.set(value);
   }
+
   setPaymentToken(value: CheckoutPaymentToken) {
     this.paymentToken.set(value);
   }
+
   createOrder(): Observable<Order> {
     const request: CreateOrderRequest = {
       lines: this.basket.items(),
@@ -36,6 +40,7 @@ export class CheckoutFacade {
     };
     return this.orders.createOrder(request);
   }
+
   clearBasket(): void {
     this.basket.clear();
   }

@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,7 +9,7 @@ import {
   input,
   signal,
 } from '@angular/core';
-import { NgTemplateOutlet } from '@angular/common';
+
 import { UiTab } from './ui-tab';
 @Component({
   selector: 'app-tabs',
@@ -22,6 +23,7 @@ export class UiTabs {
   readonly tabs = contentChildren(UiTab);
   readonly selectedId = signal('');
   private readonly host: ElementRef<HTMLElement> = inject(ElementRef);
+
   constructor() {
     effect(() => {
       const tabs = this.tabs();
@@ -29,9 +31,11 @@ export class UiTabs {
         this.selectedId.set(tabs.find((t) => !t.disabled())?.id() ?? '');
     });
   }
+
   select(tab: UiTab): void {
     if (!tab.disabled()) this.selectedId.set(tab.id());
   }
+
   keydown(event: KeyboardEvent, current: UiTab): void {
     const enabled = this.tabs().filter((t) => !t.disabled());
     let index = enabled.indexOf(current);

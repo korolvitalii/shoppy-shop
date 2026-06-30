@@ -1,7 +1,7 @@
 import { computed, Injectable, signal } from '@angular/core';
 
-import { Product } from '../../catalogue/models/product';
-import { BasketItem } from '../models/basket-item';
+import { type Product } from '../../catalogue/models/product';
+import { type BasketItem } from '../models/basket-item';
 
 const STORAGE_KEY = 'shoppyshop.basket.v1';
 
@@ -58,6 +58,7 @@ export class BasketService {
   remove(productId: string): void {
     this.commit(this.itemsState().filter((item) => item.productId !== productId));
   }
+
   clear(): void {
     this.commit([]);
   }

@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
 import { BasketService } from '../../data-access/basket.service';
-import { BasketItem } from '../../models/basket-item';
+import { type BasketItem } from '../../models/basket-item';
 import { BasketPage } from './basket-page';
 
 describe('BasketPage', () => {

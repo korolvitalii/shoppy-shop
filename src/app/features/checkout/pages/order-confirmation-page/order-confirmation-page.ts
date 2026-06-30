@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { catchError, of, switchMap } from 'rxjs';
+
 import { OrdersRepository } from '../../data-access/orders.repository';
-import { Order } from '../../models/checkout.models';
+import { type Order } from '../../models/checkout.models';
 @Component({
   selector: 'app-order-confirmation-page',
   imports: [RouterLink],
@@ -28,6 +29,7 @@ export class OrderConfirmationPage {
   private readonly repository = inject(OrdersRepository);
   readonly order = signal<Order | null>(null);
   readonly error = signal(false);
+
   constructor() {
     inject(ActivatedRoute)
       .paramMap.pipe(

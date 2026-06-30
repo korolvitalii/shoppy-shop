@@ -1,9 +1,10 @@
 import { HttpClient, HttpContext, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { SKIP_GLOBAL_LOADING } from './loading-context';
+
 import { loadingInterceptor } from './loading.interceptor';
 import { LoadingService } from './loading.service';
+import { SKIP_GLOBAL_LOADING } from './loading-context';
 
 describe('loadingInterceptor', () => {
   const loading = { start: vi.fn(), stop: vi.fn() };

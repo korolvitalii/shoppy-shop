@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 
-import { ProductGroup } from '../../app/features/catalogue/models/product-group';
+import { type ProductGroup } from '../../app/features/catalogue/models/product-group';
 
 faker.seed(20260609);
 

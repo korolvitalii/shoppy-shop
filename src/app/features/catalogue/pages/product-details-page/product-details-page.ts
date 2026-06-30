@@ -2,8 +2,8 @@ import { CurrencyPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  DestroyRef,
   computed,
+  DestroyRef,
   inject,
   signal,
 } from '@angular/core';
@@ -11,11 +11,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { catchError, map, of, switchMap, tap } from 'rxjs';
 
-import { BasketService } from '../../../basket/data-access/basket.service';
-import { ProductsRepository } from '../../data-access/products.repository';
-import { Product } from '../../models/product';
 import { UiTab } from '../../../../shared/ui/tabs/ui-tab';
 import { UiTabs } from '../../../../shared/ui/tabs/ui-tabs';
+import { BasketService } from '../../../basket/data-access/basket.service';
+import { ProductsRepository } from '../../data-access/products.repository';
+import { type Product } from '../../models/product';
 
 type DetailStatus = 'loading' | 'success' | 'not-found' | 'error';
 
@@ -73,6 +73,7 @@ export class ProductDetailsPage {
   increment(): void {
     this.quantity.update((value) => Math.min(value + 1, 10));
   }
+
   decrement(): void {
     this.quantity.update((value) => Math.max(value - 1, 1));
   }

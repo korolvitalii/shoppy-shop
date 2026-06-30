@@ -3,10 +3,10 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs';
 
-import { AppHeader } from './shell/header/app-header';
-import { MobileNavigation } from './shell/mobile-navigation/mobile-navigation';
 import { ErrorBanner } from './shared/ui/error-banner/error-banner';
 import { LoadingIndicator } from './shared/ui/loading-indicator/loading-indicator';
+import { AppHeader } from './shell/header/app-header';
+import { MobileNavigation } from './shell/mobile-navigation/mobile-navigation';
 
 @Component({
   selector: 'app-root',

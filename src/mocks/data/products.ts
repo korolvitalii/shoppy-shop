@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 
-import { Product } from '../../app/features/catalogue/models/product';
+import { type Product } from '../../app/features/catalogue/models/product';
 
 faker.seed(20260612);
 

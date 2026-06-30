@@ -1,5 +1,6 @@
-import { TestBed } from '@angular/core/testing';
 import { HttpErrorResponse } from '@angular/common/http';
+import { TestBed } from '@angular/core/testing';
+
 import { ErrorNotificationService } from '../../../core/errors/error-notification.service';
 import { ErrorBanner } from './error-banner';
 

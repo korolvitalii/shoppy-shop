@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+
 import { ErrorNotificationService } from '../../../core/errors/error-notification.service';
 
 @Component({

@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { type Observable } from 'rxjs';
 
-import { ProductGroup } from '../models/product-group';
+import { type ProductGroup } from '../models/product-group';
 
 @Injectable()
 export abstract class ProductGroupsRepository {

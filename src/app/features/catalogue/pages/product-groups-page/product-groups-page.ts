@@ -4,7 +4,7 @@ import { take } from 'rxjs';
 
 import { ProductGroupCard } from '../../components/product-group-card/product-group-card';
 import { ProductGroupsRepository } from '../../data-access/product-groups.repository';
-import { ProductGroup } from '../../models/product-group';
+import { type ProductGroup } from '../../models/product-group';
 
 type RequestStatus = 'loading' | 'success' | 'error';
 

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+
 import { CheckoutFacade } from '../../data-access/checkout.facade';
 @Component({
   selector: 'app-payment-page',
@@ -27,6 +28,7 @@ export class PaymentPage {
       validators: [Validators.required, Validators.pattern(/^\d{3,4}$/)],
     }),
   });
+
   continue() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();

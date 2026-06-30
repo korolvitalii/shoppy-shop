@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+
 import { UiTab } from './ui-tab';
 import { UiTabs } from './ui-tabs';
 

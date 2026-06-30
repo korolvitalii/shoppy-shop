@@ -1,5 +1,6 @@
 import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
+import { type CanActivateFn, Router } from '@angular/router';
+
 import { BasketService } from '../../basket/data-access/basket.service';
 import { CheckoutFacade } from '../data-access/checkout.facade';
 export const basketRequiredGuard: CanActivateFn = () =>

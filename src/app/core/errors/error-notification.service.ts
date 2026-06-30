@@ -1,5 +1,6 @@
 import { Injectable, signal } from '@angular/core';
-import { AppError, normalizeError } from './app-error';
+
+import { type AppError, normalizeError } from './app-error';
 
 @Injectable({ providedIn: 'root' })
 export class ErrorNotificationService {

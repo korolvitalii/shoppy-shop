@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+
 import { LoadingService } from '../../../core/loading/loading.service';
 
 @Component({

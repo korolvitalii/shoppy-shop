@@ -1,10 +1,10 @@
+import { TestBed } from '@angular/core/testing';
 import { convertToParamMap, provideRouter } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
-import { TestBed } from '@angular/core/testing';
 import { BehaviorSubject, Subject } from 'rxjs';
 
-import { Product } from '../../models/product';
 import { ProductsRepository } from '../../data-access/products.repository';
+import { type Product } from '../../models/product';
 import { ProductListingPage } from './product-listing-page';
 
 describe('ProductListingPage', () => {

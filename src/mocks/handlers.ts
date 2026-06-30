@@ -1,8 +1,11 @@
 import { delay, http, HttpResponse } from 'msw';
 
+import {
+  type CreateOrderRequest,
+  type Order,
+} from '../app/features/checkout/models/checkout.models';
 import { mockProductGroups } from './data/product-groups';
 import { mockProducts } from './data/products';
-import { CreateOrderRequest, Order } from '../app/features/checkout/models/checkout.models';
 const orders = new Map<string, Order>();
 
 export const handlers = [

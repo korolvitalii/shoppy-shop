@@ -1,4 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
+
 import { APP_ERROR_CODES, AppError, normalizeError } from './app-error';
 
 describe('normalizeError', () => {

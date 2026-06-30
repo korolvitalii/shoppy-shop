@@ -3,7 +3,10 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize, take } from 'rxjs';
 
-import { AuthenticationService, LoginCredentials } from '../data-access/authentication.service';
+import {
+  AuthenticationService,
+  type LoginCredentials,
+} from '../data-access/authentication.service';
 import { AuthenticationSessionService } from '../data-access/authentication-session.service';
 
 interface LoginForm {

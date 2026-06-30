@@ -4,8 +4,8 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { filter } from 'rxjs';
 
-import { BasketService } from '../../features/basket/data-access/basket.service';
 import { AuthenticationSessionService } from '../../features/auth/data-access/authentication-session.service';
+import { BasketService } from '../../features/basket/data-access/basket.service';
 
 @Component({
   selector: 'app-header',

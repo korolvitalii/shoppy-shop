@@ -1,10 +1,11 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { APP_ERROR_CODES, AppError } from './app-error';
+
 import { apiErrorInterceptor } from './api-error.interceptor';
+import { APP_ERROR_CODES, AppError } from './app-error';
 import { ErrorNotificationService } from './error-notification.service';
-import { HttpClient } from '@angular/common/http';
 
 describe('apiErrorInterceptor', () => {
   it('normalizes API failures and publishes a safe global message', () => {

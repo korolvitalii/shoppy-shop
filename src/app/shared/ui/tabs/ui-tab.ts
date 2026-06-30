@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, input, TemplateRef, viewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  type TemplateRef,
+  viewChild,
+} from '@angular/core';
 @Component({
   selector: 'app-tab',
   template: `<ng-template #content><ng-content /></ng-template>`,

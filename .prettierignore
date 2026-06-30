@@ -1,0 +1,6 @@
+/App/
+coverage/
+dist/
+node_modules/
+package-lock.json
+public/mockServiceWorker.js

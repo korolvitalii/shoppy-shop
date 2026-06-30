@@ -1,4 +1,5 @@
-import { ErrorHandler, Injectable, inject } from '@angular/core';
+import { type ErrorHandler, inject, Injectable } from '@angular/core';
+
 import { ErrorNotificationService } from './error-notification.service';
 
 @Injectable()

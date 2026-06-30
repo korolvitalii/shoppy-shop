@@ -2,7 +2,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
-import { ProductGroup } from '../models/product-group';
+import { type ProductGroup } from '../models/product-group';
 import { ApiProductGroupsRepository } from './product-groups.repository';
 
 describe('ApiProductGroupsRepository', () => {

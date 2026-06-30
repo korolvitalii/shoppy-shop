@@ -2,6 +2,7 @@ import { CurrencyPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { finalize, take } from 'rxjs';
+
 import { CheckoutFacade } from '../../data-access/checkout.facade';
 @Component({
   selector: 'app-review-page',
@@ -15,6 +16,7 @@ export class ReviewPage {
   private readonly router = inject(Router);
   readonly submitting = signal(false);
   readonly error = signal<string | null>(null);
+
   submit() {
     if (this.submitting()) return;
     this.submitting.set(true);

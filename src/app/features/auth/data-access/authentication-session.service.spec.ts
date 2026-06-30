@@ -1,7 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { AuthenticationSessionService } from './authentication-session.service';
+
 import { authenticationGuard } from '../guards/authentication.guard';
+import { AuthenticationSessionService } from './authentication-session.service';
 
 describe('AuthenticationSessionService', () => {
   beforeEach(() => {

@@ -1,8 +1,8 @@
-import { ComponentRef } from '@angular/core';
+import { type ComponentRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
-import { ProductGroup } from '../../models/product-group';
+import { type ProductGroup } from '../../models/product-group';
 import { ProductGroupCard } from './product-group-card';
 
 describe('ProductGroupCard', () => {

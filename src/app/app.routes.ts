@@ -1,5 +1,14 @@
-import { Routes } from '@angular/router';
+import { type Routes } from '@angular/router';
+
 import { authenticationGuard } from './features/auth/guards/authentication.guard';
+import {
+  ApiProductGroupsRepository,
+  ProductGroupsRepository,
+} from './features/catalogue/data-access/product-groups.repository';
+import {
+  ApiProductsRepository,
+  ProductsRepository,
+} from './features/catalogue/data-access/products.repository';
 import { CheckoutFacade } from './features/checkout/data-access/checkout.facade';
 import {
   ApiOrdersRepository,
@@ -10,15 +19,6 @@ import {
   deliveryRequiredGuard,
   paymentRequiredGuard,
 } from './features/checkout/guards/checkout.guards';
-
-import {
-  ApiProductGroupsRepository,
-  ProductGroupsRepository,
-} from './features/catalogue/data-access/product-groups.repository';
-import {
-  ApiProductsRepository,
-  ProductsRepository,
-} from './features/catalogue/data-access/products.repository';
 
 export const routes: Routes = [
   {

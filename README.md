@@ -817,6 +817,14 @@ The project uses:
 
 The project follows strict development rules:
 
+- ESLint 10 flat configuration with Angular ESLint 22
+- Angular template accessibility and modern control-flow checks
+- Deterministic import and export sorting
+- Type-only import enforcement
+- Consistent class member ordering and blank lines between methods
+- Prettier formatting for TypeScript, Angular HTML, SCSS, JSON, and Markdown
+- Shared VS Code format-on-save and ESLint fix settings
+- A single `npm run check` quality gate for linting, formatting, tests, and production build
 - Strict TypeScript configuration
 - No implicit `any`
 - Typed API responses

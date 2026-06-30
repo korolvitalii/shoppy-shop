@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+
 import { CheckoutFacade } from '../../data-access/checkout.facade';
 @Component({
   selector: 'app-delivery-page',
@@ -29,6 +30,7 @@ export class DeliveryPage {
       validators: [Validators.required],
     }),
   });
+
   continue() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
