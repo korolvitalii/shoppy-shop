@@ -41,6 +41,13 @@
       </form>
 
       <div class="header-actions">
+        <a class="action-link" routerLink="/orders" routerLinkActive="active" aria-label="Orders">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z" />
+            <path d="M9 8h6M9 12h6" />
+          </svg>
+          <span>Orders</span>
+        </a>
         <a class="action-link" routerLink="/basket" aria-label="Open basket">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M5 8h14l-1 12H6L5 8Z" />
@@ -104,6 +111,7 @@
       <a routerLink="/basket" routerLinkActive="active">
         Basket <span>{{ basket.itemCount() }} items</span>
       </a>
+      <a routerLink="/orders" routerLinkActive="active">Purchase history</a>
       <button class="mobile-logout" type="button" (click)="logout()">Log out</button>
     </nav>
   }

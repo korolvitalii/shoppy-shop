@@ -106,6 +106,16 @@ export const routes: Routes = [
     ],
   },
   {
+    path: 'orders',
+    canActivate: [authenticationGuard],
+    title: 'Purchase history | ShoppyShop',
+    providers: [{ provide: OrdersRepository, useClass: ApiOrdersRepository }],
+    loadComponent: () =>
+      import('./features/orders/pages/order-history-page/order-history-page').then(
+        ({ OrderHistoryPage }) => OrderHistoryPage,
+      ),
+  },
+  {
     path: 'orders/:orderId/confirmation',
     canActivate: [authenticationGuard],
     providers: [{ provide: OrdersRepository, useClass: ApiOrdersRepository }],

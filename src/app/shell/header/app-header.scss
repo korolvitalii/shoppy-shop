@@ -149,6 +149,7 @@
   cursor: pointer;
 }
 .action-link:hover,
+.action-link.active,
 .account-button:hover {
   color: var(--header-violet);
 }

@@ -1077,6 +1077,7 @@ The current Angular 22 application includes:
 - Route-backed delivery, payment, and order-review checkout steps
 - Mock payment tokenization that never persists raw card data
 - MSW-backed order creation and refresh-safe order confirmation
+- Protected purchase history with seeded orders and newly completed checkout orders
 - Responsive application navigation with active states and basket count
 - Vitest unit and integration coverage for UI, repositories, guards, and state services
 

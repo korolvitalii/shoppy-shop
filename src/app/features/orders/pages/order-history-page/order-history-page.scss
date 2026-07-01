@@ -1,0 +1,218 @@
+.history-page {
+  width: min(100% - 2rem, 68rem);
+  margin-inline: auto;
+  padding-block: clamp(2.5rem, 6vw, 5rem);
+  color: #16213e;
+}
+.page-header {
+  max-width: 40rem;
+  margin-bottom: 2.5rem;
+}
+.eyebrow,
+.order-label,
+.order-date span,
+.order-footer span {
+  color: #6842e8;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.page-header h1 {
+  margin: 0.35rem 0 0.65rem;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(2.3rem, 5vw, 4rem);
+  line-height: 1;
+}
+.page-header > p:last-child {
+  color: #65708a;
+  line-height: 1.7;
+}
+.order-list,
+.order-lines {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.order-list {
+  display: grid;
+  gap: 1.25rem;
+}
+.order-card {
+  overflow: hidden;
+  border: 1px solid rgba(22, 33, 62, 0.12);
+  border-radius: 1rem;
+  background: #fffdf8;
+  box-shadow: 0 0.8rem 2rem rgba(22, 33, 62, 0.06);
+}
+.order-header {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 2rem;
+  align-items: center;
+  padding: 1.2rem 1.4rem;
+  border-bottom: 1px solid rgba(22, 33, 62, 0.1);
+  background: #faf7f0;
+}
+.order-header h2 {
+  margin: 0.2rem 0 0;
+  font-size: 1.05rem;
+}
+.status-badge {
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  color: #08775c;
+  background: #e4f5ee;
+  font-size: 0.67rem;
+  font-weight: 800;
+  text-transform: capitalize;
+}
+.order-date {
+  display: grid;
+  gap: 0.2rem;
+}
+.order-date time {
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+.order-lines {
+  padding: 0.4rem 1.4rem;
+}
+.order-lines li {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding-block: 1rem;
+}
+.order-lines li + li {
+  border-top: 1px solid rgba(22, 33, 62, 0.08);
+}
+.order-lines img {
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 0.7rem;
+  object-fit: cover;
+  background: #eee9ff;
+}
+.order-lines div {
+  display: grid;
+  gap: 0.35rem;
+}
+.order-lines a {
+  color: #16213e;
+  font-weight: 800;
+  text-decoration: none;
+}
+.order-lines a:hover {
+  color: #6842e8;
+}
+.order-lines span {
+  color: #65708a;
+  font-size: 0.78rem;
+}
+.order-footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 1rem;
+  align-items: end;
+  padding: 1rem 1.4rem;
+  border-top: 1px solid rgba(22, 33, 62, 0.1);
+  background: #faf7f0;
+}
+.order-footer p {
+  display: grid;
+  gap: 0.3rem;
+  margin: 0;
+  font-size: 0.8rem;
+}
+.order-total {
+  text-align: right;
+}
+.order-total strong {
+  font-size: 1.2rem;
+}
+.state {
+  display: grid;
+  min-height: 18rem;
+  place-items: center;
+  align-content: center;
+  gap: 0.65rem;
+  padding: 2rem;
+  border: 1px solid rgba(22, 33, 62, 0.1);
+  border-radius: 1rem;
+  text-align: center;
+  background: #fffdf8;
+}
+.state h2,
+.state p {
+  margin: 0;
+}
+.state p {
+  color: #65708a;
+}
+.state a,
+.state button {
+  margin-top: 0.6rem;
+  padding: 0.75rem 1.2rem;
+  border: 0;
+  border-radius: 0.65rem;
+  color: #fff;
+  background: #6842e8;
+  font: inherit;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+}
+.empty-icon {
+  color: #6842e8;
+  font-size: 2.5rem;
+}
+.state-loader {
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid #ded6fb;
+  border-top-color: #6842e8;
+  border-radius: 50%;
+  animation: spin 700ms linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (max-width: 42rem) {
+  .history-page {
+    padding-top: 2rem;
+  }
+  .order-header {
+    grid-template-columns: 1fr auto;
+    gap: 0.75rem;
+  }
+  .order-date {
+    grid-column: 1 / -1;
+  }
+  .order-lines li {
+    grid-template-columns: 3.8rem 1fr;
+  }
+  .order-lines img {
+    width: 3.8rem;
+    height: 3.8rem;
+  }
+  .order-lines strong {
+    grid-column: 2;
+  }
+  .order-footer {
+    grid-template-columns: 1fr;
+  }
+  .order-total {
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(22, 33, 62, 0.1);
+    text-align: left;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .state-loader {
+    animation: none;
+  }
+}

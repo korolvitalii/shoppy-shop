@@ -6,6 +6,7 @@ import { type CreateOrderRequest, type Order } from '../models/checkout.models';
 @Injectable()
 export abstract class OrdersRepository {
   abstract createOrder(request: CreateOrderRequest): Observable<Order>;
+  abstract getOrders(): Observable<readonly Order[]>;
   abstract getOrderById(id: string): Observable<Order | null>;
 }
 @Injectable()
@@ -14,6 +15,10 @@ export class ApiOrdersRepository implements OrdersRepository {
 
   createOrder(request: CreateOrderRequest) {
     return this.http.post<Order>('/api/orders', request);
+  }
+
+  getOrders() {
+    return this.http.get<readonly Order[]>('/api/orders');
   }
 
   getOrderById(id: string) {

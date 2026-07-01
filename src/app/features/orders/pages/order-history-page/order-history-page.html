@@ -1,0 +1,85 @@
+<main class="history-page">
+  <header class="page-header">
+    <p class="eyebrow">Your ShoppyShop</p>
+    <h1>Purchase history</h1>
+    <p>Review your orders, delivery details and payment summaries.</p>
+  </header>
+
+  @switch (status()) {
+    @case ('loading') {
+      <section class="state" role="status" aria-live="polite">
+        <span class="state-loader" aria-hidden="true"></span>
+        <p>Loading purchases…</p>
+      </section>
+    }
+    @case ('error') {
+      <section class="state state--error" role="alert">
+        <h2>We could not load your purchases</h2>
+        <p>Check your connection and try again.</p>
+        <button type="button" (click)="load()">Try again</button>
+      </section>
+    }
+    @case ('success') {
+      @if (orders().length === 0) {
+        <section class="state state--empty">
+          <span class="empty-icon" aria-hidden="true">⌁</span>
+          <h2>No purchases yet</h2>
+          <p>When you place an order, its details will appear here.</p>
+          <a routerLink="/products">Start shopping</a>
+        </section>
+      } @else {
+        <ol class="order-list" aria-label="Previous purchases">
+          @for (order of orders(); track order.id) {
+            <li>
+              <article class="order-card">
+                <header class="order-header">
+                  <div>
+                    <span class="order-label">Order</span>
+                    <h2>{{ order.id }}</h2>
+                  </div>
+                  <span class="status-badge">{{ order.status }}</span>
+                  <div class="order-date">
+                    <span>Placed</span>
+                    <time [attr.datetime]="order.createdAt">{{
+                      order.createdAt | date: 'd MMMM y'
+                    }}</time>
+                  </div>
+                </header>
+
+                <ul class="order-lines" aria-label="Order items">
+                  @for (line of order.lines; track line.productId) {
+                    <li>
+                      <img [src]="line.imageUrl" [alt]="line.name" />
+                      <div>
+                        <a [routerLink]="['/products', line.groupId, line.productId]">{{
+                          line.name
+                        }}</a>
+                        <span>Quantity {{ line.quantity }}</span>
+                      </div>
+                      <strong>{{ line.unitPrice * line.quantity | currency: 'GBP' }}</strong>
+                    </li>
+                  }
+                </ul>
+
+                <footer class="order-footer">
+                  <p>
+                    <span>Delivering to</span>
+                    {{ order.delivery.city }}, {{ order.delivery.postcode }}
+                  </p>
+                  <p>
+                    <span>Payment</span>
+                    {{ order.paymentToken.brand }} ending in {{ order.paymentToken.last4 }}
+                  </p>
+                  <p class="order-total">
+                    <span>Total</span>
+                    <strong>{{ order.total | currency: 'GBP' }}</strong>
+                  </p>
+                </footer>
+              </article>
+            </li>
+          }
+        </ol>
+      }
+    }
+  }
+</main>

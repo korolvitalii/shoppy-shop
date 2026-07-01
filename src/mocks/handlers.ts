@@ -4,9 +4,11 @@ import {
   type CreateOrderRequest,
   type Order,
 } from '../app/features/checkout/models/checkout.models';
+import { mockOrders } from './data/orders';
 import { mockProductGroups } from './data/product-groups';
 import { mockProducts } from './data/products';
-const orders = new Map<string, Order>();
+
+const orders = new Map<string, Order>(mockOrders.map((order) => [order.id, order]));
 
 export const handlers = [
   http.get('/api/product-groups', async () => {
@@ -35,11 +37,17 @@ export const handlers = [
     const order: Order = {
       ...body,
       id,
-      createdAt: new Date('2026-06-23T18:40:00Z').toISOString(),
+      createdAt: new Date('2026-07-01T16:05:00Z').toISOString(),
       status: 'confirmed',
     };
     orders.set(id, order);
     return HttpResponse.json(order, { status: 201 });
+  }),
+  http.get('/api/orders', async () => {
+    await delay(300);
+    return HttpResponse.json(
+      [...orders.values()].sort((left, right) => right.createdAt.localeCompare(left.createdAt)),
+    );
   }),
   http.get('/api/orders/:orderId', async ({ params }) => {
     await delay(200);
