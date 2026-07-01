@@ -27,6 +27,7 @@ describe('AppHeader', () => {
       'All categories',
     );
     expect(element.querySelector('a[href="/basket"]')?.textContent).toContain('3');
+    expect(element.querySelector('a[href="/orders"]')?.textContent).toContain('Orders');
   });
 
   it('renders a distinctive brand mark and an accessible product search', () => {
