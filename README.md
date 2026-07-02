@@ -1073,6 +1073,7 @@ The current Angular 22 application includes:
 
 - Accessible signal-based tabs with keyboard navigation
 - Mock authentication session restoration and functional route guards
+- Public catalogue browsing with session-aware sign-in and customer-only navigation
 - Lazy product catalogue, filtering, details, and persistent basket flows
 - Route-backed delivery, payment, and order-review checkout steps
 - Mock payment tokenization that never persists raw card data

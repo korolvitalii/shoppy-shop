@@ -1,6 +1,6 @@
 import { type Routes } from '@angular/router';
 
-import { authenticationGuard } from './features/auth/guards/authentication.guard';
+import { anonymousGuard, authenticationGuard } from './features/auth/guards/authentication.guard';
 import {
   ApiProductGroupsRepository,
   ProductGroupsRepository,
@@ -23,6 +23,7 @@ import {
 export const routes: Routes = [
   {
     path: 'login',
+    canActivate: [anonymousGuard],
     title: 'Sign in | ShoppyShop',
     loadComponent: () =>
       import('./features/auth/login-page/login-page').then(({ LoginPage }) => LoginPage),
@@ -125,5 +126,5 @@ export const routes: Routes = [
       ),
   },
   { path: '', pathMatch: 'full', redirectTo: 'products' },
-  { path: '**', redirectTo: 'login' },
+  { path: '**', redirectTo: 'products' },
 ];

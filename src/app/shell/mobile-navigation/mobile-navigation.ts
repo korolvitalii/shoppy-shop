@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
+import { AuthenticationSessionService } from '../../features/auth/data-access/authentication-session.service';
 import { BasketService } from '../../features/basket/data-access/basket.service';
 
 @Component({
@@ -12,4 +13,5 @@ import { BasketService } from '../../features/basket/data-access/basket.service'
 })
 export class MobileNavigation {
   protected readonly basket = inject(BasketService);
+  protected readonly session = inject(AuthenticationSessionService);
 }

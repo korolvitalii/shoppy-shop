@@ -8,3 +8,8 @@ export const authenticationGuard: CanActivateFn = (_route, state) => {
     ? true
     : inject(Router).parseUrl(`/login?returnUrl=${encodeURIComponent(state.url)}`);
 };
+
+export const anonymousGuard: CanActivateFn = () => {
+  const session = inject(AuthenticationSessionService);
+  return session.isAuthenticated() ? inject(Router).parseUrl('/products') : true;
+};

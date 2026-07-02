@@ -65,7 +65,9 @@ describe('anonymousGuard', () => {
       ],
     });
 
-    expect(TestBed.runInInjectionContext(() => anonymousGuard())).toBe('products-tree');
+    expect(TestBed.runInInjectionContext(() => anonymousGuard({} as never, {} as never))).toBe(
+      'products-tree',
+    );
     expect(parseUrl).toHaveBeenCalledWith('/products');
   });
 });

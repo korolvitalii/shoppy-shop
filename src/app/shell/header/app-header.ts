@@ -29,7 +29,7 @@ export class AppHeader {
     query: new FormControl('', { nonNullable: true }),
     category: new FormControl('all', { nonNullable: true }),
   });
-  private readonly session = inject(AuthenticationSessionService);
+  protected readonly session = inject(AuthenticationSessionService);
   private readonly router = inject(Router);
 
   constructor() {

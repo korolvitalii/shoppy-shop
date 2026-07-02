@@ -5,11 +5,14 @@
   left: 0;
   z-index: 150;
   display: none;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr;
   padding: 0.35rem 1rem calc(0.35rem + env(safe-area-inset-bottom));
   border-top: 1px solid rgba(22, 33, 62, 0.12);
   background: rgba(255, 253, 248, 0.95);
   backdrop-filter: blur(1rem);
+}
+.mobile-tabs--authenticated {
+  grid-template-columns: repeat(3, 1fr);
 }
 a {
   position: relative;
