@@ -2,20 +2,30 @@ import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 
+import { AuthenticationSessionService } from '../../features/auth/data-access/authentication-session.service';
 import { BasketService } from '../../features/basket/data-access/basket.service';
 import { AppHeader } from './app-header';
 
 describe('AppHeader', () => {
   const basket = { itemCount: signal(3) };
+  const authenticated = signal(false);
+  const session = { isAuthenticated: authenticated, end: vi.fn() };
 
   beforeEach(async () => {
+    authenticated.set(false);
+    session.end.mockReset();
     await TestBed.configureTestingModule({
       imports: [AppHeader],
-      providers: [provideRouter([]), { provide: BasketService, useValue: basket }],
+      providers: [
+        provideRouter([]),
+        { provide: BasketService, useValue: basket },
+        { provide: AuthenticationSessionService, useValue: session },
+      ],
     }).compileComponents();
   });
 
-  it('provides primary navigation and the current basket count', () => {
+  it('shows customer links and the basket count when authenticated', () => {
+    authenticated.set(true);
     const fixture = TestBed.createComponent(AppHeader);
     fixture.detectChanges();
     const element = fixture.nativeElement as HTMLElement;
@@ -28,6 +38,17 @@ describe('AppHeader', () => {
     );
     expect(element.querySelector('a[href="/basket"]')?.textContent).toContain('3');
     expect(element.querySelector('a[href="/orders"]')?.textContent).toContain('Orders');
+  });
+
+  it('shows sign in and hides customer links when browsing anonymously', () => {
+    const fixture = TestBed.createComponent(AppHeader);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+
+    expect(element.querySelector('a[href="/login"]')?.textContent).toContain('Sign in');
+    expect(element.querySelector('a[href="/orders"]')).toBeNull();
+    expect(element.querySelector('a[href="/basket"]')).toBeNull();
+    expect(element.textContent).not.toContain('Log out');
   });
 
   it('renders a distinctive brand mark and an accessible product search', () => {

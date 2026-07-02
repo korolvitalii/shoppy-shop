@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
-import { authenticationGuard } from '../guards/authentication.guard';
+import { anonymousGuard, authenticationGuard } from '../guards/authentication.guard';
 import { AuthenticationSessionService } from './authentication-session.service';
 
 describe('AuthenticationSessionService', () => {
@@ -38,5 +38,34 @@ describe('authenticationGuard', () => {
       ),
     ).toBe('tree');
     expect(parseUrl).toHaveBeenCalledWith('/login?returnUrl=%2Fcheckout%2Freview');
+  });
+
+  it('allows authenticated customers to open protected pages', () => {
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: AuthenticationSessionService, useValue: { isAuthenticated: () => true } },
+      ],
+    });
+
+    expect(
+      TestBed.runInInjectionContext(() =>
+        authenticationGuard({} as never, { url: '/orders' } as never),
+      ),
+    ).toBe(true);
+  });
+});
+
+describe('anonymousGuard', () => {
+  it('redirects authenticated customers away from the login page', () => {
+    const parseUrl = vi.fn(() => 'products-tree');
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: Router, useValue: { parseUrl } },
+        { provide: AuthenticationSessionService, useValue: { isAuthenticated: () => true } },
+      ],
+    });
+
+    expect(TestBed.runInInjectionContext(() => anonymousGuard())).toBe('products-tree');
+    expect(parseUrl).toHaveBeenCalledWith('/products');
   });
 });
