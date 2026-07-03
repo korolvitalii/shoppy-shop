@@ -8,11 +8,12 @@ import {
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { catchError, map, of, switchMap, tap } from 'rxjs';
 
 import { UiTab } from '../../../../shared/ui/tabs/ui-tab';
 import { UiTabs } from '../../../../shared/ui/tabs/ui-tabs';
+import { AuthenticationSessionService } from '../../../auth/data-access/authentication-session.service';
 import { BasketService } from '../../../basket/data-access/basket.service';
 import { ProductsRepository } from '../../data-access/products.repository';
 import { type Product } from '../../models/product';
@@ -31,6 +32,8 @@ export class ProductDetailsPage {
   private readonly basket = inject(BasketService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly session = inject(AuthenticationSessionService);
 
   readonly product = signal<Product | null>(null);
   readonly status = signal<DetailStatus>('loading');
@@ -43,6 +46,11 @@ export class ProductDetailsPage {
   readonly saving = computed(() => {
     const product = this.product();
     return product?.salePrice ? product.price - product.salePrice : 0;
+  });
+  readonly isAuthenticated = this.session.isAuthenticated;
+  readonly addButtonLabel = computed(() => {
+    if (!this.isAuthenticated()) return 'Sign in to add';
+    return this.added() ? 'Added to basket' : 'Add to basket';
   });
 
   constructor() {
@@ -81,6 +89,12 @@ export class ProductDetailsPage {
   addToBasket(): void {
     const product = this.product();
     if (!product?.inStock) return;
+    if (!this.session.isAuthenticated()) {
+      void this.router.navigate(['/login'], {
+        queryParams: { returnUrl: `/products/${product.groupId}/${product.id}` },
+      });
+      return;
+    }
     this.basket.add(product, this.quantity());
     this.added.set(true);
   }

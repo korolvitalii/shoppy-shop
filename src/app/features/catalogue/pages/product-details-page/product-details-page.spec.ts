@@ -1,7 +1,9 @@
+import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angular/router';
 import { BehaviorSubject, Subject } from 'rxjs';
 
+import { AuthenticationSessionService } from '../../../auth/data-access/authentication-session.service';
 import { BasketService } from '../../../basket/data-access/basket.service';
 import { ProductsRepository } from '../../data-access/products.repository';
 import { type Product } from '../../models/product';
@@ -13,6 +15,7 @@ describe('ProductDetailsPage', () => {
   );
   const repository = { search: vi.fn(), getById: vi.fn() };
   const basket = { add: vi.fn() };
+  const authenticated = signal(true);
   let response: Subject<Product | null>;
 
   const product: Product = {
@@ -32,6 +35,7 @@ describe('ProductDetailsPage', () => {
     repository.getById.mockReset();
     repository.getById.mockReturnValue(response);
     basket.add.mockReset();
+    authenticated.set(true);
 
     await TestBed.configureTestingModule({
       imports: [ProductDetailsPage],
@@ -39,6 +43,10 @@ describe('ProductDetailsPage', () => {
         provideRouter([]),
         { provide: ProductsRepository, useValue: repository },
         { provide: BasketService, useValue: basket },
+        {
+          provide: AuthenticationSessionService,
+          useValue: { isAuthenticated: authenticated },
+        },
         { provide: ActivatedRoute, useValue: { paramMap: params } },
       ],
     }).compileComponents();
@@ -86,6 +94,29 @@ describe('ProductDetailsPage', () => {
 
     expect(basket.add).toHaveBeenCalledWith(product, 2);
     expect((fixture.nativeElement as HTMLElement).textContent).toContain('Added to basket');
+  });
+
+  it('redirects anonymous customers to login without changing the basket', () => {
+    authenticated.set(false);
+    const router = TestBed.inject(Router);
+    const navigate = vi.spyOn(router, 'navigate').mockResolvedValue(true);
+    const fixture = TestBed.createComponent(ProductDetailsPage);
+    fixture.detectChanges();
+    response.next(product);
+    response.complete();
+    fixture.detectChanges();
+
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('[data-testid="add-to-basket"]')?.textContent).toContain(
+      'Sign in to add',
+    );
+    expect(element.querySelector('a[href="/basket"]')).toBeNull();
+    (element.querySelector('[data-testid="add-to-basket"]') as HTMLButtonElement).click();
+
+    expect(basket.add).not.toHaveBeenCalled();
+    expect(navigate).toHaveBeenCalledWith(['/login'], {
+      queryParams: { returnUrl: '/products/electronics/headphones' },
+    });
   });
 
   it('shows a not-found state for an unknown product', () => {

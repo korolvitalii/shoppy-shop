@@ -68,9 +68,11 @@
                 [disabled]="!item.inStock"
                 (click)="addToBasket()"
               >
-                {{ added() ? 'Added to basket' : 'Add to basket' }}
+                {{ addButtonLabel() }}
               </button>
-              <a class="basket-link" routerLink="/basket">View basket</a>
+              @if (isAuthenticated()) {
+                <a class="basket-link" routerLink="/basket">View basket</a>
+              }
             </div>
             <app-tabs label="Product information">
               <app-tab id="description" label="Description"
