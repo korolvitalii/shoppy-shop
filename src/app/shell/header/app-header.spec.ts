@@ -1,25 +1,45 @@
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
+import { of } from 'rxjs';
 
 import { AuthenticationSessionService } from '../../features/auth/data-access/authentication-session.service';
 import { BasketService } from '../../features/basket/data-access/basket.service';
+import { ProductsRepository } from '../../features/catalogue/data-access/products.repository';
+import { type Product } from '../../features/catalogue/models/product';
 import { AppHeader } from './app-header';
 
 describe('AppHeader', () => {
   const basket = { itemCount: signal(3) };
   const authenticated = signal(false);
   const session = { isAuthenticated: authenticated, end: vi.fn() };
+  const product: Product = {
+    id: 'electronics-1',
+    groupId: 'electronics',
+    name: 'Wireless Headphones',
+    brand: 'Sonic Studio',
+    description: 'Comfortable headphones',
+    imageUrl: '/headphones.jpg',
+    price: 129,
+    salePrice: 99,
+    inStock: true,
+  };
+  const productsRepository = { search: vi.fn(), getById: vi.fn() };
+
+  afterEach(() => vi.useRealTimers());
 
   beforeEach(async () => {
     authenticated.set(false);
     session.end.mockReset();
+    productsRepository.search.mockReset();
+    productsRepository.search.mockReturnValue(of([product]));
     await TestBed.configureTestingModule({
       imports: [AppHeader],
       providers: [
         provideRouter([]),
         { provide: BasketService, useValue: basket },
         { provide: AuthenticationSessionService, useValue: session },
+        { provide: ProductsRepository, useValue: productsRepository },
       ],
     }).compileComponents();
   });
@@ -83,6 +103,54 @@ describe('AppHeader', () => {
     expect(navigate).toHaveBeenCalledWith(['/products', 'electronics'], {
       queryParams: { search: 'wireless headphones' },
     });
+  });
+
+  it('shows category-aware product suggestions after typing', async () => {
+    vi.useFakeTimers();
+    const fixture = TestBed.createComponent(AppHeader);
+    fixture.detectChanges();
+    const input = fixture.nativeElement.querySelector('input[type="search"]') as HTMLInputElement;
+    const select = fixture.nativeElement.querySelector('select') as HTMLSelectElement;
+
+    select.value = 'electronics';
+    select.dispatchEvent(new Event('change'));
+    input.value = 'wire';
+    input.dispatchEvent(new Event('input'));
+    await vi.advanceTimersByTimeAsync(250);
+    fixture.detectChanges();
+
+    expect(productsRepository.search).toHaveBeenCalledWith('electronics', {
+      search: 'wire',
+      sort: 'featured',
+      price: 'all',
+    });
+    expect(input.getAttribute('role')).toBe('combobox');
+    expect(input.getAttribute('aria-expanded')).toBe('true');
+    expect(fixture.nativeElement.querySelector('[role="listbox"]')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('[role="option"]')?.textContent).toContain(
+      'Wireless Headphones',
+    );
+  });
+
+  it('supports keyboard selection of a suggested product', async () => {
+    vi.useFakeTimers();
+    const fixture = TestBed.createComponent(AppHeader);
+    const router = TestBed.inject(Router);
+    const navigate = vi.spyOn(router, 'navigate').mockResolvedValue(true);
+    fixture.detectChanges();
+    const input = fixture.nativeElement.querySelector('input[type="search"]') as HTMLInputElement;
+
+    input.value = 'head';
+    input.dispatchEvent(new Event('input'));
+    await vi.advanceTimersByTimeAsync(250);
+    fixture.detectChanges();
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    fixture.detectChanges();
+
+    expect(input.getAttribute('aria-activedescendant')).toBe('search-suggestion-0');
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+
+    expect(navigate).toHaveBeenCalledWith(['/products', 'electronics', 'electronics-1']);
   });
 
   it('exposes an accessible mobile-menu state', () => {
