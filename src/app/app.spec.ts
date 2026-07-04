@@ -2,12 +2,16 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
 import { App } from './app';
+import { ProductsRepository } from './features/catalogue/data-access/products.repository';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
-      providers: [provideRouter([])],
+      providers: [
+        provideRouter([]),
+        { provide: ProductsRepository, useValue: { search: vi.fn(), getById: vi.fn() } },
+      ],
     }).compileComponents();
   });
 

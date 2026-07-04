@@ -5,10 +5,6 @@ import {
   ApiProductGroupsRepository,
   ProductGroupsRepository,
 } from './features/catalogue/data-access/product-groups.repository';
-import {
-  ApiProductsRepository,
-  ProductsRepository,
-} from './features/catalogue/data-access/products.repository';
 import { CheckoutFacade } from './features/checkout/data-access/checkout.facade';
 import {
   ApiOrdersRepository,
@@ -30,10 +26,7 @@ export const routes: Routes = [
   },
   {
     path: 'products',
-    providers: [
-      { provide: ProductGroupsRepository, useClass: ApiProductGroupsRepository },
-      { provide: ProductsRepository, useClass: ApiProductsRepository },
-    ],
+    providers: [{ provide: ProductGroupsRepository, useClass: ApiProductGroupsRepository }],
     children: [
       {
         path: '',

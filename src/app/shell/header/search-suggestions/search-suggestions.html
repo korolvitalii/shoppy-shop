@@ -1,0 +1,26 @@
+<p class="suggestions-heading">Suggested products</p>
+@for (product of products(); track product.id; let index = $index) {
+  <button
+    type="button"
+    role="option"
+    class="suggestion"
+    [id]="suggestionId(index)"
+    [attr.aria-selected]="activeIndex() === index"
+    [class.active]="activeIndex() === index"
+    (mouseenter)="activeIndexChange.emit(index)"
+    (click)="productSelected.emit(product)"
+  >
+    <img [src]="product.imageUrl" alt="" width="64" height="52" />
+    <span class="suggestion-copy">
+      <strong>{{ product.name }}</strong>
+      <span>{{ product.brand }} · {{ product.groupId }}</span>
+    </span>
+    <span class="suggestion-price">
+      {{ product.salePrice ?? product.price | currency: 'GBP' }}
+    </span>
+  </button>
+}
+<button class="view-results" type="submit">
+  View all results for “{{ query() }}”
+  <span aria-hidden="true">→</span>
+</button>

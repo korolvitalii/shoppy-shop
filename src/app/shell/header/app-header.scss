@@ -63,13 +63,13 @@
   fill: var(--header-coral);
 }
 .search-form {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(8rem, 1fr) auto auto;
   min-width: 0;
   min-height: 2.85rem;
   border: 2px solid var(--header-violet);
   border-radius: 0.7rem;
-  overflow: hidden;
   background: #fff;
 }
 .search-form:focus-within {

@@ -23,6 +23,15 @@
           formControlName="query"
           placeholder="Search products, brands and more"
           autocomplete="off"
+          role="combobox"
+          aria-autocomplete="list"
+          aria-controls="search-suggestions"
+          [attr.aria-expanded]="suggestionsOpen()"
+          [attr.aria-activedescendant]="
+            activeSuggestionIndex() >= 0 ? suggestionId(activeSuggestionIndex()) : null
+          "
+          (focus)="showSuggestions()"
+          (keydown)="handleSearchKeydown($event)"
         />
         <label class="visually-hidden" for="search-category">Search category</label>
         <select id="search-category" formControlName="category">
@@ -38,6 +47,17 @@
           </svg>
           <span>Search</span>
         </button>
+        @if (suggestionsOpen()) {
+          <app-search-suggestions
+            id="search-suggestions"
+            role="listbox"
+            [products]="suggestions()"
+            [activeIndex]="activeSuggestionIndex()"
+            [query]="searchForm.controls.query.value.trim()"
+            (activeIndexChange)="activeSuggestionIndex.set($event)"
+            (productSelected)="openSuggestion($event)"
+          />
+        }
       </form>
 
       <div class="header-actions">
