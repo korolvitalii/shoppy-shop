@@ -30,4 +30,49 @@ describe('apiErrorInterceptor', () => {
     expect(notifications.current()?.code).toBe(APP_ERROR_CODES.server);
     expect(notifications.current()?.userMessage).not.toContain('database');
   });
+
+  it('clears an API error after the same request succeeds on retry', () => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideHttpClient(withInterceptors([apiErrorInterceptor])),
+        provideHttpClientTesting(),
+      ],
+    });
+    const http = TestBed.inject(HttpClient);
+    const controller = TestBed.inject(HttpTestingController);
+    const notifications = TestBed.inject(ErrorNotificationService);
+
+    http.get('/api/product-groups').subscribe({ error: () => undefined });
+    controller
+      .expectOne('/api/product-groups')
+      .flush(null, { status: 503, statusText: 'Unavailable' });
+    expect(notifications.current()).not.toBeNull();
+
+    http.get('/api/product-groups').subscribe();
+    controller.expectOne('/api/product-groups').flush([]);
+
+    expect(notifications.current()).toBeNull();
+  });
+
+  it('keeps the current API error when an unrelated request succeeds', () => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideHttpClient(withInterceptors([apiErrorInterceptor])),
+        provideHttpClientTesting(),
+      ],
+    });
+    const http = TestBed.inject(HttpClient);
+    const controller = TestBed.inject(HttpTestingController);
+    const notifications = TestBed.inject(ErrorNotificationService);
+
+    http.get('/api/product-groups').subscribe({ error: () => undefined });
+    controller
+      .expectOne('/api/product-groups')
+      .flush(null, { status: 503, statusText: 'Unavailable' });
+
+    http.get('/api/products?search=gold').subscribe();
+    controller.expectOne('/api/products?search=gold').flush([]);
+
+    expect(notifications.current()?.code).toBe(APP_ERROR_CODES.server);
+  });
 });
