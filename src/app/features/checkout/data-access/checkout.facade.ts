@@ -28,6 +28,10 @@ export class CheckoutFacade {
     this.paymentToken.set(value);
   }
 
+  clearPaymentToken(): void {
+    this.paymentToken.set(null);
+  }
+
   createOrder(): Observable<Order> {
     const request: CreateOrderRequest = {
       lines: this.basket.items(),

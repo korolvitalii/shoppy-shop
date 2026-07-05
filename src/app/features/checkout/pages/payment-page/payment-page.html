@@ -1,24 +1,90 @@
 <main class="checkout">
-  <p class="step">Step 2 of 3</p>
+  <app-checkout-stepper
+    [currentStep]="2"
+    [deliveryComplete]="facade.delivery() !== null"
+    [paymentComplete]="facade.paymentToken() !== null"
+  />
   <h1>Payment</h1>
   <p>Simulated payment—no real charge is made and card details are never stored.</p>
-  <form [formGroup]="form" (ngSubmit)="continue()" novalidate>
-    <label>Cardholder name<input autocomplete="cc-name" formControlName="name" /></label
-    ><label
-      >Card number<input
-        inputmode="numeric"
-        autocomplete="cc-number"
-        formControlName="card"
-        maxlength="16" /></label
-    ><label
-      >Expiry<input autocomplete="cc-exp" formControlName="expiry" placeholder="MM/YY" /></label
-    ><label
-      >CVV<input
-        type="password"
-        inputmode="numeric"
-        autocomplete="cc-csc"
-        formControlName="cvv"
-        maxlength="4" /></label
-    ><button type="submit">Review order</button>
-  </form>
+  @if (!editingPayment() && facade.paymentToken(); as payment) {
+    <section class="saved-payment" aria-label="Selected payment method">
+      <p>
+        <strong>{{ payment.brand }}</strong> ending in {{ payment.last4 }}
+      </p>
+      <button type="button" class="text-button" (click)="changePayment()">Change payment</button>
+    </section>
+    <div class="checkout-actions">
+      <a class="secondary-action" routerLink="/checkout/delivery">Back to delivery</a>
+      <button type="button" (click)="continue()">Continue to review</button>
+    </div>
+  } @else {
+    <form [formGroup]="form" (submit)="continue($event)" novalidate>
+      @if (submitted() && form.invalid) {
+        <p class="form-error" role="alert">Check the highlighted payment details and try again.</p>
+      }
+      <label for="cardholder-name">
+        Cardholder name
+        <input
+          id="cardholder-name"
+          autocomplete="cc-name"
+          formControlName="name"
+          [attr.aria-invalid]="form.controls.name.touched && form.controls.name.invalid"
+        />
+        @if (form.controls.name.touched && form.controls.name.invalid) {
+          <span>Enter the name shown on the card</span>
+        }
+      </label>
+      <label for="card-number">
+        Card number
+        <input
+          id="card-number"
+          inputmode="numeric"
+          autocomplete="cc-number"
+          formControlName="card"
+          maxlength="19"
+          placeholder="4444 4444 4444 4444"
+          [attr.aria-invalid]="form.controls.card.touched && form.controls.card.invalid"
+          (input)="formatCard($event)"
+        />
+        @if (form.controls.card.touched && form.controls.card.invalid) {
+          <span>Enter a 16-digit card number</span>
+        }
+      </label>
+      <label for="card-expiry">
+        Expiry
+        <input
+          id="card-expiry"
+          inputmode="numeric"
+          autocomplete="cc-exp"
+          formControlName="expiry"
+          maxlength="5"
+          placeholder="MM/YY"
+          [attr.aria-invalid]="form.controls.expiry.touched && form.controls.expiry.invalid"
+          (input)="formatExpiry($event)"
+        />
+        @if (form.controls.expiry.touched && form.controls.expiry.invalid) {
+          <span>Enter expiry as MM/YY</span>
+        }
+      </label>
+      <label for="card-cvv">
+        CVV
+        <input
+          id="card-cvv"
+          type="password"
+          inputmode="numeric"
+          autocomplete="cc-csc"
+          formControlName="cvv"
+          maxlength="4"
+          [attr.aria-invalid]="form.controls.cvv.touched && form.controls.cvv.invalid"
+        />
+        @if (form.controls.cvv.touched && form.controls.cvv.invalid) {
+          <span>Enter the 3 or 4-digit security code</span>
+        }
+      </label>
+      <div class="checkout-actions">
+        <a class="secondary-action" routerLink="/checkout/delivery">Back to delivery</a>
+        <button type="submit">Continue to review</button>
+      </div>
+    </form>
+  }
 </main>

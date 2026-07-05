@@ -19,6 +19,15 @@ form {
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
 }
+.form-error {
+  grid-column: 1/-1;
+  padding: 0.75rem 1rem;
+  margin: 0;
+  border: 1px solid #c63f4d;
+  border-radius: 0.6rem;
+  color: #8e2634;
+  background: #fff2f2;
+}
 label {
   display: grid;
   gap: 0.35rem;
@@ -36,11 +45,16 @@ input {
   border-radius: 0.7rem;
   background: #fff;
 }
+input[aria-invalid='true'] {
+  border-color: #c63f4d;
+  box-shadow: 0 0 0 2px rgba(198, 63, 77, 0.12);
+}
 label span {
   color: #c63f4d;
   font-size: 0.7rem;
 }
-button {
+.checkout button,
+.primary-action {
   grid-column: 1/-1;
   min-height: 3.1rem;
   border: 0;
@@ -50,11 +64,73 @@ button {
   font-weight: 800;
   cursor: pointer;
 }
+.checkout-actions {
+  grid-column: 1/-1;
+  display: grid;
+  grid-template-columns: minmax(8rem, auto) 1fr;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+.secondary-action,
+.primary-action {
+  display: grid;
+  min-height: 3.1rem;
+  place-items: center;
+  border-radius: 0.75rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+.secondary-action {
+  padding-inline: 1rem;
+  border: 1px solid rgba(22, 33, 62, 0.2);
+  color: #16213e;
+  background: #fff;
+}
+.saved-payment {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid rgba(22, 33, 62, 0.15);
+  border-radius: 0.75rem;
+  background: #fff;
+}
+.saved-payment p {
+  margin: 0;
+}
+.checkout .text-button {
+  min-height: auto;
+  padding: 0;
+  color: #6842e8;
+  background: none;
+}
+.confirmation {
+  text-align: center;
+}
+.confirmation-icon {
+  display: grid;
+  width: 4rem;
+  height: 4rem;
+  margin-inline: auto;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: #16835f;
+  font-size: 2rem;
+}
+.confirmation-total {
+  font-size: 1.15rem;
+}
 @media (max-width: 35rem) {
   form {
     grid-template-columns: 1fr;
   }
   label:nth-child(3) {
     grid-column: auto;
+  }
+  .checkout-actions {
+    grid-template-columns: 1fr;
   }
 }
