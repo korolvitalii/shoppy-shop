@@ -1,7 +1,11 @@
 <main class="checkout">
-  <p class="step">Step 1 of 3</p>
+  <app-checkout-stepper
+    [currentStep]="1"
+    [deliveryComplete]="facade.delivery() !== null"
+    [paymentComplete]="facade.paymentToken() !== null"
+  />
   <h1>Delivery details</h1>
-  <form [formGroup]="form" (ngSubmit)="continue()" novalidate>
+  <form [formGroup]="form" (submit)="continue($event)" novalidate>
     @for (field of ['name', 'email', 'address', 'city', 'postcode', 'country']; track field) {
       <label [for]="field"
         >{{ field
@@ -15,6 +19,9 @@
         }
       </label>
     }
-    <button type="submit">Continue to payment</button>
+    <div class="checkout-actions">
+      <a class="secondary-action" routerLink="/basket">Back to basket</a>
+      <button type="submit">Continue to payment</button>
+    </div>
   </form>
 </main>

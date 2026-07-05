@@ -1,12 +1,13 @@
 import { CurrencyPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { finalize, take } from 'rxjs';
 
+import { CheckoutStepper } from '../../components/checkout-stepper/checkout-stepper';
 import { CheckoutFacade } from '../../data-access/checkout.facade';
 @Component({
   selector: 'app-review-page',
-  imports: [CurrencyPipe],
+  imports: [CheckoutStepper, CurrencyPipe, RouterLink],
   templateUrl: './review-page.html',
   styleUrl: '../checkout.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,8 +18,9 @@ export class ReviewPage {
   readonly submitting = signal(false);
   readonly error = signal<string | null>(null);
 
-  submit() {
+  submit(): void {
     if (this.submitting()) return;
+    this.error.set(null);
     this.submitting.set(true);
     this.facade
       .createOrder()

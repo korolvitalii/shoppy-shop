@@ -1,17 +1,18 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
+import { CheckoutStepper } from '../../components/checkout-stepper/checkout-stepper';
 import { CheckoutFacade } from '../../data-access/checkout.facade';
 @Component({
   selector: 'app-delivery-page',
-  imports: [ReactiveFormsModule],
+  imports: [CheckoutStepper, ReactiveFormsModule, RouterLink],
   templateUrl: './delivery-page.html',
   styleUrl: '../checkout.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeliveryPage {
-  private readonly facade = inject(CheckoutFacade);
+  protected readonly facade = inject(CheckoutFacade);
   private readonly router = inject(Router);
   readonly form = new FormGroup({
     name: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
@@ -31,7 +32,13 @@ export class DeliveryPage {
     }),
   });
 
-  continue() {
+  constructor() {
+    const delivery = this.facade.delivery();
+    if (delivery) this.form.setValue(delivery);
+  }
+
+  continue(event?: SubmitEvent): void {
+    event?.preventDefault();
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
