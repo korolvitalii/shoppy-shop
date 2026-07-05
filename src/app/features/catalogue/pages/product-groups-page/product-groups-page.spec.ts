@@ -83,6 +83,26 @@ describe('ProductGroupsPage', () => {
     expect(alert.textContent).toContain('We could not load the product categories');
 
     (alert.querySelector('button') as HTMLButtonElement).click();
+    fixture.detectChanges();
     expect(repository.getAll).toHaveBeenCalledTimes(2);
+    expect(fixture.nativeElement.querySelector('[role="status"]')?.textContent).toContain(
+      'Loading product categories',
+    );
+
+    retryResponse.next([
+      {
+        id: 'home',
+        name: 'Home & living',
+        description: 'Considered pieces for every room.',
+        imageUrl: '/images/home.jpg',
+        itemCount: 8,
+        badge: null,
+      },
+    ]);
+    retryResponse.complete();
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('[role="alert"]')).toBeNull();
+    expect(fixture.nativeElement.textContent).toContain('Home & living');
   });
 });
