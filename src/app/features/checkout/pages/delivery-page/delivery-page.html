@@ -1,26 +1,105 @@
 <main class="checkout">
   <app-checkout-stepper
+    backLabel="Back to basket"
+    backRoute="/basket"
     [currentStep]="1"
     [deliveryComplete]="facade.delivery() !== null"
     [paymentComplete]="facade.paymentToken() !== null"
   />
   <h1>Delivery details</h1>
+  <p class="page-intro">Tell us where your order should arrive.</p>
   <form [formGroup]="form" (submit)="continue($event)" novalidate>
-    @for (field of ['name', 'email', 'address', 'city', 'postcode', 'country']; track field) {
-      <label [for]="field"
-        >{{ field
-        }}<input
-          [id]="field"
-          [type]="field === 'email' ? 'email' : 'text'"
-          [formControlName]="$any(field)"
-        />
-        @if (form.get(field)?.touched && form.get(field)?.invalid) {
-          <span>{{ field === 'name' ? 'Name is required' : 'Enter a valid ' + field }}</span>
-        }
-      </label>
-    }
+    <div class="form-heading">
+      <span aria-hidden="true">01</span>
+      <div>
+        <h2>Contact information</h2>
+        <p>We’ll use these details for delivery updates.</p>
+      </div>
+    </div>
+    <label for="name">
+      Full name
+      <input
+        id="name"
+        autocomplete="name"
+        formControlName="name"
+        placeholder="Alex Morgan"
+        [attr.aria-invalid]="form.controls.name.touched && form.controls.name.invalid"
+      />
+      @if (form.controls.name.touched && form.controls.name.invalid) {
+        <span>Name is required</span>
+      }
+    </label>
+    <label for="email">
+      Email address
+      <input
+        id="email"
+        type="email"
+        autocomplete="email"
+        formControlName="email"
+        placeholder="alex@example.com"
+        [attr.aria-invalid]="form.controls.email.touched && form.controls.email.invalid"
+      />
+      @if (form.controls.email.touched && form.controls.email.invalid) {
+        <span>Enter a valid email address</span>
+      }
+    </label>
+    <div class="form-heading form-heading--address">
+      <span aria-hidden="true">02</span>
+      <div>
+        <h2>Delivery address</h2>
+        <p>Choose an address where someone can receive the parcel.</p>
+      </div>
+    </div>
+    <label class="full-width" for="address">
+      Street address
+      <input
+        id="address"
+        autocomplete="street-address"
+        formControlName="address"
+        placeholder="4 Market Street"
+        [attr.aria-invalid]="form.controls.address.touched && form.controls.address.invalid"
+      />
+      @if (form.controls.address.touched && form.controls.address.invalid) {
+        <span>Address is required</span>
+      }
+    </label>
+    <label for="city">
+      City
+      <input
+        id="city"
+        autocomplete="address-level2"
+        formControlName="city"
+        placeholder="London"
+        [attr.aria-invalid]="form.controls.city.touched && form.controls.city.invalid"
+      />
+      @if (form.controls.city.touched && form.controls.city.invalid) {
+        <span>City is required</span>
+      }
+    </label>
+    <label for="postcode">
+      Postcode
+      <input
+        id="postcode"
+        autocomplete="postal-code"
+        formControlName="postcode"
+        placeholder="SW1A 1AA"
+        [attr.aria-invalid]="form.controls.postcode.touched && form.controls.postcode.invalid"
+      />
+      @if (form.controls.postcode.touched && form.controls.postcode.invalid) {
+        <span>Enter a valid postcode</span>
+      }
+    </label>
+    <label class="full-width" for="country">
+      Country
+      <select id="country" autocomplete="country-name" formControlName="country">
+        <option>United Kingdom</option>
+        <option>Ireland</option>
+        <option>France</option>
+        <option>Germany</option>
+        <option>Spain</option>
+      </select>
+    </label>
     <div class="checkout-actions">
-      <a class="secondary-action" routerLink="/basket">Back to basket</a>
       <button type="submit">Continue to payment</button>
     </div>
   </form>

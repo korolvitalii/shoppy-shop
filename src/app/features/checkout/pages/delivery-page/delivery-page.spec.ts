@@ -46,5 +46,6 @@ describe('DeliveryPage', () => {
 
     expect(fixture.componentInstance.form.controls.name.value).toBe('Alex Morgan');
     expect(fixture.nativeElement.querySelector('a[href="/basket"]')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('.checkout-actions a')).toBeNull();
   });
 });

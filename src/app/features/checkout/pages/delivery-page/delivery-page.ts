@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 
 import { CheckoutStepper } from '../../components/checkout-stepper/checkout-stepper';
 import { CheckoutFacade } from '../../data-access/checkout.facade';
 @Component({
   selector: 'app-delivery-page',
-  imports: [CheckoutStepper, ReactiveFormsModule, RouterLink],
+  imports: [CheckoutStepper, ReactiveFormsModule],
   templateUrl: './delivery-page.html',
   styleUrl: '../checkout.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

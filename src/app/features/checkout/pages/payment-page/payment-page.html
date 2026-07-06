@@ -5,7 +5,9 @@
     [paymentComplete]="facade.paymentToken() !== null"
   />
   <h1>Payment</h1>
-  <p>Simulated payment—no real charge is made and card details are never stored.</p>
+  <p class="page-intro">
+    Secure mock checkout—no real charge is made and card details are never stored.
+  </p>
   @if (!editingPayment() && facade.paymentToken(); as payment) {
     <section class="saved-payment" aria-label="Selected payment method">
       <p>
@@ -14,11 +16,17 @@
       <button type="button" class="text-button" (click)="changePayment()">Change payment</button>
     </section>
     <div class="checkout-actions">
-      <a class="secondary-action" routerLink="/checkout/delivery">Back to delivery</a>
       <button type="button" (click)="continue()">Continue to review</button>
     </div>
   } @else {
     <form [formGroup]="form" (submit)="continue($event)" novalidate>
+      <div class="form-heading">
+        <span aria-hidden="true">✓</span>
+        <div>
+          <h2>Card details</h2>
+          <p>Protected mock payment for portfolio demonstration.</p>
+        </div>
+      </div>
       @if (submitted() && form.invalid) {
         <p class="form-error" role="alert">Check the highlighted payment details and try again.</p>
       }
@@ -82,7 +90,6 @@
         }
       </label>
       <div class="checkout-actions">
-        <a class="secondary-action" routerLink="/checkout/delivery">Back to delivery</a>
         <button type="submit">Continue to review</button>
       </div>
     </form>
