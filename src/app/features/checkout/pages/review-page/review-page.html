@@ -5,27 +5,59 @@
     [paymentComplete]="facade.paymentToken() !== null"
   />
   <h1>Review order</h1>
-  <section>
+  <p class="page-intro">Check the details below before placing your order.</p>
+  <section class="review-card" aria-labelledby="items-heading">
+    <div class="review-card-heading">
+      <div>
+        <span>Order summary</span>
+        <h2 id="items-heading">Your items</h2>
+      </div>
+      <strong>{{ facade.items().length }} products</strong>
+    </div>
     @for (item of facade.items(); track item.productId) {
-      <p>
-        {{ item.name }} × {{ item.quantity }}
+      <article class="review-item">
+        <img [src]="item.imageUrl" alt="" width="72" height="64" />
+        <div>
+          <h3>{{ item.name }}</h3>
+          <p>Quantity {{ item.quantity }}</p>
+        </div>
         <strong>{{ item.unitPrice * item.quantity | currency: 'GBP' }}</strong>
-      </p>
+      </article>
     }
   </section>
-  <p>Deliver to {{ facade.delivery()?.name }}, {{ facade.delivery()?.postcode }}</p>
-  <p>
-    Subtotal <strong>{{ facade.subtotal() | currency: 'GBP' }}</strong>
-  </p>
-  <p>
-    Delivery <strong>{{ facade.deliveryCharge() | currency: 'GBP' }}</strong>
-  </p>
-  <h2>Total {{ facade.total() | currency: 'GBP' }}</h2>
+  <div class="review-columns">
+    <section class="review-card delivery-summary" aria-labelledby="delivery-heading">
+      <div class="review-card-heading">
+        <div>
+          <span>Delivery</span>
+          <h2 id="delivery-heading">Shipping address</h2>
+        </div>
+      </div>
+      <p>
+        <strong>{{ facade.delivery()?.name }}</strong>
+      </p>
+      <p>{{ facade.delivery()?.address }}</p>
+      <p>{{ facade.delivery()?.city }}, {{ facade.delivery()?.postcode }}</p>
+      <p>{{ facade.delivery()?.country }}</p>
+    </section>
+    <section class="review-card totals" aria-labelledby="total-heading">
+      <h2 id="total-heading">Payment summary</h2>
+      <p>
+        <span>Subtotal</span><strong>{{ facade.subtotal() | currency: 'GBP' }}</strong>
+      </p>
+      <p>
+        <span>Standard delivery</span
+        ><strong>{{ facade.deliveryCharge() | currency: 'GBP' }}</strong>
+      </p>
+      <p class="grand-total">
+        <span>Total</span><strong>{{ facade.total() | currency: 'GBP' }}</strong>
+      </p>
+    </section>
+  </div>
   @if (error()) {
     <p role="alert">{{ error() }}</p>
   }
   <div class="checkout-actions">
-    <a class="secondary-action" routerLink="/checkout/payment">Back to payment</a>
     <button type="button" [disabled]="submitting()" (click)="submit()">
       {{ submitting() ? 'Placing order…' : 'Place order' }}
     </button>

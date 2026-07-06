@@ -1,13 +1,13 @@
 import { CurrencyPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { finalize, take } from 'rxjs';
 
 import { CheckoutStepper } from '../../components/checkout-stepper/checkout-stepper';
 import { CheckoutFacade } from '../../data-access/checkout.facade';
 @Component({
   selector: 'app-review-page',
-  imports: [CheckoutStepper, CurrencyPipe, RouterLink],
+  imports: [CheckoutStepper, CurrencyPipe],
   templateUrl: './review-page.html',
   styleUrl: '../checkout.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
