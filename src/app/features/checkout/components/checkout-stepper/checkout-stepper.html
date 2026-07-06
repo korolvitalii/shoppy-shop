@@ -1,14 +1,29 @@
 <nav aria-label="Checkout progress">
+  @if (backRoute(); as route) {
+    <a class="back-link" [routerLink]="route" [attr.aria-label]="backLabel()">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="m14.5 6-6 6 6 6" />
+      </svg>
+    </a>
+  }
   <ol>
     <li [class.complete]="deliveryComplete()" [class.current]="currentStep() === 1">
-      <a routerLink="/checkout/delivery" [attr.aria-current]="currentStep() === 1 ? 'step' : null">
+      <a
+        class="step-link"
+        routerLink="/checkout/delivery"
+        [attr.aria-current]="currentStep() === 1 ? 'step' : null"
+      >
         <span>1</span>
         Delivery
       </a>
     </li>
     <li [class.complete]="paymentComplete()" [class.current]="currentStep() === 2">
       @if (deliveryComplete()) {
-        <a routerLink="/checkout/payment" [attr.aria-current]="currentStep() === 2 ? 'step' : null">
+        <a
+          class="step-link"
+          routerLink="/checkout/payment"
+          [attr.aria-current]="currentStep() === 2 ? 'step' : null"
+        >
           <span>2</span>
           Payment
         </a>
@@ -18,7 +33,11 @@
     </li>
     <li [class.current]="currentStep() === 3">
       @if (paymentComplete()) {
-        <a routerLink="/checkout/review" [attr.aria-current]="currentStep() === 3 ? 'step' : null">
+        <a
+          class="step-link"
+          routerLink="/checkout/review"
+          [attr.aria-current]="currentStep() === 3 ? 'step' : null"
+        >
           <span>3</span>
           Review
         </a>

@@ -1,6 +1,10 @@
 :host {
   display: block;
-  margin-bottom: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+nav {
+  position: relative;
 }
 
 ol {
@@ -19,7 +23,7 @@ li:not(:last-child)::after {
   content: '';
   position: absolute;
   top: 1rem;
-  right: 0;
+  right: calc(-50% + 1.25rem);
   left: calc(50% + 1.25rem);
   height: 2px;
   background: rgba(22, 33, 62, 0.15);
@@ -29,10 +33,10 @@ li.complete:not(:last-child)::after {
   background: #6842e8;
 }
 
-a,
+.step-link,
 .disabled {
   display: grid;
-  justify-items: start;
+  justify-items: center;
   gap: 0.45rem;
   color: #65708a;
   font-size: 0.72rem;
@@ -40,12 +44,12 @@ a,
   text-decoration: none;
 }
 
-a:hover,
-.current a {
+.step-link:hover,
+.current .step-link {
   color: #16213e;
 }
 
-a > span,
+.step-link > span,
 .disabled > span {
   position: relative;
   z-index: 1;
@@ -58,8 +62,8 @@ a > span,
   background: #fffdf8;
 }
 
-.complete a > span,
-.current a > span {
+.complete .step-link > span,
+.current .step-link > span {
   border-color: #6842e8;
   color: #fff;
   background: #6842e8;
@@ -69,8 +73,42 @@ a > span,
   opacity: 0.55;
 }
 
+.back-link {
+  position: absolute;
+  top: 0;
+  left: calc(16.666% - 3rem);
+  z-index: 2;
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border: 1px solid rgba(22, 33, 62, 0.18);
+  border-radius: 50%;
+  color: #16213e;
+  background: #fff;
+  transition:
+    color 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+.back-link:hover {
+  border-color: #6842e8;
+  color: #6842e8;
+  transform: translateX(-0.15rem);
+}
+
+.back-link svg {
+  width: 1.1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
 @media (max-width: 35rem) {
-  a,
+  .step-link,
   .disabled {
     font-size: 0.65rem;
   }
