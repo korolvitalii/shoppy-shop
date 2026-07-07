@@ -22,6 +22,7 @@ import {
   switchMap,
 } from 'rxjs';
 
+import { ConfirmationService } from '../../core/confirmation/confirmation.service';
 import { AuthenticationSessionService } from '../../features/auth/data-access/authentication-session.service';
 import { BasketService } from '../../features/basket/data-access/basket.service';
 import { ProductsRepository } from '../../features/catalogue/data-access/products.repository';
@@ -58,6 +59,7 @@ export class AppHeader {
     () => this.suggestions()[this.activeSuggestionIndex()] ?? null,
   );
   private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly confirmation = inject(ConfirmationService);
   private readonly productsRepository = inject(ProductsRepository);
   private readonly router = inject(Router);
 
@@ -169,7 +171,15 @@ export class AppHeader {
     return `search-suggestion-${index}`;
   }
 
-  protected logout(): void {
+  protected async logout(): Promise<void> {
+    const confirmed = await this.confirmation.confirm({
+      title: 'Log out of ShoppyShop?',
+      message: 'Your basket stays on this device, but you will need to sign in again.',
+      confirmLabel: 'Log out',
+      tone: 'danger',
+    });
+    if (!confirmed) return;
+
     this.session.end();
     void this.router.navigateByUrl('/login', { replaceUrl: true });
   }

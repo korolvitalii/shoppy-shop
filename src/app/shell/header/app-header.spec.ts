@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { of } from 'rxjs';
 
+import { ConfirmationService } from '../../core/confirmation/confirmation.service';
 import { AuthenticationSessionService } from '../../features/auth/data-access/authentication-session.service';
 import { BasketService } from '../../features/basket/data-access/basket.service';
 import { ProductsRepository } from '../../features/catalogue/data-access/products.repository';
@@ -25,6 +26,7 @@ describe('AppHeader', () => {
     inStock: true,
   };
   const productsRepository = { search: vi.fn(), getById: vi.fn() };
+  const confirmation = { confirm: vi.fn() };
 
   afterEach(() => vi.useRealTimers());
 
@@ -33,6 +35,8 @@ describe('AppHeader', () => {
     session.end.mockReset();
     productsRepository.search.mockReset();
     productsRepository.search.mockReturnValue(of([product]));
+    confirmation.confirm.mockReset();
+    confirmation.confirm.mockResolvedValue(true);
     await TestBed.configureTestingModule({
       imports: [AppHeader],
       providers: [
@@ -40,6 +44,7 @@ describe('AppHeader', () => {
         { provide: BasketService, useValue: basket },
         { provide: AuthenticationSessionService, useValue: session },
         { provide: ProductsRepository, useValue: productsRepository },
+        { provide: ConfirmationService, useValue: confirmation },
       ],
     }).compileComponents();
   });
@@ -69,6 +74,24 @@ describe('AppHeader', () => {
     expect(element.querySelector('a[href="/orders"]')).toBeNull();
     expect(element.querySelector('a[href="/basket"]')).toBeNull();
     expect(element.textContent).not.toContain('Log out');
+  });
+
+  it('only logs out after destructive action confirmation', async () => {
+    authenticated.set(true);
+    confirmation.confirm.mockResolvedValueOnce(false).mockResolvedValueOnce(true);
+    const fixture = TestBed.createComponent(AppHeader);
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
+    fixture.detectChanges();
+    const button = fixture.nativeElement.querySelector('.account-button') as HTMLButtonElement;
+
+    button.click();
+    await fixture.whenStable();
+    expect(session.end).not.toHaveBeenCalled();
+
+    button.click();
+    await fixture.whenStable();
+    expect(session.end).toHaveBeenCalledOnce();
+    expect(navigate).toHaveBeenCalledWith('/login', { replaceUrl: true });
   });
 
   it('renders a distinctive brand mark and an accessible product search', () => {
