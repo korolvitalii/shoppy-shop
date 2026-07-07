@@ -3,6 +3,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs';
 
+import { ConfirmationDialog } from './shared/ui/confirmation-dialog/confirmation-dialog';
 import { ErrorBanner } from './shared/ui/error-banner/error-banner';
 import { LoadingIndicator } from './shared/ui/loading-indicator/loading-indicator';
 import { AppHeader } from './shell/header/app-header';
@@ -10,7 +11,14 @@ import { MobileNavigation } from './shell/mobile-navigation/mobile-navigation';
 
 @Component({
   selector: 'app-root',
-  imports: [AppHeader, ErrorBanner, LoadingIndicator, MobileNavigation, RouterOutlet],
+  imports: [
+    AppHeader,
+    ConfirmationDialog,
+    ErrorBanner,
+    LoadingIndicator,
+    MobileNavigation,
+    RouterOutlet,
+  ],
   templateUrl: './app.html',
   styleUrl: './app.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,0 +1,37 @@
+@if (confirmation.current(); as request) {
+  <div class="dialog-backdrop" (mousedown)="handleBackdrop($event)">
+    <section
+      class="confirmation-dialog"
+      role="alertdialog"
+      aria-modal="true"
+      aria-labelledby="confirmation-title"
+      aria-describedby="confirmation-message"
+      (keydown)="handleKeydown($event)"
+    >
+      <span
+        class="dialog-icon"
+        [class.dialog-icon--danger]="request.tone === 'danger'"
+        aria-hidden="true"
+      >
+        {{ request.tone === 'danger' ? '!' : '?' }}
+      </span>
+      <h2 id="confirmation-title">{{ request.title }}</h2>
+      <p id="confirmation-message">{{ request.message }}</p>
+      <div class="dialog-actions">
+        <button #dialogButton type="button" class="cancel" (click)="confirmation.cancel()">
+          {{ request.cancelLabel }}
+        </button>
+        <button
+          #dialogButton
+          #confirmButton
+          type="button"
+          class="confirm"
+          [class.confirm--danger]="request.tone === 'danger'"
+          (click)="confirmation.accept()"
+        >
+          {{ request.confirmLabel }}
+        </button>
+      </div>
+    </section>
+  </div>
+}
