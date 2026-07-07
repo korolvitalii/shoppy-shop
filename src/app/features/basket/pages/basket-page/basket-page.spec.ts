@@ -2,6 +2,7 @@ import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
+import { ConfirmationService } from '../../../../core/confirmation/confirmation.service';
 import { BasketService } from '../../data-access/basket.service';
 import { type BasketItem } from '../../models/basket-item';
 import { BasketPage } from './basket-page';
@@ -14,7 +15,9 @@ describe('BasketPage', () => {
     subtotal: signal(0),
     updateQuantity: vi.fn(),
     remove: vi.fn(),
+    clear: vi.fn(),
   };
+  const confirmation = { confirm: vi.fn() };
 
   beforeEach(async () => {
     items.set([]);
@@ -22,10 +25,17 @@ describe('BasketPage', () => {
     basket.subtotal.set(0);
     basket.updateQuantity.mockReset();
     basket.remove.mockReset();
+    basket.clear.mockReset();
+    confirmation.confirm.mockReset();
+    confirmation.confirm.mockResolvedValue(true);
 
     await TestBed.configureTestingModule({
       imports: [BasketPage],
-      providers: [provideRouter([]), { provide: BasketService, useValue: basket }],
+      providers: [
+        provideRouter([]),
+        { provide: BasketService, useValue: basket },
+        { provide: ConfirmationService, useValue: confirmation },
+      ],
     }).compileComponents();
   });
 
@@ -37,7 +47,7 @@ describe('BasketPage', () => {
     expect(fixture.nativeElement.querySelector('a[href="/products"]')).toBeTruthy();
   });
 
-  it('renders items, totals, and delegates quantity changes', () => {
+  it('renders items, totals, and confirms removal', async () => {
     items.set([
       {
         productId: 'headphones',
@@ -65,6 +75,58 @@ describe('BasketPage', () => {
     expect(basket.updateQuantity).toHaveBeenCalledWith('headphones', 3);
 
     (element.querySelector('[aria-label="Remove Studio headphones"]') as HTMLButtonElement).click();
+    await fixture.whenStable();
+
+    expect(confirmation.confirm).toHaveBeenCalledWith(
+      expect.objectContaining({ title: 'Remove Studio headphones?', tone: 'danger' }),
+    );
     expect(basket.remove).toHaveBeenCalledWith('headphones');
+  });
+
+  it('keeps an item when removal is cancelled', async () => {
+    confirmation.confirm.mockResolvedValue(false);
+    items.set([
+      {
+        productId: 'headphones',
+        groupId: 'electronics',
+        name: 'Studio headphones',
+        imageUrl: '/images/headphones.jpg',
+        unitPrice: 199,
+        quantity: 1,
+      },
+    ]);
+    basket.itemCount.set(1);
+    const fixture = TestBed.createComponent(BasketPage);
+    fixture.detectChanges();
+
+    (fixture.nativeElement.querySelector('[aria-label^="Decrease"]') as HTMLButtonElement).click();
+    await fixture.whenStable();
+
+    expect(basket.remove).not.toHaveBeenCalled();
+    expect(basket.updateQuantity).not.toHaveBeenCalled();
+  });
+
+  it('confirms before clearing the complete basket', async () => {
+    items.set([
+      {
+        productId: 'headphones',
+        groupId: 'electronics',
+        name: 'Studio headphones',
+        imageUrl: '/images/headphones.jpg',
+        unitPrice: 199,
+        quantity: 2,
+      },
+    ]);
+    basket.itemCount.set(2);
+    const fixture = TestBed.createComponent(BasketPage);
+    fixture.detectChanges();
+
+    (fixture.nativeElement.querySelector('.clear') as HTMLButtonElement).click();
+    await fixture.whenStable();
+
+    expect(confirmation.confirm).toHaveBeenCalledWith(
+      expect.objectContaining({ title: 'Clear your basket?' }),
+    );
+    expect(basket.clear).toHaveBeenCalledOnce();
   });
 });

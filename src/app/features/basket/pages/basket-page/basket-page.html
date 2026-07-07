@@ -8,9 +8,12 @@
     </section>
   } @else {
     <header>
-      <p class="eyebrow">Your selection</p>
-      <h1>Shopping basket</h1>
-      <p>{{ basket.itemCount() }} {{ basket.itemCount() === 1 ? 'item' : 'items' }}</p>
+      <div>
+        <p class="eyebrow">Your selection</p>
+        <h1>Shopping basket</h1>
+        <p>{{ basket.itemCount() }} {{ basket.itemCount() === 1 ? 'item' : 'items' }}</p>
+      </div>
+      <button class="clear" type="button" (click)="clearBasket()">Clear basket</button>
     </header>
 
     <div class="layout">
@@ -29,7 +32,7 @@
                 <button
                   type="button"
                   [attr.aria-label]="'Decrease ' + item.name + ' quantity'"
-                  (click)="basket.updateQuantity(item.productId, item.quantity - 1)"
+                  (click)="decrease(item)"
                 >
                   −
                 </button>
@@ -49,7 +52,7 @@
                 class="remove"
                 type="button"
                 [attr.aria-label]="'Remove ' + item.name"
-                (click)="basket.remove(item.productId)"
+                (click)="removeItem(item)"
               >
                 Remove
               </button>
