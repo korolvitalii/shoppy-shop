@@ -323,6 +323,11 @@ label > span {
   text-align: center;
 }
 
+.confirmation .checkout-actions {
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
 .confirmation-icon {
   display: grid;
   width: 4rem;
