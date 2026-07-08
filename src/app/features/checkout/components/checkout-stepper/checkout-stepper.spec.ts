@@ -10,8 +10,6 @@ describe('CheckoutStepper', () => {
       providers: [provideRouter([])],
     }).compileComponents();
     const fixture = TestBed.createComponent(CheckoutStepper);
-    fixture.componentRef.setInput('backRoute', '/basket');
-    fixture.componentRef.setInput('backLabel', 'Back to basket');
     fixture.componentRef.setInput('currentStep', 3);
     fixture.componentRef.setInput('deliveryComplete', true);
     fixture.componentRef.setInput('paymentComplete', true);
@@ -22,9 +20,6 @@ describe('CheckoutStepper', () => {
     );
     expect(fixture.nativeElement.querySelector('a[href="/checkout/delivery"]')).toBeTruthy();
     expect(fixture.nativeElement.querySelector('a[href="/checkout/payment"]')).toBeTruthy();
-    expect(
-      fixture.nativeElement.querySelector('a[href="/basket"]')?.getAttribute('aria-label'),
-    ).toBe('Back to basket');
     expect(fixture.nativeElement.querySelector('[aria-current="step"]')?.textContent).toContain(
       'Review',
     );

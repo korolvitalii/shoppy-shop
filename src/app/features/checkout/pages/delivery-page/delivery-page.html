@@ -1,7 +1,5 @@
 <main class="checkout">
   <app-checkout-stepper
-    backLabel="Back to basket"
-    backRoute="/basket"
     [currentStep]="1"
     [deliveryComplete]="facade.delivery() !== null"
     [paymentComplete]="facade.paymentToken() !== null"

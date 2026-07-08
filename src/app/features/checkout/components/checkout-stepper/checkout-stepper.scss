@@ -73,40 +73,6 @@ li.complete:not(:last-child)::after {
   opacity: 0.55;
 }
 
-.back-link {
-  position: absolute;
-  top: 0;
-  left: calc(16.666% - 3rem);
-  z-index: 2;
-  display: grid;
-  width: 2rem;
-  height: 2rem;
-  place-items: center;
-  border: 1px solid rgba(22, 33, 62, 0.18);
-  border-radius: 50%;
-  color: #16213e;
-  background: #fff;
-  transition:
-    color 160ms ease,
-    border-color 160ms ease,
-    transform 160ms ease;
-}
-
-.back-link:hover {
-  border-color: #6842e8;
-  color: #6842e8;
-  transform: translateX(-0.15rem);
-}
-
-.back-link svg {
-  width: 1.1rem;
-  fill: none;
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 2;
-}
-
 @media (max-width: 35rem) {
   .step-link,
   .disabled {

@@ -1,11 +1,4 @@
 <nav aria-label="Checkout progress">
-  @if (backRoute(); as route) {
-    <a class="back-link" [routerLink]="route" [attr.aria-label]="backLabel()">
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="m14.5 6-6 6 6 6" />
-      </svg>
-    </a>
-  }
   <ol>
     <li [class.complete]="deliveryComplete()" [class.current]="currentStep() === 1">
       <a
