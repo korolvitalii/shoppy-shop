@@ -15,6 +15,7 @@ import { UiTab } from '../../../../shared/ui/tabs/ui-tab';
 import { UiTabs } from '../../../../shared/ui/tabs/ui-tabs';
 import { AuthenticationSessionService } from '../../../auth/data-access/authentication-session.service';
 import { BasketService } from '../../../basket/data-access/basket.service';
+import { FavoritesService } from '../../../favorites/data-access/favorites.service';
 import { ProductsRepository } from '../../data-access/products.repository';
 import { type Product } from '../../models/product';
 
@@ -31,6 +32,7 @@ export class ProductDetailsPage {
   private readonly repository = inject(ProductsRepository);
   private readonly basket = inject(BasketService);
   private readonly destroyRef = inject(DestroyRef);
+  readonly favorites = inject(FavoritesService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly session = inject(AuthenticationSessionService);
@@ -97,5 +99,10 @@ export class ProductDetailsPage {
     }
     this.basket.add(product, this.quantity());
     this.added.set(true);
+  }
+
+  toggleFavorite(): void {
+    const product = this.product();
+    if (product) this.favorites.toggle(product);
   }
 }

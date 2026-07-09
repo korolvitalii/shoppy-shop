@@ -26,6 +26,22 @@
         <div class="layout">
           <div class="image-frame">
             <img [src]="item.imageUrl" [alt]="item.name" />
+            <button
+              class="favorite-button"
+              type="button"
+              [class.active]="favorites.has(item.id)"
+              [attr.aria-pressed]="favorites.has(item.id)"
+              [attr.aria-label]="
+                favorites.has(item.id) ? 'Remove from favourites' : 'Add to favourites'
+              "
+              (click)="toggleFavorite()"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M20.8 4.8a5.5 5.5 0 0 0-7.8 0L12 5.9l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.4a5.5 5.5 0 0 0 0-7.8Z"
+                />
+              </svg>
+            </button>
             @if (saving()) {
               <span class="sale">Save {{ saving() | currency: 'GBP' }}</span>
             }

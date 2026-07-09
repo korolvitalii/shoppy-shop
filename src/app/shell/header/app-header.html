@@ -61,6 +61,24 @@
       </form>
 
       <div class="header-actions">
+        <a
+          class="action-link"
+          routerLink="/favorites"
+          routerLinkActive="active"
+          aria-label="Open favourites"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M20.8 4.8a5.5 5.5 0 0 0-7.8 0L12 5.9l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.4a5.5 5.5 0 0 0 0-7.8Z"
+            />
+          </svg>
+          <span>Favourites</span>
+          @if (favorites.count() > 0) {
+            <span class="badge" aria-label="Favourite products">{{
+              favorites.count() > 99 ? '99+' : favorites.count()
+            }}</span>
+          }
+        </a>
         @if (session.isAuthenticated()) {
           <a class="action-link" routerLink="/orders" routerLinkActive="active" aria-label="Orders">
             <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -139,12 +157,18 @@
         }}</a>
       }
       @if (session.isAuthenticated()) {
+        <a routerLink="/favorites" routerLinkActive="active">
+          Favourites <span>{{ favorites.count() }} saved</span>
+        </a>
         <a routerLink="/basket" routerLinkActive="active">
           Basket <span>{{ basket.itemCount() }} items</span>
         </a>
         <a routerLink="/orders" routerLinkActive="active">Purchase history</a>
         <button class="mobile-logout" type="button" (click)="logout()">Log out</button>
       } @else {
+        <a routerLink="/favorites" routerLinkActive="active">
+          Favourites <span>{{ favorites.count() }} saved</span>
+        </a>
         <a routerLink="/login">Sign in</a>
       }
     </nav>

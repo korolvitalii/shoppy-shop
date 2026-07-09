@@ -7,6 +7,15 @@
     <span class="tab-icon" aria-hidden="true">⌂</span>
     <span>Shop</span>
   </a>
+  <a routerLink="/favorites" routerLinkActive="active">
+    <span class="tab-icon" aria-hidden="true">♡</span>
+    <span>Favourites</span>
+    @if (favorites.count() > 0) {
+      <span class="badge" aria-label="Favourite products">{{
+        favorites.count() > 99 ? '99+' : favorites.count()
+      }}</span>
+    }
+  </a>
   @if (session.isAuthenticated()) {
     <a routerLink="/orders" routerLinkActive="active">
       <span class="tab-icon" aria-hidden="true">◷</span>

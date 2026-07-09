@@ -55,6 +55,40 @@
   font-size: 0.75rem;
   font-weight: 800;
 }
+.favorite-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  padding: 0.7rem;
+  place-items: center;
+  border: 1px solid rgba(22, 33, 62, 0.12);
+  border-radius: 50%;
+  color: #65708a;
+  background: rgba(255, 253, 248, 0.94);
+  box-shadow: 0 0.35rem 1.2rem rgba(22, 33, 62, 0.15);
+  cursor: pointer;
+}
+.favorite-button:hover {
+  color: #6842e8;
+}
+.favorite-button svg {
+  width: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+.favorite-button.active {
+  color: #fff;
+  background: #6842e8;
+}
+.favorite-button.active svg {
+  fill: currentColor;
+}
 .information {
   padding-top: 1rem;
 }

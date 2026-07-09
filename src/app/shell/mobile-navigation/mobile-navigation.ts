@@ -3,6 +3,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 
 import { AuthenticationSessionService } from '../../features/auth/data-access/authentication-session.service';
 import { BasketService } from '../../features/basket/data-access/basket.service';
+import { FavoritesService } from '../../features/favorites/data-access/favorites.service';
 
 @Component({
   selector: 'app-mobile-navigation-tabs',
@@ -13,5 +14,6 @@ import { BasketService } from '../../features/basket/data-access/basket.service'
 })
 export class MobileNavigation {
   protected readonly basket = inject(BasketService);
+  protected readonly favorites = inject(FavoritesService);
   protected readonly session = inject(AuthenticationSessionService);
 }

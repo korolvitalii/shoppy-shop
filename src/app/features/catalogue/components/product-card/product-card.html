@@ -1,4 +1,22 @@
 <article class="product-card">
+  <button
+    class="favorite-button"
+    type="button"
+    [class.active]="favorites.has(product().id)"
+    [attr.aria-pressed]="favorites.has(product().id)"
+    [attr.aria-label]="
+      favorites.has(product().id)
+        ? 'Remove ' + product().name + ' from favourites'
+        : 'Add ' + product().name + ' to favourites'
+    "
+    (click)="toggleFavorite()"
+  >
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M20.8 4.8a5.5 5.5 0 0 0-7.8 0L12 5.9l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.4a5.5 5.5 0 0 0 0-7.8Z"
+      />
+    </svg>
+  </button>
   <a [routerLink]="['/products', product().groupId, product().id]">
     <div class="image-frame">
       <img [src]="product().imageUrl" [alt]="product().name" loading="lazy" />

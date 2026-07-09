@@ -1,7 +1,8 @@
 import { CurrencyPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+import { FavoritesService } from '../../../favorites/data-access/favorites.service';
 import { type Product } from '../../models/product';
 
 @Component({
@@ -12,6 +13,7 @@ import { type Product } from '../../models/product';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductCard {
+  protected readonly favorites = inject(FavoritesService);
   readonly product = input.required<Product>();
   readonly effectivePrice = computed(() => this.product().salePrice ?? this.product().price);
   readonly discount = computed(() => {
@@ -20,4 +22,8 @@ export class ProductCard {
       ? Math.round(((product.price - product.salePrice) / product.price) * 100)
       : null;
   });
+
+  protected toggleFavorite(): void {
+    this.favorites.toggle(this.product());
+  }
 }

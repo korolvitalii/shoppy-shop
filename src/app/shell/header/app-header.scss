@@ -68,13 +68,15 @@
   grid-template-columns: minmax(8rem, 1fr) auto auto;
   min-width: 0;
   min-height: 2.85rem;
-  border: 2px solid var(--header-violet);
+  overflow: visible;
+  border: 2px solid var(--header-border);
   border-radius: 0.7rem;
   background: #fff;
+  transition: border-color 150ms ease;
 }
 .search-form:focus-within {
-  outline: 3px solid rgba(104, 66, 232, 0.18);
-  outline-offset: 2px;
+  border-color: var(--header-violet);
+  outline: 0;
 }
 .search-form input,
 .search-form select {
@@ -85,6 +87,7 @@
   font: inherit;
 }
 .search-form input {
+  appearance: none;
   padding: 0.75rem 1rem;
   outline: 0;
 }
@@ -106,6 +109,7 @@
   gap: 0.4rem;
   padding-inline: 1rem;
   border: 0;
+  border-radius: 0 0.5rem 0.5rem 0;
   color: #fff;
   background: var(--header-violet);
   font: inherit;

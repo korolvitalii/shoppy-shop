@@ -27,6 +27,7 @@ import { AuthenticationSessionService } from '../../features/auth/data-access/au
 import { BasketService } from '../../features/basket/data-access/basket.service';
 import { ProductsRepository } from '../../features/catalogue/data-access/products.repository';
 import { type Product } from '../../features/catalogue/models/product';
+import { FavoritesService } from '../../features/favorites/data-access/favorites.service';
 import { SearchSuggestions } from './search-suggestions/search-suggestions';
 
 @Component({
@@ -47,6 +48,7 @@ export class AppHeader {
   ] as const;
   protected readonly activeSuggestionIndex = signal(-1);
   protected readonly basket = inject(BasketService);
+  protected readonly favorites = inject(FavoritesService);
   protected readonly menuOpen = signal(false);
   protected readonly searchForm = new FormGroup({
     query: new FormControl('', { nonNullable: true }),
