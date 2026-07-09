@@ -1,16 +1,16 @@
 :host {
-  --header-ink: #16213e;
-  --header-muted: #65708a;
-  --header-violet: #6842e8;
-  --header-coral: #ef6a67;
-  --header-border: rgba(22, 33, 62, 0.14);
+  --header-ink: var(--color-ink);
+  --header-muted: var(--color-muted);
+  --header-violet: var(--color-primary);
+  --header-coral: var(--color-coral);
+  --header-border: var(--color-border);
 }
 .site-header {
   position: sticky;
   top: 0;
   z-index: 100;
   color: var(--header-ink);
-  background: rgba(255, 253, 248, 0.96);
+  background: var(--color-header);
   box-shadow: 0 0.15rem 1rem rgba(22, 33, 62, 0.06);
   backdrop-filter: blur(1rem);
 }
@@ -71,8 +71,7 @@
   overflow: visible;
   border: 2px solid var(--header-border);
   border-radius: 0.7rem;
-  background: #fff;
-  transition: border-color 150ms ease;
+  background: var(--color-input);
 }
 .search-form:focus-within {
   border-color: var(--header-violet);
@@ -83,7 +82,7 @@
   min-width: 0;
   border: 0;
   color: var(--header-ink);
-  background: #fff;
+  background: var(--color-input);
   font: inherit;
 }
 .search-form input {
@@ -92,7 +91,7 @@
   outline: 0;
 }
 .search-form input::placeholder {
-  color: #81899c;
+  color: var(--header-muted);
 }
 .search-form select {
   width: 10.5rem;
@@ -120,7 +119,7 @@
   cursor: pointer;
 }
 .search-button:hover {
-  background: #5430cf;
+  background: var(--color-primary-hover);
 }
 .search-button svg,
 .action-link svg,
@@ -201,7 +200,6 @@
   height: 2px;
   background: var(--header-violet);
   transform: scaleX(0);
-  transition: transform 160ms ease;
 }
 .desktop-navigation a:hover,
 .desktop-navigation a.active {
@@ -233,7 +231,7 @@
   padding: 0.65rem;
   border: 1px solid var(--header-border);
   border-radius: 0.7rem;
-  background: #fff;
+  background: var(--color-surface-strong);
   cursor: pointer;
 }
 .menu-button span {
@@ -251,6 +249,7 @@
   border-top: 1px solid var(--header-border);
 }
 .mobile-navigation a,
+.mobile-theme,
 .mobile-logout {
   display: flex;
   justify-content: space-between;
@@ -265,10 +264,13 @@
   text-decoration: none;
   cursor: pointer;
 }
+.mobile-theme {
+  color: var(--header-muted);
+}
 .mobile-navigation a:hover,
 .mobile-navigation a.active {
   color: var(--header-ink);
-  background: #eee9ff;
+  background: var(--color-primary-soft);
 }
 .mobile-navigation span {
   color: var(--header-violet);
@@ -358,10 +360,5 @@ select:focus-visible {
   }
   .mobile-navigation {
     display: grid;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .desktop-navigation a::after {
-    transition: none;
   }
 }

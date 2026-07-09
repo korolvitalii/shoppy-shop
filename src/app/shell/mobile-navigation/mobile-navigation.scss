@@ -8,7 +8,7 @@
   grid-template-columns: repeat(2, 1fr);
   padding: 0.35rem 1rem calc(0.35rem + env(safe-area-inset-bottom));
   border-top: 1px solid rgba(22, 33, 62, 0.12);
-  background: rgba(255, 253, 248, 0.95);
+  background: var(--color-header-mobile);
   backdrop-filter: blur(1rem);
 }
 .mobile-tabs--authenticated {
@@ -22,14 +22,14 @@ a {
   align-content: center;
   gap: 0.1rem;
   border-radius: 0.7rem;
-  color: #65708a;
+  color: var(--color-muted);
   font-size: 0.7rem;
   font-weight: 750;
   text-decoration: none;
 }
 a.active {
-  color: #6842e8;
-  background: #eee9ff;
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
 }
 .tab-icon {
   font-size: 1.25rem;

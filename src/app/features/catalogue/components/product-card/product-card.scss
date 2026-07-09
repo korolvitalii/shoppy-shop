@@ -8,7 +8,7 @@
   overflow: hidden;
   border: 1px solid rgba(22, 33, 62, 0.1);
   border-radius: 1.2rem;
-  background: #fffdf8;
+  background: var(--color-surface);
   box-shadow: 0 0.7rem 2rem rgba(22, 33, 62, 0.07);
   transition:
     transform 180ms ease,
@@ -26,8 +26,8 @@
   place-items: center;
   border: 1px solid rgba(22, 33, 62, 0.12);
   border-radius: 50%;
-  color: #65708a;
-  background: rgba(255, 253, 248, 0.94);
+  color: var(--color-muted);
+  background: var(--color-header);
   box-shadow: 0 0.3rem 1rem rgba(22, 33, 62, 0.12);
   cursor: pointer;
   transition:
@@ -36,7 +36,7 @@
     background 150ms ease;
 }
 .favorite-button:hover {
-  color: #6842e8;
+  color: var(--color-primary);
   transform: scale(1.06);
 }
 .favorite-button svg {
@@ -49,7 +49,7 @@
 }
 .favorite-button.active {
   color: #fff;
-  background: #6842e8;
+  background: var(--color-primary);
 }
 .favorite-button.active svg {
   fill: currentColor;
@@ -66,7 +66,7 @@ a {
   height: 100%;
   display: flex;
   flex-direction: column;
-  color: #16213e;
+  color: var(--color-ink);
   text-decoration: none;
 }
 a:focus-visible {
@@ -77,7 +77,7 @@ a:focus-visible {
   position: relative;
   aspect-ratio: 4 / 3;
   overflow: hidden;
-  background: #eee9ff;
+  background: var(--color-image-placeholder);
 }
 img {
   width: 100%;
@@ -104,7 +104,7 @@ img {
 }
 .stock {
   right: 3.75rem;
-  background: #16213e;
+  background: var(--color-ink);
 }
 .content {
   flex: 1;
@@ -114,7 +114,7 @@ img {
 }
 .brand {
   margin: 0 0 0.35rem;
-  color: #6842e8;
+  color: var(--color-primary);
   font-size: 0.7rem;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -137,6 +137,6 @@ strong {
   font-size: 1.05rem;
 }
 del {
-  color: #7b8397;
+  color: var(--color-muted);
   font-size: 0.8rem;
 }

@@ -1,8 +1,8 @@
 .checkout {
-  --checkout-ink: #16213e;
-  --checkout-muted: #65708a;
-  --checkout-violet: #6842e8;
-  --checkout-border: rgba(22, 33, 62, 0.13);
+  --checkout-ink: var(--color-ink);
+  --checkout-muted: var(--color-muted);
+  --checkout-violet: var(--color-primary);
+  --checkout-border: var(--color-border);
   width: min(100% - 2rem, 50rem);
   margin-inline: auto;
   padding-block: 2.5rem 5rem;
@@ -35,7 +35,7 @@ form,
 .saved-payment {
   border: 1px solid var(--checkout-border);
   border-radius: 1.1rem;
-  background: rgba(255, 255, 255, 0.82);
+  background: var(--color-surface);
   box-shadow: 0 1rem 2.5rem rgba(22, 33, 62, 0.07);
 }
 
@@ -67,7 +67,7 @@ form {
   place-items: center;
   border-radius: 0.65rem;
   color: var(--checkout-violet);
-  background: #eee9ff;
+  background: var(--color-primary-soft);
   font-size: 0.7rem;
   font-weight: 900;
 }
@@ -99,7 +99,7 @@ label {
   display: grid;
   align-content: start;
   gap: 0.45rem;
-  color: #35405b;
+  color: var(--color-ink);
   font-size: 0.74rem;
   font-weight: 800;
 }
@@ -113,7 +113,7 @@ select {
   border-radius: 0.75rem;
   outline: 0;
   color: var(--checkout-ink);
-  background: #fff;
+  background: var(--color-input);
   font: inherit;
   font-size: 0.88rem;
   font-weight: 600;
@@ -169,7 +169,7 @@ label > span {
 
 .checkout button:hover,
 .primary-action:hover {
-  background: #5430cf;
+  background: var(--color-primary-hover);
   transform: translateY(-1px);
 }
 
@@ -203,7 +203,7 @@ label > span {
   padding-inline: 1rem;
   border: 1px solid var(--checkout-border);
   color: var(--checkout-ink);
-  background: #fff;
+  background: var(--color-input);
 }
 
 .saved-payment {
@@ -276,7 +276,7 @@ label > span {
   height: 4rem;
   border-radius: 0.65rem;
   object-fit: cover;
-  background: #f0ece4;
+  background: var(--color-surface-muted);
 }
 
 .review-item h3 {

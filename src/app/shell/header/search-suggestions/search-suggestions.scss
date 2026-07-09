@@ -9,7 +9,7 @@
   overflow-y: auto;
   border: 1px solid var(--header-border);
   border-radius: 0.75rem;
-  background: #fff;
+  background: var(--color-surface-strong);
   box-shadow: 0 1rem 2.5rem rgba(22, 33, 62, 0.18);
 }
 
@@ -45,7 +45,7 @@
 
 .suggestion:hover,
 .suggestion.active {
-  background: #f2eeff;
+  background: var(--color-primary-soft);
 }
 
 .suggestion img {
@@ -53,7 +53,7 @@
   height: 3.25rem;
   border-radius: 0.4rem;
   object-fit: cover;
-  background: #f3efe7;
+  background: var(--color-surface-muted);
 }
 
 .suggestion-copy {

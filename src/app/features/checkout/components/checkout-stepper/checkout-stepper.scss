@@ -30,7 +30,7 @@ li:not(:last-child)::after {
 }
 
 li.complete:not(:last-child)::after {
-  background: #6842e8;
+  background: var(--color-primary);
 }
 
 .step-link,
@@ -38,7 +38,7 @@ li.complete:not(:last-child)::after {
   display: grid;
   justify-items: center;
   gap: 0.45rem;
-  color: #65708a;
+  color: var(--color-muted);
   font-size: 0.72rem;
   font-weight: 800;
   text-decoration: none;
@@ -46,7 +46,7 @@ li.complete:not(:last-child)::after {
 
 .step-link:hover,
 .current .step-link {
-  color: #16213e;
+  color: var(--color-ink);
 }
 
 .step-link > span,
@@ -59,14 +59,14 @@ li.complete:not(:last-child)::after {
   place-items: center;
   border: 2px solid rgba(22, 33, 62, 0.2);
   border-radius: 50%;
-  background: #fffdf8;
+  background: var(--color-surface);
 }
 
 .complete .step-link > span,
 .current .step-link > span {
-  border-color: #6842e8;
+  border-color: var(--color-primary);
   color: #fff;
-  background: #6842e8;
+  background: var(--color-primary);
 }
 
 .disabled {

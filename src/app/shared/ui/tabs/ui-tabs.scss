@@ -16,15 +16,15 @@
   padding: 0.8rem 1rem;
   border: 0;
   border-bottom: 2px solid transparent;
-  color: #65708a;
+  color: var(--color-muted);
   background: none;
   font-weight: 750;
   cursor: pointer;
   white-space: nowrap;
 }
 .tablist button[aria-selected='true'] {
-  border-color: #6842e8;
-  color: #16213e;
+  border-color: var(--color-primary);
+  color: var(--color-ink);
 }
 .tablist button:focus-visible {
   outline: 3px solid rgba(104, 66, 232, 0.25);
@@ -32,6 +32,6 @@
 }
 [role='tabpanel'] {
   padding-block: 1.5rem;
-  color: #65708a;
+  color: var(--color-muted);
   line-height: 1.7;
 }

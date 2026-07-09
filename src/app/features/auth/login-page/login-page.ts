@@ -3,6 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize, take } from 'rxjs';
 
+import { ThemeService } from '../../../core/theme/theme.service';
 import {
   AuthenticationService,
   type LoginCredentials,
@@ -31,6 +32,7 @@ export class LoginPage {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly session = inject(AuthenticationSessionService);
+  readonly theme = inject(ThemeService);
 
   readonly form = new FormGroup<LoginForm>({
     email: new FormControl('', {

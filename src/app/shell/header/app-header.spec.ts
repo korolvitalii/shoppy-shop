@@ -82,7 +82,7 @@ describe('AppHeader', () => {
     const fixture = TestBed.createComponent(AppHeader);
     const navigate = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
     fixture.detectChanges();
-    const button = fixture.nativeElement.querySelector('.account-button') as HTMLButtonElement;
+    const button = fixture.nativeElement.querySelector('.logout-button') as HTMLButtonElement;
 
     button.click();
     await fixture.whenStable();

@@ -14,8 +14,8 @@
   padding: clamp(1.4rem, 5vw, 2rem);
   border: 1px solid rgba(22, 33, 62, 0.12);
   border-radius: 1.1rem;
-  color: #16213e;
-  background: #fffdf8;
+  color: var(--color-ink);
+  background: var(--color-surface);
   box-shadow: 0 1.5rem 4rem rgba(11, 18, 35, 0.3);
   text-align: center;
 }
@@ -27,8 +27,8 @@
   margin-inline: auto;
   place-items: center;
   border-radius: 50%;
-  color: #6842e8;
-  background: #eee9ff;
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
   font-size: 1.25rem;
   font-weight: 900;
 }
@@ -46,7 +46,7 @@ h2 {
 
 p {
   margin: 0;
-  color: #65708a;
+  color: var(--color-muted);
   line-height: 1.6;
 }
 
@@ -68,13 +68,13 @@ button {
 
 .cancel {
   border: 1px solid rgba(22, 33, 62, 0.16);
-  color: #16213e;
-  background: #fff;
+  color: var(--color-ink);
+  background: var(--color-input);
 }
 
 .confirm {
   color: #fff;
-  background: #6842e8;
+  background: var(--color-primary);
 }
 
 .confirm--danger {

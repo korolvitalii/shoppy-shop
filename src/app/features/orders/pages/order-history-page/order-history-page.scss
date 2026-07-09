@@ -2,7 +2,7 @@
   width: min(100% - 2rem, 68rem);
   margin-inline: auto;
   padding-block: clamp(2.5rem, 6vw, 5rem);
-  color: #16213e;
+  color: var(--color-ink);
 }
 .page-header {
   max-width: 40rem;
@@ -12,7 +12,7 @@
 .order-label,
 .order-date span,
 .order-footer span {
-  color: #6842e8;
+  color: var(--color-primary);
   font-size: 0.7rem;
   font-weight: 800;
   letter-spacing: 0.1em;
@@ -25,7 +25,7 @@
   line-height: 1;
 }
 .page-header > p:last-child {
-  color: #65708a;
+  color: var(--color-muted);
   line-height: 1.7;
 }
 .order-list,
@@ -42,7 +42,7 @@
   overflow: hidden;
   border: 1px solid rgba(22, 33, 62, 0.12);
   border-radius: 1rem;
-  background: #fffdf8;
+  background: var(--color-surface);
   box-shadow: 0 0.8rem 2rem rgba(22, 33, 62, 0.06);
 }
 .order-header {
@@ -52,7 +52,7 @@
   align-items: center;
   padding: 1.2rem 1.4rem;
   border-bottom: 1px solid rgba(22, 33, 62, 0.1);
-  background: #faf7f0;
+  background: var(--color-surface-muted);
 }
 .order-header h2 {
   margin: 0.2rem 0 0;
@@ -93,22 +93,22 @@
   height: 4.5rem;
   border-radius: 0.7rem;
   object-fit: cover;
-  background: #eee9ff;
+  background: var(--color-primary-soft);
 }
 .order-lines div {
   display: grid;
   gap: 0.35rem;
 }
 .order-lines a {
-  color: #16213e;
+  color: var(--color-ink);
   font-weight: 800;
   text-decoration: none;
 }
 .order-lines a:hover {
-  color: #6842e8;
+  color: var(--color-primary);
 }
 .order-lines span {
-  color: #65708a;
+  color: var(--color-muted);
   font-size: 0.78rem;
 }
 .order-footer {
@@ -118,7 +118,7 @@
   align-items: end;
   padding: 1rem 1.4rem;
   border-top: 1px solid rgba(22, 33, 62, 0.1);
-  background: #faf7f0;
+  background: var(--color-surface-muted);
 }
 .order-footer p {
   display: grid;
@@ -142,14 +142,14 @@
   border: 1px solid rgba(22, 33, 62, 0.1);
   border-radius: 1rem;
   text-align: center;
-  background: #fffdf8;
+  background: var(--color-surface);
 }
 .state h2,
 .state p {
   margin: 0;
 }
 .state p {
-  color: #65708a;
+  color: var(--color-muted);
 }
 .state a,
 .state button {
@@ -158,21 +158,21 @@
   border: 0;
   border-radius: 0.65rem;
   color: #fff;
-  background: #6842e8;
+  background: var(--color-primary);
   font: inherit;
   font-weight: 800;
   text-decoration: none;
   cursor: pointer;
 }
 .empty-icon {
-  color: #6842e8;
+  color: var(--color-primary);
   font-size: 2.5rem;
 }
 .state-loader {
   width: 2rem;
   height: 2rem;
   border: 3px solid #ded6fb;
-  border-top-color: #6842e8;
+  border-top-color: var(--color-primary);
   border-radius: 50%;
   animation: spin 700ms linear infinite;
 }

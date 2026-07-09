@@ -23,6 +23,7 @@ import {
 } from 'rxjs';
 
 import { ConfirmationService } from '../../core/confirmation/confirmation.service';
+import { ThemeService } from '../../core/theme/theme.service';
 import { AuthenticationSessionService } from '../../features/auth/data-access/authentication-session.service';
 import { BasketService } from '../../features/basket/data-access/basket.service';
 import { ProductsRepository } from '../../features/catalogue/data-access/products.repository';
@@ -57,6 +58,7 @@ export class AppHeader {
   protected readonly session = inject(AuthenticationSessionService);
   protected readonly suggestions = signal<readonly Product[]>([]);
   protected readonly suggestionsOpen = signal(false);
+  protected readonly theme = inject(ThemeService);
   protected readonly activeSuggestion = computed(
     () => this.suggestions()[this.activeSuggestionIndex()] ?? null,
   );

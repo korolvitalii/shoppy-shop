@@ -1,18 +1,19 @@
 :host {
-  --page-background: #f7f2e9;
-  --card-background: rgba(255, 253, 248, 0.92);
-  --card-border: rgba(22, 33, 62, 0.12);
-  --text-primary: #16213e;
-  --text-secondary: #65708a;
-  --accent: #6842e8;
-  --accent-hover: #5431ce;
-  --accent-soft: #eee9ff;
-  --danger: #c63f4d;
+  --page-background: var(--color-page);
+  --card-background: var(--color-header);
+  --card-border: var(--color-border);
+  --text-primary: var(--color-ink);
+  --text-secondary: var(--color-muted);
+  --accent: var(--color-primary);
+  --accent-hover: var(--color-primary-hover);
+  --accent-soft: var(--color-primary-soft);
+  --danger: var(--color-danger);
 
   display: block;
 }
 
 .login-page {
+  position: relative;
   min-height: 100svh;
   display: grid;
   place-items: center;
@@ -22,6 +23,30 @@
     radial-gradient(circle at 12% 18%, rgba(104, 66, 232, 0.14), transparent 30rem),
     radial-gradient(circle at 88% 82%, rgba(239, 106, 103, 0.15), transparent 27rem),
     var(--page-background);
+}
+
+.theme-toggle {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--card-border);
+  border-radius: 999px;
+  color: var(--text-secondary);
+  background: var(--card-background);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--accent);
+  }
+
+  &:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--accent) 28%, transparent);
+    outline-offset: 3px;
+  }
 }
 
 .login-card {
@@ -90,7 +115,7 @@ form {
     border-radius: 0.75rem;
     outline: none;
     color: var(--text-primary);
-    background: #ffffff;
+    background: var(--color-input);
     transition:
       border-color 150ms ease,
       box-shadow 150ms ease;

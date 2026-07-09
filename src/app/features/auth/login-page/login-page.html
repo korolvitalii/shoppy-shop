@@ -1,4 +1,13 @@
 <main class="login-page">
+  <button
+    class="theme-toggle"
+    type="button"
+    (click)="theme.toggle()"
+    [attr.aria-label]="theme.isDark() ? 'Switch to light theme' : 'Switch to dark theme'"
+  >
+    <span aria-hidden="true">{{ theme.isDark() ? '☀' : '☾' }}</span>
+    {{ theme.isDark() ? 'Light' : 'Dark' }} theme
+  </button>
   <section class="login-card" aria-labelledby="login-title">
     <header class="login-header">
       <a class="brand" href="/" aria-label="ShoppyShop">ShoppyShop</a>

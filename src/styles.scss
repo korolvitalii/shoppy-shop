@@ -5,15 +5,58 @@
 }
 
 html {
+  --color-page: #f7f2e9;
+  --color-surface: #fffdf8;
+  --color-surface-strong: #ffffff;
+  --color-surface-muted: #faf7f0;
+  --color-ink: #16213e;
+  --color-muted: #65708a;
+  --color-primary: #6842e8;
+  --color-primary-hover: #5430cf;
+  --color-primary-soft: #eee9ff;
+  --color-border: rgba(22, 33, 62, 0.14);
+  --color-header: rgba(255, 253, 248, 0.96);
+  --color-header-mobile: rgba(255, 253, 248, 0.95);
+  --color-input: #ffffff;
+  --color-image-placeholder: #eee9ff;
+  --color-coral: #ef6a67;
+  --color-danger: #c63f4d;
+  --shadow-color: rgba(22, 33, 62, 0.13);
   color-scheme: light;
   font-family:
     'Avenir Next', 'Segoe UI Variable', 'Trebuchet MS', ui-sans-serif, system-ui, sans-serif;
-  background: #f7f2e9;
+  background: var(--color-page);
+  transition:
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+html[data-theme='dark'] {
+  --color-page: #0f1424;
+  --color-surface: #171e31;
+  --color-surface-strong: #20283d;
+  --color-surface-muted: #1b2337;
+  --color-ink: #f3f1fb;
+  --color-muted: #aab4cd;
+  --color-primary: #9b80ff;
+  --color-primary-hover: #b09cff;
+  --color-primary-soft: #2b2949;
+  --color-border: rgba(224, 228, 244, 0.16);
+  --color-header: rgba(18, 24, 40, 0.96);
+  --color-header-mobile: rgba(18, 24, 40, 0.95);
+  --color-input: #20283d;
+  --color-image-placeholder: #292b46;
+  --color-coral: #ff8580;
+  --color-danger: #ff7b88;
+  --shadow-color: rgba(0, 0, 0, 0.35);
+  color-scheme: dark;
 }
 
 body {
   min-width: 20rem;
   margin: 0;
+  color: var(--color-ink);
+  background: var(--color-page);
 }
 
 button,

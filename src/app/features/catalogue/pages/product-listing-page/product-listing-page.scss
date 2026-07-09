@@ -2,24 +2,24 @@
   width: min(100% - 2rem, 75rem);
   margin-inline: auto;
   padding-block: 2.5rem 5rem;
-  color: #16213e;
+  color: var(--color-ink);
 }
 .breadcrumbs {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 2rem;
-  color: #65708a;
+  color: var(--color-muted);
   font-size: 0.8rem;
 }
 .breadcrumbs a {
-  color: #6842e8;
+  color: var(--color-primary);
 }
 header {
   margin-bottom: 2rem;
 }
 .eyebrow {
   margin: 0 0 0.5rem;
-  color: #6842e8;
+  color: var(--color-primary);
   font-size: 0.7rem;
   font-weight: 800;
   letter-spacing: 0.12em;
@@ -32,7 +32,7 @@ h1 {
   text-transform: capitalize;
 }
 header > p:last-child {
-  color: #65708a;
+  color: var(--color-muted);
 }
 .toolbar {
   display: grid;
@@ -42,12 +42,12 @@ header > p:last-child {
   padding: 1rem;
   border: 1px solid rgba(22, 33, 62, 0.1);
   border-radius: 1rem;
-  background: #fffdf8;
+  background: var(--color-surface);
 }
 label {
   display: grid;
   gap: 0.35rem;
-  color: #65708a;
+  color: var(--color-muted);
   font-size: 0.72rem;
   font-weight: 750;
   text-transform: uppercase;
@@ -58,8 +58,8 @@ select {
   border: 1px solid rgba(22, 33, 62, 0.18);
   border-radius: 0.65rem;
   padding: 0.6rem 0.75rem;
-  color: #16213e;
-  background: #fff;
+  color: var(--color-ink);
+  background: var(--color-input);
   text-transform: none;
 }
 input:focus-visible,
@@ -84,7 +84,7 @@ button:focus-visible {
   border: 0;
   border-radius: 0.65rem;
   color: #fff;
-  background: #6842e8;
+  background: var(--color-primary);
   font-weight: 750;
   cursor: pointer;
 }

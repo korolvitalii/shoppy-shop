@@ -10,7 +10,7 @@
 
   h1 {
     margin: 0;
-    color: #16213e;
+    color: var(--color-ink);
     font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
     font-size: clamp(2.5rem, 8vw, 4.75rem);
     line-height: 0.98;
@@ -20,7 +20,7 @@
   > p:last-child {
     max-width: 38rem;
     margin: 1.25rem 0 0;
-    color: #65708a;
+    color: var(--color-muted);
     font-size: clamp(1rem, 2vw, 1.125rem);
     line-height: 1.65;
   }
@@ -39,8 +39,8 @@
   padding: clamp(2rem, 8vw, 5rem);
   border: 1px dashed rgba(22, 33, 62, 0.2);
   border-radius: 1.35rem;
-  color: #65708a;
-  background: rgba(255, 253, 248, 0.7);
+  color: var(--color-muted);
+  background: var(--color-header);
   text-align: center;
 
   h2,
@@ -49,7 +49,7 @@
   }
 
   h2 {
-    color: #16213e;
+    color: var(--color-ink);
     font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
   }
 
@@ -59,12 +59,12 @@
     border: 0;
     border-radius: 0.7rem;
     color: #ffffff;
-    background: #6842e8;
+    background: var(--color-primary);
     font-weight: 750;
     cursor: pointer;
 
     &:hover {
-      background: #5431ce;
+      background: var(--color-primary-hover);
     }
 
     &:focus-visible {
@@ -78,7 +78,7 @@
   width: 2rem;
   aspect-ratio: 1;
   border: 3px solid #eee9ff;
-  border-top-color: #6842e8;
+  border-top-color: var(--color-primary);
   border-radius: 50%;
   animation: spin 700ms linear infinite;
 }

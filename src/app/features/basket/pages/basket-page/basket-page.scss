@@ -2,11 +2,11 @@
   width: min(100% - 2rem, 75rem);
   margin-inline: auto;
   padding-block: clamp(2.5rem, 7vw, 5rem);
-  color: #16213e;
+  color: var(--color-ink);
 }
 .eyebrow {
   margin: 0 0 0.6rem;
-  color: #6842e8;
+  color: var(--color-primary);
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.14em;
@@ -25,7 +25,7 @@ header {
   gap: 1rem;
 }
 header > div > p:last-child {
-  color: #65708a;
+  color: var(--color-muted);
 }
 .clear {
   margin-bottom: 1rem;
@@ -58,14 +58,14 @@ header > div > p:last-child {
   padding: 1rem;
   border: 1px solid rgba(22, 33, 62, 0.1);
   border-radius: 1.2rem;
-  background: #fffdf8;
+  background: var(--color-surface);
 }
 .image {
   width: 7rem;
   aspect-ratio: 1;
   overflow: hidden;
   border-radius: 0.8rem;
-  background: #eee9ff;
+  background: var(--color-image-placeholder);
 }
 .image img {
   width: 100%;
@@ -83,7 +83,7 @@ header > div > p:last-child {
 }
 .details p {
   margin: 0.4rem 0 0.8rem;
-  color: #65708a;
+  color: var(--color-muted);
   font-size: 0.82rem;
 }
 .quantity {
@@ -99,7 +99,7 @@ header > div > p:last-child {
   place-items: center;
   min-height: 2.2rem;
   border: 0;
-  background: #fff;
+  background: var(--color-input);
 }
 .quantity button {
   cursor: pointer;
@@ -125,7 +125,7 @@ header > div > p:last-child {
   padding: 1.5rem;
   border: 1px solid rgba(22, 33, 62, 0.1);
   border-radius: 1.2rem;
-  background: #fffdf8;
+  background: var(--color-surface);
   box-shadow: 0 0.8rem 2.5rem rgba(22, 33, 62, 0.08);
 }
 .summary h2 {
@@ -140,7 +140,7 @@ header > div > p:last-child {
 }
 .summary p {
   margin: 0;
-  color: #65708a;
+  color: var(--color-muted);
   font-size: 0.8rem;
   line-height: 1.5;
 }
@@ -157,10 +157,10 @@ header > div > p:last-child {
 .checkout,
 .empty-state a {
   color: #fff;
-  background: #6842e8;
+  background: var(--color-primary);
 }
 .continue {
-  color: #6842e8;
+  color: var(--color-primary);
 }
 .empty-state {
   max-width: 40rem;
@@ -168,7 +168,7 @@ header > div > p:last-child {
   text-align: center;
 }
 .empty-state > p:not(.eyebrow) {
-  color: #65708a;
+  color: var(--color-muted);
   line-height: 1.6;
 }
 .empty-state a {

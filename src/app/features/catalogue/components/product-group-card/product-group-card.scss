@@ -12,7 +12,7 @@
   overflow: hidden;
   border: 1px solid rgba(22, 33, 62, 0.1);
   border-radius: 1.35rem;
-  background: rgba(255, 253, 248, 0.94);
+  background: var(--color-header);
   box-shadow: 0 0.75rem 2.5rem rgba(22, 33, 62, 0.08);
   transition:
     box-shadow 180ms ease,
@@ -21,7 +21,7 @@
   a {
     display: flex;
     flex-direction: column;
-    color: #16213e;
+    color: var(--color-ink);
     text-decoration: none;
   }
 
@@ -44,7 +44,7 @@
   position: relative;
   aspect-ratio: 16 / 10;
   overflow: hidden;
-  background: #eee9ff;
+  background: var(--color-image-placeholder);
 
   img {
     width: 100%;
@@ -94,7 +94,7 @@
   p {
     flex: 1;
     margin: 0.55rem 0 1.25rem;
-    color: #65708a;
+    color: var(--color-muted);
     font-size: 0.875rem;
     line-height: 1.55;
   }
@@ -104,7 +104,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: #6842e8;
+  color: var(--color-primary);
   font-size: 0.8125rem;
   font-weight: 750;
 }
