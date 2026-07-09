@@ -63,6 +63,14 @@ export const routes: Routes = [
     ],
   },
   {
+    path: 'favorites',
+    title: 'My favourites | ShoppyShop',
+    loadComponent: () =>
+      import('./features/favorites/pages/favorites-page/favorites-page').then(
+        ({ FavoritesPage }) => FavoritesPage,
+      ),
+  },
+  {
     path: 'basket',
     canActivate: [authenticationGuard],
     title: 'Basket | ShoppyShop',

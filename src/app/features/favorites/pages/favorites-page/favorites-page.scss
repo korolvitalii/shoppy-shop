@@ -1,0 +1,123 @@
+.favorites-page {
+  width: min(100% - 2rem, 82rem);
+  margin-inline: auto;
+  padding-block: 2rem 6rem;
+  color: #16213e;
+}
+.breadcrumbs {
+  display: flex;
+  gap: 0.5rem;
+  color: #65708a;
+  font-size: 0.78rem;
+}
+.breadcrumbs a {
+  color: #6842e8;
+}
+.page-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 2.5rem 0 2rem;
+  border-bottom: 1px solid rgba(22, 33, 62, 0.12);
+}
+.eyebrow {
+  margin: 0 0 0.45rem;
+  color: #6842e8;
+  font-size: 0.68rem;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+h1 {
+  margin: 0;
+  font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  line-height: 1;
+}
+.page-header p:last-child {
+  margin: 0.75rem 0 0;
+  color: #65708a;
+}
+.page-header button {
+  padding: 0.7rem 1rem;
+  border: 1px solid rgba(22, 33, 62, 0.18);
+  border-radius: 0.65rem;
+  color: #65708a;
+  background: #fff;
+  cursor: pointer;
+}
+.page-header button:hover {
+  color: #c63f4d;
+  border-color: #c63f4d;
+}
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.25rem;
+  padding-top: 2rem;
+}
+.empty-state {
+  max-width: 34rem;
+  margin: 5rem auto;
+  text-align: center;
+}
+.empty-heart {
+  display: grid;
+  width: 5rem;
+  height: 5rem;
+  margin: 0 auto 1.25rem;
+  place-items: center;
+  border-radius: 50%;
+  color: #6842e8;
+  background: #eee9ff;
+  font-size: 3rem;
+}
+.empty-state h2 {
+  margin: 0 0 0.75rem;
+  font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+  font-size: 2rem;
+}
+.empty-state p {
+  margin: 0 auto 1.75rem;
+  color: #65708a;
+  line-height: 1.65;
+}
+.empty-state a {
+  display: inline-flex;
+  padding: 0.85rem 1.2rem;
+  border-radius: 0.7rem;
+  color: #fff;
+  background: #6842e8;
+  font-weight: 800;
+  text-decoration: none;
+}
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid rgba(104, 66, 232, 0.28);
+  outline-offset: 3px;
+}
+@media (max-width: 64rem) {
+  .product-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 46rem) {
+  .product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .page-header {
+    align-items: start;
+  }
+}
+@media (max-width: 30rem) {
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+  .page-header {
+    display: block;
+  }
+  .page-header button {
+    margin-top: 1.25rem;
+  }
+}

@@ -1,0 +1,31 @@
+<main class="favorites-page">
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a routerLink="/products">Products</a><span>/</span><span>Favourites</span>
+  </nav>
+
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">Saved for later</p>
+      <h1>My favourites</h1>
+      <p>{{ favorites.count() }} {{ favorites.count() === 1 ? 'product' : 'products' }} saved</p>
+    </div>
+    @if (favorites.count() > 0) {
+      <button type="button" (click)="favorites.clear()">Clear all</button>
+    }
+  </header>
+
+  @if (favorites.count() > 0) {
+    <section class="product-grid" aria-label="Favourite products">
+      @for (product of favorites.products(); track product.id) {
+        <app-product-card [product]="product" />
+      }
+    </section>
+  } @else {
+    <section class="empty-state">
+      <span class="empty-heart" aria-hidden="true">♡</span>
+      <h2>No favourites yet</h2>
+      <p>Save the products you love and find them waiting here whenever you return.</p>
+      <a routerLink="/products">Discover products</a>
+    </section>
+  }
+</main>
