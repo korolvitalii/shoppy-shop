@@ -188,6 +188,13 @@ describe('AppHeader', () => {
     fixture.detectChanges();
 
     expect(button.getAttribute('aria-expanded')).toBe('true');
-    expect(fixture.nativeElement.querySelector('#mobile-navigation')).toBeTruthy();
+    const mobileNavigation = fixture.nativeElement.querySelector(
+      '#mobile-navigation',
+    ) as HTMLElement;
+    expect(mobileNavigation).toBeTruthy();
+    expect(mobileNavigation.textContent).not.toContain('All categories');
+    expect(mobileNavigation.textContent).not.toContain('Electronics');
+    expect(mobileNavigation.textContent).toContain('Favourites');
+    expect(mobileNavigation.textContent).toContain('theme');
   });
 });

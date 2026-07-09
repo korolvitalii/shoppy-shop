@@ -11,11 +11,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { catchError, map, of, switchMap, tap } from 'rxjs';
 
-import { UiTab } from '../../../../shared/ui/tabs/ui-tab';
-import { UiTabs } from '../../../../shared/ui/tabs/ui-tabs';
 import { AuthenticationSessionService } from '../../../auth/data-access/authentication-session.service';
 import { BasketService } from '../../../basket/data-access/basket.service';
 import { FavoritesService } from '../../../favorites/data-access/favorites.service';
+import { ProductInformation } from '../../components/product-information/product-information';
 import { ProductsRepository } from '../../data-access/products.repository';
 import { type Product } from '../../models/product';
 
@@ -23,7 +22,7 @@ type DetailStatus = 'loading' | 'success' | 'not-found' | 'error';
 
 @Component({
   selector: 'app-product-details-page',
-  imports: [CurrencyPipe, RouterLink, UiTab, UiTabs],
+  imports: [CurrencyPipe, ProductInformation, RouterLink],
   templateUrl: './product-details-page.html',
   styleUrl: './product-details-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

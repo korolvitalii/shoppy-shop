@@ -74,6 +74,10 @@ describe('ProductDetailsPage', () => {
     expect(element.textContent).toContain('£199.00');
     expect(element.textContent).toContain('Save £50.00');
     expect(element.textContent).toContain('In stock');
+    expect(element.textContent).toContain(product.description);
+    expect(element.textContent).toContain('Product details');
+    expect(element.textContent).toContain('Tracked delivery');
+    expect(element.querySelector('[role="tablist"]')).toBeNull();
     expect(element.querySelector('img')?.alt).toBe('Studio headphones');
   });
 

@@ -90,35 +90,15 @@
                 <a class="basket-link" routerLink="/basket">View basket</a>
               }
             </div>
-            <app-tabs label="Product information">
-              <app-tab id="description" label="Description"
-                ><p>{{ item.description }}</p></app-tab
-              >
-              <app-tab id="delivery" label="Delivery & returns"
-                ><p>
-                  Tracked UK delivery with simple 30-day returns. Items are carefully packed and
-                  dispatch estimates appear at checkout.
-                </p></app-tab
-              >
-              <app-tab id="specifications" label="Specifications"
-                ><dl>
-                  <div>
-                    <dt>Brand</dt>
-                    <dd>{{ item.brand }}</dd>
-                  </div>
-                  <div>
-                    <dt>Availability</dt>
-                    <dd>{{ item.inStock ? 'In stock' : 'Unavailable' }}</dd>
-                  </div>
-                  <div>
-                    <dt>Category</dt>
-                    <dd>{{ item.groupId }}</dd>
-                  </div>
-                </dl></app-tab
-              >
-            </app-tabs>
+            <ul class="purchase-assurances" aria-label="Shopping assurances">
+              <li><span aria-hidden="true">✓</span> Secure checkout</li>
+              <li><span aria-hidden="true">↻</span> 30-day returns</li>
+              <li><span aria-hidden="true">◇</span> Tracked UK delivery</li>
+            </ul>
           </section>
         </div>
+
+        <app-product-information [product]="item" [effectivePrice]="effectivePrice()" />
       }
     }
   }

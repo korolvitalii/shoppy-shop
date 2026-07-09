@@ -1,0 +1,197 @@
+:host {
+  display: block;
+}
+.product-content {
+  margin-top: clamp(4rem, 8vw, 7rem);
+  padding-top: clamp(3rem, 6vw, 5rem);
+  border-top: 1px solid var(--color-border);
+}
+.section-heading {
+  max-width: 51rem;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+.section-heading > p,
+.subsection-heading > p {
+  margin: 0 0 0.7rem;
+  color: var(--color-primary);
+  font-size: 0.7rem;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.section-heading h2,
+.subsection-heading h2 {
+  margin: 0;
+  font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.08;
+}
+.description-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(17rem, 0.75fr);
+  gap: clamp(2.5rem, 7vw, 6rem);
+  align-items: start;
+}
+.story-copy {
+  max-width: 46rem;
+  color: var(--color-muted);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+.story-copy p {
+  margin: 0 0 1.25rem;
+}
+.story-copy .lead {
+  color: var(--color-ink);
+  font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+  font-size: clamp(1.35rem, 2.4vw, 1.8rem);
+  line-height: 1.5;
+}
+.highlights {
+  padding: 1.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 1.1rem;
+  background: var(--color-surface);
+  box-shadow: 0 0.75rem 2rem var(--shadow-color);
+}
+.highlights h3 {
+  margin: 0 0 0.85rem;
+  font-size: 1rem;
+}
+.highlights ul {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.highlights li {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: 0.5rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+.highlights li > span:first-child {
+  display: grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+.highlights strong {
+  display: block;
+  margin-bottom: 0.15rem;
+  color: var(--color-ink);
+  font-size: 0.82rem;
+}
+.specifications {
+  display: grid;
+  grid-template-columns: minmax(13rem, 0.55fr) minmax(0, 1.45fr);
+  gap: clamp(2rem, 7vw, 6rem);
+  margin-top: clamp(4rem, 8vw, 7rem);
+  padding: clamp(2rem, 4vw, 3.5rem);
+  border-radius: 1.25rem;
+  background: var(--color-surface-muted);
+}
+.subsection-heading h2 {
+  font-size: clamp(1.9rem, 3vw, 2.7rem);
+}
+.specification-list {
+  margin: 0;
+}
+.specification-list > div {
+  display: grid;
+  grid-template-columns: minmax(8rem, 0.7fr) minmax(0, 1.3fr);
+  gap: 1rem;
+  padding: 0.9rem 0.2rem;
+  border-bottom: 1px solid var(--color-border);
+}
+.specification-list > div:first-child {
+  padding-top: 0;
+}
+.specification-list > div:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+.specification-list dt {
+  color: var(--color-muted);
+  font-size: 0.78rem;
+}
+.specification-list dd {
+  min-width: 0;
+  margin: 0;
+  font-size: 0.84rem;
+  font-weight: 750;
+  overflow-wrap: anywhere;
+}
+.status-dot {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-right: 0.45rem;
+  border-radius: 50%;
+  background: #16835f;
+}
+.status-dot.unavailable {
+  background: var(--color-danger);
+}
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+.service-grid article {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr;
+  gap: 0.85rem;
+  padding: 1.4rem;
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  background: var(--color-surface);
+}
+.service-grid article > span {
+  display: grid;
+  width: 2.4rem;
+  height: 2.4rem;
+  place-items: center;
+  border-radius: 0.7rem;
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+  font-size: 1.2rem;
+  font-weight: 850;
+}
+.service-grid h3 {
+  margin: 0 0 0.35rem;
+  font-size: 0.88rem;
+}
+.service-grid p {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.76rem;
+  line-height: 1.55;
+}
+@media (max-width: 48rem) {
+  .description-layout,
+  .specifications {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .service-grid {
+    grid-template-columns: 1fr;
+  }
+  .specifications {
+    padding: 1.5rem;
+  }
+}
+@media (max-width: 30rem) {
+  .specification-list > div {
+    grid-template-columns: 1fr;
+    gap: 0.3rem;
+  }
+}

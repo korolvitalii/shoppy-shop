@@ -172,12 +172,6 @@
 
   @if (menuOpen()) {
     <nav id="mobile-navigation" class="mobile-navigation" aria-label="Mobile navigation">
-      <a routerLink="/products" routerLinkActive="active">All categories</a>
-      @for (category of categories; track category.id) {
-        <a [routerLink]="['/products', category.id]" routerLinkActive="active">{{
-          category.label
-        }}</a>
-      }
       <button class="mobile-theme" type="button" (click)="theme.toggle()">
         {{ theme.isDark() ? 'Light theme' : 'Dark theme' }}
         <span aria-hidden="true">{{ theme.isDark() ? '☀' : '☾' }}</span>

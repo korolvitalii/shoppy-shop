@@ -1,0 +1,105 @@
+<section class="product-content" aria-labelledby="product-overview-title">
+  <header class="section-heading">
+    <p>Product overview</p>
+    <h2 id="product-overview-title">A closer look at {{ product().name }}</h2>
+  </header>
+
+  <div class="description-layout">
+    <article class="story-copy">
+      <p class="lead">{{ product().description }}</p>
+      <p>
+        Chosen from {{ product().brand }} for its balance of thoughtful design, everyday usefulness
+        and lasting quality. This {{ product().groupId | titlecase }} piece has been selected to
+        feel at home in your routine from day one.
+      </p>
+      <p>
+        Every order is carefully checked and packed before dispatch, with clear delivery updates
+        from our door to yours.
+      </p>
+    </article>
+
+    <aside class="highlights" aria-labelledby="highlights-title">
+      <h3 id="highlights-title">Why you’ll love it</h3>
+      <ul>
+        <li>
+          <span aria-hidden="true">✦</span>
+          <span
+            ><strong>Considered choice</strong>Selected for useful design and dependable
+            quality.</span
+          >
+        </li>
+        <li>
+          <span aria-hidden="true">◎</span>
+          <span
+            ><strong>Quality checked</strong>Inspected before it leaves our fulfilment
+            partner.</span
+          >
+        </li>
+        <li>
+          <span aria-hidden="true">↻</span>
+          <span><strong>Easy to return</strong>Change your mind within 30 days of delivery.</span>
+        </li>
+      </ul>
+    </aside>
+  </div>
+
+  <div class="specifications" aria-labelledby="specifications-title">
+    <div class="subsection-heading">
+      <p>At a glance</p>
+      <h2 id="specifications-title">Product details</h2>
+    </div>
+    <dl class="specification-list">
+      <div>
+        <dt>Brand</dt>
+        <dd>{{ product().brand }}</dd>
+      </div>
+      <div>
+        <dt>Category</dt>
+        <dd>{{ product().groupId | titlecase }}</dd>
+      </div>
+      <div>
+        <dt>Product code</dt>
+        <dd>{{ product().id | uppercase }}</dd>
+      </div>
+      <div>
+        <dt>Availability</dt>
+        <dd>
+          <span class="status-dot" [class.unavailable]="!product().inStock"></span
+          >{{ product().inStock ? 'Ready to dispatch' : 'Currently unavailable' }}
+        </dd>
+      </div>
+      <div>
+        <dt>Current price</dt>
+        <dd>{{ effectivePrice() | currency: 'GBP' }}</dd>
+      </div>
+      <div>
+        <dt>Returns</dt>
+        <dd>30 days from delivery</dd>
+      </div>
+    </dl>
+  </div>
+
+  <div class="service-grid" aria-label="Delivery and support information">
+    <article>
+      <span aria-hidden="true">▱</span>
+      <div>
+        <h3>Tracked delivery</h3>
+        <p>Dispatch estimates appear at checkout, followed by tracking updates.</p>
+      </div>
+    </article>
+    <article>
+      <span aria-hidden="true">↻</span>
+      <div>
+        <h3>Simple returns</h3>
+        <p>Send it back within 30 days in its original condition.</p>
+      </div>
+    </article>
+    <article>
+      <span aria-hidden="true">?</span>
+      <div>
+        <h3>Here to help</h3>
+        <p>Our customer team can help with product and order questions.</p>
+      </div>
+    </article>
+  </div>
+</section>
