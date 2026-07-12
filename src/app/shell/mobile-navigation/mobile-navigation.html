@@ -5,11 +5,11 @@
 >
   <a routerLink="/products" routerLinkActive="active">
     <span class="tab-icon" aria-hidden="true">⌂</span>
-    <span>Shop</span>
+    <span i18n="@@shop">Shop</span>
   </a>
   <a routerLink="/favorites" routerLinkActive="active">
     <span class="tab-icon" aria-hidden="true">♡</span>
-    <span>Favourites</span>
+    <span i18n="@@favourites">Favourites</span>
     @if (favorites.count() > 0) {
       <span class="badge" aria-label="Favourite products">{{
         favorites.count() > 99 ? '99+' : favorites.count()
@@ -19,11 +19,11 @@
   @if (session.isAuthenticated()) {
     <a routerLink="/orders" routerLinkActive="active">
       <span class="tab-icon" aria-hidden="true">◷</span>
-      <span>Orders</span>
+      <span i18n="@@orders">Orders</span>
     </a>
     <a routerLink="/basket" routerLinkActive="active">
       <span class="tab-icon" aria-hidden="true">▱</span>
-      <span>Basket</span>
+      <span i18n="@@basket">Basket</span>
       @if (basket.itemCount() > 0) {
         <span class="badge" aria-label="Basket items">{{
           basket.itemCount() > 99 ? '99+' : basket.itemCount()

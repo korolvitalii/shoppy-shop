@@ -1,5 +1,5 @@
 <header class="site-header">
-  <a class="skip-link" href="#main-content">Skip to content</a>
+  <a class="skip-link" href="#main-content" i18n="@@skipToContent">Skip to content</a>
   <div class="header-main">
     <div class="header-inner">
       <a class="brand" routerLink="/products" aria-label="ShoppyShop home">
@@ -16,12 +16,15 @@
       </a>
 
       <form class="search-form" role="search" [formGroup]="searchForm" (ngSubmit)="search()">
-        <label class="visually-hidden" for="site-search">Search products</label>
+        <label class="visually-hidden" for="site-search" i18n="@@searchProducts"
+          >Search products</label
+        >
         <input
           id="site-search"
           type="search"
           formControlName="query"
           placeholder="Search products, brands and more"
+          i18n-placeholder="@@searchPlaceholder"
           autocomplete="off"
           role="combobox"
           aria-autocomplete="list"
@@ -33,9 +36,11 @@
           (focus)="showSuggestions()"
           (keydown)="handleSearchKeydown($event)"
         />
-        <label class="visually-hidden" for="search-category">Search category</label>
+        <label class="visually-hidden" for="search-category" i18n="@@searchCategory"
+          >Search category</label
+        >
         <select id="search-category" formControlName="category">
-          <option value="all">All categories</option>
+          <option value="all" i18n="@@allCategories">All categories</option>
           @for (category of categories; track category.id) {
             <option [value]="category.id">{{ category.label }}</option>
           }
@@ -45,7 +50,7 @@
             <circle cx="10.7" cy="10.7" r="6.7" />
             <path d="m16 16 4 4" />
           </svg>
-          <span>Search</span>
+          <span i18n="@@searchAction">Search</span>
         </button>
         @if (suggestionsOpen()) {
           <app-search-suggestions
@@ -61,6 +66,7 @@
       </form>
 
       <div class="header-actions">
+        <app-language-selector />
         <button
           class="account-button theme-button"
           type="button"
@@ -75,12 +81,12 @@
                 d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
               />
             </svg>
-            <span>Light</span>
+            <span i18n="@@lightThemeShort">Light</span>
           } @else {
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M20.5 15.4A8.5 8.5 0 0 1 8.6 3.5 8.5 8.5 0 1 0 20.5 15.4Z" />
             </svg>
-            <span>Dark</span>
+            <span i18n="@@darkThemeShort">Dark</span>
           }
         </button>
         <a
@@ -94,7 +100,7 @@
               d="M20.8 4.8a5.5 5.5 0 0 0-7.8 0L12 5.9l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.4a5.5 5.5 0 0 0 0-7.8Z"
             />
           </svg>
-          <span>Favourites</span>
+          <span i18n="@@favourites">Favourites</span>
           @if (favorites.count() > 0) {
             <span class="badge" aria-label="Favourite products">{{
               favorites.count() > 99 ? '99+' : favorites.count()
@@ -107,14 +113,14 @@
               <path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z" />
               <path d="M9 8h6M9 12h6" />
             </svg>
-            <span>Orders</span>
+            <span i18n="@@orders">Orders</span>
           </a>
           <a class="action-link" routerLink="/basket" aria-label="Open basket">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M5 8h14l-1 12H6L5 8Z" />
               <path d="M9 9V7a3 3 0 0 1 6 0v2" />
             </svg>
-            <span>Basket</span>
+            <span i18n="@@basket">Basket</span>
             @if (basket.itemCount() > 0) {
               <span class="badge" aria-label="Basket items">{{
                 basket.itemCount() > 99 ? '99+' : basket.itemCount()
@@ -126,7 +132,7 @@
               <circle cx="12" cy="8" r="3.5" />
               <path d="M5.5 20c.6-4 2.8-6 6.5-6s5.9 2 6.5 6" />
             </svg>
-            <span>Log out</span>
+            <span i18n="@@logOut">Log out</span>
           </button>
         } @else {
           <a class="action-link" routerLink="/login" aria-label="Sign in">
@@ -134,7 +140,7 @@
               <circle cx="12" cy="8" r="3.5" />
               <path d="M5.5 20c.6-4 2.8-6 6.5-6s5.9 2 6.5 6" />
             </svg>
-            <span>Sign in</span>
+            <span i18n="@@signIn">Sign in</span>
           </a>
         }
       </div>
@@ -160,7 +166,8 @@
         routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: true }"
       >
-        <span class="grid-icon" aria-hidden="true">⌘</span> All categories
+        <span class="grid-icon" aria-hidden="true">⌘</span>
+        <span i18n="@@allCategories">All categories</span>
       </a>
       @for (category of categories; track category.id) {
         <a [routerLink]="['/products', category.id]" routerLinkActive="active">{{
@@ -172,24 +179,36 @@
 
   @if (menuOpen()) {
     <nav id="mobile-navigation" class="mobile-navigation" aria-label="Mobile navigation">
+      <app-language-selector [wide]="true" />
       <button class="mobile-theme" type="button" (click)="theme.toggle()">
-        {{ theme.isDark() ? 'Light theme' : 'Dark theme' }}
+        @if (theme.isDark()) {
+          <span i18n="@@lightTheme">Light theme</span>
+        } @else {
+          <span i18n="@@darkTheme">Dark theme</span>
+        }
         <span aria-hidden="true">{{ theme.isDark() ? '☀' : '☾' }}</span>
       </button>
       @if (session.isAuthenticated()) {
         <a routerLink="/favorites" routerLinkActive="active">
-          Favourites <span>{{ favorites.count() }} saved</span>
+          <span i18n="@@favourites">Favourites</span>
+          <span i18n="@@savedCount">{{ favorites.count() }} saved</span>
         </a>
         <a routerLink="/basket" routerLinkActive="active">
-          Basket <span>{{ basket.itemCount() }} items</span>
+          <span i18n="@@basket">Basket</span>
+          <span i18n="@@itemCount">{{ basket.itemCount() }} items</span>
         </a>
-        <a routerLink="/orders" routerLinkActive="active">Purchase history</a>
-        <button class="mobile-logout" type="button" (click)="logout()">Log out</button>
+        <a routerLink="/orders" routerLinkActive="active" i18n="@@purchaseHistory"
+          >Purchase history</a
+        >
+        <button class="mobile-logout" type="button" (click)="logout()">
+          <span i18n="@@logOut">Log out</span>
+        </button>
       } @else {
         <a routerLink="/favorites" routerLinkActive="active">
-          Favourites <span>{{ favorites.count() }} saved</span>
+          <span i18n="@@favourites">Favourites</span>
+          <span i18n="@@savedCount">{{ favorites.count() }} saved</span>
         </a>
-        <a routerLink="/login">Sign in</a>
+        <a routerLink="/login" i18n="@@signIn">Sign in</a>
       }
     </nav>
   }

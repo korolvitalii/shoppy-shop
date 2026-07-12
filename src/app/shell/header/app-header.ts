@@ -29,23 +29,24 @@ import { BasketService } from '../../features/basket/data-access/basket.service'
 import { ProductsRepository } from '../../features/catalogue/data-access/products.repository';
 import { type Product } from '../../features/catalogue/models/product';
 import { FavoritesService } from '../../features/favorites/data-access/favorites.service';
+import { LanguageSelector } from '../../shared/ui/language-selector/language-selector';
 import { SearchSuggestions } from './search-suggestions/search-suggestions';
 
 @Component({
   selector: 'app-header',
-  imports: [ReactiveFormsModule, RouterLink, RouterLinkActive, SearchSuggestions],
+  imports: [LanguageSelector, ReactiveFormsModule, RouterLink, RouterLinkActive, SearchSuggestions],
   templateUrl: './app-header.html',
   styleUrl: './app-header.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppHeader {
   protected readonly categories = [
-    { id: 'beauty', label: 'Beauty' },
-    { id: 'electronics', label: 'Electronics' },
-    { id: 'fashion', label: 'Fashion' },
-    { id: 'home', label: 'Home & living' },
-    { id: 'accessories', label: 'Accessories' },
-    { id: 'gifts', label: 'Gifts' },
+    { id: 'beauty', label: $localize`:@@categoryBeauty:Beauty` },
+    { id: 'electronics', label: $localize`:@@categoryElectronics:Electronics` },
+    { id: 'fashion', label: $localize`:@@categoryFashion:Fashion` },
+    { id: 'home', label: $localize`:@@categoryHome:Home & living` },
+    { id: 'accessories', label: $localize`:@@categoryAccessories:Accessories` },
+    { id: 'gifts', label: $localize`:@@categoryGifts:Gifts` },
   ] as const;
   protected readonly activeSuggestionIndex = signal(-1);
   protected readonly basket = inject(BasketService);
@@ -177,9 +178,9 @@ export class AppHeader {
 
   protected async logout(): Promise<void> {
     const confirmed = await this.confirmation.confirm({
-      title: 'Log out of ShoppyShop?',
-      message: 'Your basket stays on this device, but you will need to sign in again.',
-      confirmLabel: 'Log out',
+      title: $localize`:@@logoutTitle:Log out of ShoppyShop?`,
+      message: $localize`:@@logoutMessage:Your basket stays on this device, but you will need to sign in again.`,
+      confirmLabel: $localize`:@@logOutConfirm:Log out`,
       tone: 'danger',
     });
     if (!confirmed) return;

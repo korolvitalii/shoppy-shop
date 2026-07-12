@@ -1,25 +1,25 @@
 <main class="details-page">
   @switch (status()) {
     @case ('loading') {
-      <section class="state" role="status">Loading product…</section>
+      <section class="state" role="status" i18n="@@loadingProduct">Loading product…</section>
     }
     @case ('error') {
       <section class="state" role="alert">
-        <h1>Product unavailable</h1>
-        <a routerLink="/products">Browse products</a>
+        <h1 i18n="@@productUnavailable">Product unavailable</h1>
+        <a routerLink="/products" i18n="@@browseProducts">Browse products</a>
       </section>
     }
     @case ('not-found') {
       <section class="state">
-        <h1>Product not found</h1>
-        <p>This product may have been removed.</p>
-        <a routerLink="/products">Browse products</a>
+        <h1 i18n="@@productNotFound">Product not found</h1>
+        <p i18n="@@productRemoved">This product may have been removed.</p>
+        <a routerLink="/products" i18n="@@browseProducts">Browse products</a>
       </section>
     }
     @case ('success') {
       @if (product(); as item) {
         <nav class="breadcrumbs" aria-label="Breadcrumb">
-          <a routerLink="/products">Products</a><span>/</span
+          <a routerLink="/products" i18n="@@products">Products</a><span>/</span
           ><a [routerLink]="['/products', item.groupId]">{{ item.groupId }}</a
           ><span>/</span><span>{{ item.name }}</span>
         </nav>
@@ -56,7 +56,11 @@
               }
             </div>
             <p class="availability" [class.unavailable]="!item.inStock">
-              {{ item.inStock ? 'In stock' : 'Currently unavailable' }}
+              @if (item.inStock) {
+                <span i18n="@@inStock">In stock</span>
+              } @else {
+                <span i18n="@@currentlyUnavailable">Currently unavailable</span>
+              }
             </p>
             <div class="purchase">
               <div class="quantity" aria-label="Quantity selector">
@@ -87,13 +91,22 @@
                 {{ addButtonLabel() }}
               </button>
               @if (isAuthenticated()) {
-                <a class="basket-link" routerLink="/basket">View basket</a>
+                <a class="basket-link" routerLink="/basket" i18n="@@viewBasket">View basket</a>
               }
             </div>
             <ul class="purchase-assurances" aria-label="Shopping assurances">
-              <li><span aria-hidden="true">✓</span> Secure checkout</li>
-              <li><span aria-hidden="true">↻</span> 30-day returns</li>
-              <li><span aria-hidden="true">◇</span> Tracked UK delivery</li>
+              <li>
+                <span aria-hidden="true">✓</span>
+                <span i18n="@@secureCheckout">Secure checkout</span>
+              </li>
+              <li>
+                <span aria-hidden="true">↻</span>
+                <span i18n="@@thirtyDayReturns">30-day returns</span>
+              </li>
+              <li>
+                <span aria-hidden="true">◇</span>
+                <span i18n="@@trackedUkDelivery">Tracked UK delivery</span>
+              </li>
             </ul>
           </section>
         </div>

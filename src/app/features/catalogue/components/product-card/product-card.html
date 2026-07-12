@@ -21,10 +21,10 @@
     <div class="image-frame">
       <img [src]="product().imageUrl" [alt]="product().name" loading="lazy" />
       @if (discount(); as amount) {
-        <span class="discount">Save {{ amount }}%</span>
+        <span class="discount" i18n="@@savePercent">Save {{ amount }}%</span>
       }
       @if (!product().inStock) {
-        <span class="stock">Out of stock</span>
+        <span class="stock" i18n="@@outOfStock">Out of stock</span>
       }
     </div>
     <div class="content">

@@ -50,8 +50,10 @@ export class ProductDetailsPage {
   });
   readonly isAuthenticated = this.session.isAuthenticated;
   readonly addButtonLabel = computed(() => {
-    if (!this.isAuthenticated()) return 'Sign in to add';
-    return this.added() ? 'Added to basket' : 'Add to basket';
+    if (!this.isAuthenticated()) return $localize`:@@signInToAdd:Sign in to add`;
+    return this.added()
+      ? $localize`:@@addedToBasket:Added to basket`
+      : $localize`:@@addToBasket:Add to basket`;
   });
 
   constructor() {

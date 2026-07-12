@@ -1,4 +1,4 @@
-<p class="suggestions-heading">Suggested products</p>
+<p class="suggestions-heading" i18n="@@suggestedProducts">Suggested products</p>
 @for (product of products(); track product.id; let index = $index) {
   <button
     type="button"
@@ -21,6 +21,6 @@
   </button>
 }
 <button class="view-results" type="submit">
-  View all results for “{{ query() }}”
+  <span i18n="@@viewAllSearchResults">View all results for “{{ query() }}”</span>
   <span aria-hidden="true">→</span>
 </button>

@@ -104,7 +104,7 @@ describe('AppHeader', () => {
     expect(element.querySelector('input[type="search"]')?.getAttribute('placeholder')).toBe(
       'Search products, brands and more',
     );
-    expect(element.querySelectorAll('select option')).toHaveLength(7);
+    expect(element.querySelectorAll('#search-category option')).toHaveLength(7);
   });
 
   it('searches within the selected category using URL-backed state', () => {

@@ -1,0 +1,12 @@
+<label [class.wide]="wide()">
+  <span [class.visually-hidden]="!wide()" i18n="@@languageSelector">Language</span>
+  <select
+    [value]="locale.currentLocale"
+    (change)="changeLocale($event)"
+    aria-label="Language"
+    i18n-aria-label="@@languageSelector"
+  >
+    <option value="en-GB">{{ wide() ? 'English' : 'EN' }}</option>
+    <option value="pl">{{ wide() ? 'Polski' : 'PL' }}</option>
+  </select>
+</label>

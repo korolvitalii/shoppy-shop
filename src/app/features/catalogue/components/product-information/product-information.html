@@ -1,43 +1,45 @@
 <section class="product-content" aria-labelledby="product-overview-title">
   <header class="section-heading">
-    <p>Product overview</p>
-    <h2 id="product-overview-title">A closer look at {{ product().name }}</h2>
+    <p i18n="@@productOverview">Product overview</p>
+    <h2 id="product-overview-title" i18n="@@closerLook">A closer look at {{ product().name }}</h2>
   </header>
 
   <div class="description-layout">
     <article class="story-copy">
       <p class="lead">{{ product().description }}</p>
-      <p>
+      <p i18n="@@productEditorialDescription">
         Chosen from {{ product().brand }} for its balance of thoughtful design, everyday usefulness
         and lasting quality. This {{ product().groupId | titlecase }} piece has been selected to
         feel at home in your routine from day one.
       </p>
-      <p>
+      <p i18n="@@productDispatchDescription">
         Every order is carefully checked and packed before dispatch, with clear delivery updates
         from our door to yours.
       </p>
     </article>
 
     <aside class="highlights" aria-labelledby="highlights-title">
-      <h3 id="highlights-title">Why you’ll love it</h3>
+      <h3 id="highlights-title" i18n="@@whyLoveIt">Why you’ll love it</h3>
       <ul>
         <li>
           <span aria-hidden="true">✦</span>
-          <span
+          <span i18n="@@consideredChoice"
             ><strong>Considered choice</strong>Selected for useful design and dependable
             quality.</span
           >
         </li>
         <li>
           <span aria-hidden="true">◎</span>
-          <span
+          <span i18n="@@qualityChecked"
             ><strong>Quality checked</strong>Inspected before it leaves our fulfilment
             partner.</span
           >
         </li>
         <li>
           <span aria-hidden="true">↻</span>
-          <span><strong>Easy to return</strong>Change your mind within 30 days of delivery.</span>
+          <span i18n="@@easyReturn"
+            ><strong>Easy to return</strong>Change your mind within 30 days of delivery.</span
+          >
         </li>
       </ul>
     </aside>
@@ -45,36 +47,40 @@
 
   <div class="specifications" aria-labelledby="specifications-title">
     <div class="subsection-heading">
-      <p>At a glance</p>
-      <h2 id="specifications-title">Product details</h2>
+      <p i18n="@@atGlance">At a glance</p>
+      <h2 id="specifications-title" i18n="@@productDetails">Product details</h2>
     </div>
     <dl class="specification-list">
       <div>
-        <dt>Brand</dt>
+        <dt i18n="@@brand">Brand</dt>
         <dd>{{ product().brand }}</dd>
       </div>
       <div>
-        <dt>Category</dt>
+        <dt i18n="@@category">Category</dt>
         <dd>{{ product().groupId | titlecase }}</dd>
       </div>
       <div>
-        <dt>Product code</dt>
+        <dt i18n="@@productCode">Product code</dt>
         <dd>{{ product().id | uppercase }}</dd>
       </div>
       <div>
-        <dt>Availability</dt>
+        <dt i18n="@@availability">Availability</dt>
         <dd>
-          <span class="status-dot" [class.unavailable]="!product().inStock"></span
-          >{{ product().inStock ? 'Ready to dispatch' : 'Currently unavailable' }}
+          <span class="status-dot" [class.unavailable]="!product().inStock"></span>
+          @if (product().inStock) {
+            <span i18n="@@readyToDispatch">Ready to dispatch</span>
+          } @else {
+            <span i18n="@@currentlyUnavailable">Currently unavailable</span>
+          }
         </dd>
       </div>
       <div>
-        <dt>Current price</dt>
+        <dt i18n="@@currentPrice">Current price</dt>
         <dd>{{ effectivePrice() | currency: 'GBP' }}</dd>
       </div>
       <div>
-        <dt>Returns</dt>
-        <dd>30 days from delivery</dd>
+        <dt i18n="@@returns">Returns</dt>
+        <dd i18n="@@returnsPeriod">30 days from delivery</dd>
       </div>
     </dl>
   </div>
@@ -83,22 +89,26 @@
     <article>
       <span aria-hidden="true">▱</span>
       <div>
-        <h3>Tracked delivery</h3>
-        <p>Dispatch estimates appear at checkout, followed by tracking updates.</p>
+        <h3 i18n="@@trackedDelivery">Tracked delivery</h3>
+        <p i18n="@@trackedDeliveryDetail">
+          Dispatch estimates appear at checkout, followed by tracking updates.
+        </p>
       </div>
     </article>
     <article>
       <span aria-hidden="true">↻</span>
       <div>
-        <h3>Simple returns</h3>
-        <p>Send it back within 30 days in its original condition.</p>
+        <h3 i18n="@@simpleReturns">Simple returns</h3>
+        <p i18n="@@simpleReturnsDetail">Send it back within 30 days in its original condition.</p>
       </div>
     </article>
     <article>
       <span aria-hidden="true">?</span>
       <div>
-        <h3>Here to help</h3>
-        <p>Our customer team can help with product and order questions.</p>
+        <h3 i18n="@@hereToHelp">Here to help</h3>
+        <p i18n="@@hereToHelpDetail">
+          Our customer team can help with product and order questions.
+        </p>
       </div>
     </article>
   </div>
