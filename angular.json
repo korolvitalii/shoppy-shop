@@ -17,12 +17,26 @@
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
+      "i18n": {
+        "sourceLocale": {
+          "code": "en-GB",
+          "baseHref": "/en/"
+        },
+        "locales": {
+          "pl": {
+            "translation": "src/locale/messages.pl.json",
+            "baseHref": "/pl/"
+          }
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular/build:application",
           "options": {
             "browser": "src/main.ts",
+            "polyfills": ["@angular/localize/init"],
             "tsConfig": "tsconfig.app.json",
+            "i18nMissingTranslation": "error",
             "inlineStyleLanguage": "scss",
             "assets": [
               {
@@ -70,6 +84,15 @@
         },
         "test": {
           "builder": "@angular/build:unit-test"
+        },
+        "extract-i18n": {
+          "builder": "@angular/build:extract-i18n",
+          "options": {
+            "buildTarget": "shoppy-shop:build",
+            "format": "json",
+            "outputPath": "src/locale",
+            "outFile": "messages.en.json"
+          }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
