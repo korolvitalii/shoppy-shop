@@ -4,22 +4,24 @@
     [deliveryComplete]="facade.delivery() !== null"
     [paymentComplete]="facade.paymentToken() !== null"
   />
-  <h1>Review order</h1>
-  <p class="page-intro">Check the details below before placing your order.</p>
+  <h1 i18n="@@reviewOrder">Review order</h1>
+  <p class="page-intro" i18n="@@reviewOrderIntro">
+    Check the details below before placing your order.
+  </p>
   <section class="review-card" aria-labelledby="items-heading">
     <div class="review-card-heading">
       <div>
-        <span>Order summary</span>
-        <h2 id="items-heading">Your items</h2>
+        <span i18n="@@orderSummary">Order summary</span>
+        <h2 id="items-heading" i18n="@@yourItems">Your items</h2>
       </div>
-      <strong>{{ facade.items().length }} products</strong>
+      <strong>{{ facade.items().length }} <span i18n="@@productsCountLabel">products</span></strong>
     </div>
     @for (item of facade.items(); track item.productId) {
       <article class="review-item">
         <img [src]="item.imageUrl" alt="" width="72" height="64" />
         <div>
           <h3>{{ item.name }}</h3>
-          <p>Quantity {{ item.quantity }}</p>
+          <p i18n="@@quantityValue">Quantity {{ item.quantity }}</p>
         </div>
         <strong>{{ item.unitPrice * item.quantity | currency: 'GBP' }}</strong>
       </article>
@@ -29,8 +31,8 @@
     <section class="review-card delivery-summary" aria-labelledby="delivery-heading">
       <div class="review-card-heading">
         <div>
-          <span>Delivery</span>
-          <h2 id="delivery-heading">Shipping address</h2>
+          <span i18n="@@delivery">Delivery</span>
+          <h2 id="delivery-heading" i18n="@@shippingAddress">Shipping address</h2>
         </div>
       </div>
       <p>
@@ -41,16 +43,17 @@
       <p>{{ facade.delivery()?.country }}</p>
     </section>
     <section class="review-card totals" aria-labelledby="total-heading">
-      <h2 id="total-heading">Payment summary</h2>
+      <h2 id="total-heading" i18n="@@paymentSummary">Payment summary</h2>
       <p>
-        <span>Subtotal</span><strong>{{ facade.subtotal() | currency: 'GBP' }}</strong>
+        <span i18n="@@subtotal">Subtotal</span
+        ><strong>{{ facade.subtotal() | currency: 'GBP' }}</strong>
       </p>
       <p>
-        <span>Standard delivery</span
+        <span i18n="@@standardDelivery">Standard delivery</span
         ><strong>{{ facade.deliveryCharge() | currency: 'GBP' }}</strong>
       </p>
       <p class="grand-total">
-        <span>Total</span><strong>{{ facade.total() | currency: 'GBP' }}</strong>
+        <span i18n="@@total">Total</span><strong>{{ facade.total() | currency: 'GBP' }}</strong>
       </p>
     </section>
   </div>
@@ -59,7 +62,11 @@
   }
   <div class="checkout-actions">
     <button type="button" [disabled]="submitting()" (click)="submit()">
-      {{ submitting() ? 'Placing order…' : 'Place order' }}
+      @if (submitting()) {
+        <span i18n="@@placingOrder">Placing order…</span>
+      } @else {
+        <span i18n="@@placeOrder">Place order</span>
+      }
     </button>
   </div>
 </main>

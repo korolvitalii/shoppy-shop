@@ -7,7 +7,7 @@
         [attr.aria-current]="currentStep() === 1 ? 'step' : null"
       >
         <span>1</span>
-        Delivery
+        <span i18n="@@delivery">Delivery</span>
       </a>
     </li>
     <li [class.complete]="paymentComplete()" [class.current]="currentStep() === 2">
@@ -18,10 +18,12 @@
           [attr.aria-current]="currentStep() === 2 ? 'step' : null"
         >
           <span>2</span>
-          Payment
+          <span i18n="@@payment">Payment</span>
         </a>
       } @else {
-        <span class="disabled" aria-disabled="true"><span>2</span> Payment</span>
+        <span class="disabled" aria-disabled="true"
+          ><span>2</span> <span i18n="@@payment">Payment</span></span
+        >
       }
     </li>
     <li [class.current]="currentStep() === 3">
@@ -32,10 +34,12 @@
           [attr.aria-current]="currentStep() === 3 ? 'step' : null"
         >
           <span>3</span>
-          Review
+          <span i18n="@@review">Review</span>
         </a>
       } @else {
-        <span class="disabled" aria-disabled="true"><span>3</span> Review</span>
+        <span class="disabled" aria-disabled="true"
+          ><span>3</span> <span i18n="@@review">Review</span></span
+        >
       }
     </li>
   </ol>

@@ -33,7 +33,10 @@ export class ReviewPage {
           this.facade.clearBasket();
           void this.router.navigateByUrl(`/orders/${order.id}/confirmation`, { replaceUrl: true });
         },
-        error: () => this.error.set('We could not place your order. Please try again.'),
+        error: () =>
+          this.error.set(
+            $localize`:@@placeOrderError:We could not place your order. Please try again.`,
+          ),
       });
   }
 }

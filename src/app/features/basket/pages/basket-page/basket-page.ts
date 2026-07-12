@@ -27,9 +27,9 @@ export class BasketPage {
 
   protected async removeItem(item: BasketItem): Promise<void> {
     const confirmed = await this.confirmation.confirm({
-      title: `Remove ${item.name}?`,
-      message: 'This item will be removed from your basket.',
-      confirmLabel: 'Remove item',
+      title: $localize`:@@removeProductTitle:Remove ${item.name}:productName:?`,
+      message: $localize`:@@removeProductMessage:This item will be removed from your basket.`,
+      confirmLabel: $localize`:@@removeItem:Remove item`,
       tone: 'danger',
     });
     if (confirmed) this.basket.remove(item.productId);
@@ -37,9 +37,9 @@ export class BasketPage {
 
   protected async clearBasket(): Promise<void> {
     const confirmed = await this.confirmation.confirm({
-      title: 'Clear your basket?',
-      message: `All ${this.basket.itemCount()} items will be removed. This cannot be undone.`,
-      confirmLabel: 'Clear basket',
+      title: $localize`:@@clearBasketTitle:Clear your basket?`,
+      message: $localize`:@@clearBasketMessage:All ${this.basket.itemCount()}:itemCount: items will be removed. This cannot be undone.`,
+      confirmLabel: $localize`:@@clearBasketConfirm:Clear basket`,
       tone: 'danger',
     });
     if (confirmed) this.basket.clear();

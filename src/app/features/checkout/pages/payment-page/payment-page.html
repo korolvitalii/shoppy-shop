@@ -4,34 +4,40 @@
     [deliveryComplete]="facade.delivery() !== null"
     [paymentComplete]="facade.paymentToken() !== null"
   />
-  <h1>Payment</h1>
-  <p class="page-intro">
+  <h1 i18n="@@payment">Payment</h1>
+  <p class="page-intro" i18n="@@paymentIntro">
     Secure mock checkout—no real charge is made and card details are never stored.
   </p>
   @if (!editingPayment() && facade.paymentToken(); as payment) {
     <section class="saved-payment" aria-label="Selected payment method">
       <p>
-        <strong>{{ payment.brand }}</strong> ending in {{ payment.last4 }}
+        <span i18n="@@savedCard"
+          ><strong>{{ payment.brand }}</strong> ending in {{ payment.last4 }}</span
+        >
       </p>
-      <button type="button" class="text-button" (click)="changePayment()">Change payment</button>
+      <button type="button" class="text-button" (click)="changePayment()" i18n="@@changePayment">
+        Change payment
+      </button>
     </section>
     <div class="checkout-actions">
-      <button type="button" (click)="continue()">Continue to review</button>
+      <button type="button" (click)="continue()" i18n="@@continueReview">Continue to review</button>
     </div>
   } @else {
     <form [formGroup]="form" (submit)="continue($event)" novalidate>
       <div class="form-heading">
         <span aria-hidden="true">✓</span>
         <div>
-          <h2>Card details</h2>
-          <p>Protected mock payment for portfolio demonstration.</p>
+          <h2 i18n="@@cardDetails">Card details</h2>
+          <p i18n="@@mockPaymentDetail">Protected mock payment for portfolio demonstration.</p>
         </div>
       </div>
       @if (submitted() && form.invalid) {
-        <p class="form-error" role="alert">Check the highlighted payment details and try again.</p>
+        <p class="form-error" role="alert" i18n="@@paymentDetailsError">
+          Check the highlighted payment details and try again.
+        </p>
       }
       <label for="cardholder-name">
-        Cardholder name
+        <span i18n="@@cardholderName">Cardholder name</span>
         <input
           id="cardholder-name"
           autocomplete="cc-name"
@@ -39,11 +45,11 @@
           [attr.aria-invalid]="form.controls.name.touched && form.controls.name.invalid"
         />
         @if (form.controls.name.touched && form.controls.name.invalid) {
-          <span>Enter the name shown on the card</span>
+          <span i18n="@@cardholderNameError">Enter the name shown on the card</span>
         }
       </label>
       <label for="card-number">
-        Card number
+        <span i18n="@@cardNumber">Card number</span>
         <input
           id="card-number"
           inputmode="numeric"
@@ -55,11 +61,11 @@
           (input)="formatCard($event)"
         />
         @if (form.controls.card.touched && form.controls.card.invalid) {
-          <span>Enter a 16-digit card number</span>
+          <span i18n="@@cardNumberError">Enter a 16-digit card number</span>
         }
       </label>
       <label for="card-expiry">
-        Expiry
+        <span i18n="@@expiry">Expiry</span>
         <input
           id="card-expiry"
           inputmode="numeric"
@@ -71,11 +77,11 @@
           (input)="formatExpiry($event)"
         />
         @if (form.controls.expiry.touched && form.controls.expiry.invalid) {
-          <span>Enter expiry as MM/YY</span>
+          <span i18n="@@expiryError">Enter expiry as MM/YY</span>
         }
       </label>
       <label for="card-cvv">
-        CVV
+        <span i18n="@@cvv">CVV</span>
         <input
           id="card-cvv"
           type="password"
@@ -86,11 +92,11 @@
           [attr.aria-invalid]="form.controls.cvv.touched && form.controls.cvv.invalid"
         />
         @if (form.controls.cvv.touched && form.controls.cvv.invalid) {
-          <span>Enter the 3 or 4-digit security code</span>
+          <span i18n="@@cvvError">Enter the 3 or 4-digit security code</span>
         }
       </label>
       <div class="checkout-actions">
-        <button type="submit">Continue to review</button>
+        <button type="submit" i18n="@@continueReview">Continue to review</button>
       </div>
     </form>
   }

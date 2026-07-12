@@ -1,19 +1,25 @@
 <main class="basket-page">
   @if (basket.items().length === 0) {
     <section class="empty-state">
-      <p class="eyebrow">Your selection</p>
-      <h1>Your basket is empty</h1>
-      <p>Discover something considered, useful, or unexpectedly delightful.</p>
-      <a routerLink="/products">Browse products</a>
+      <p class="eyebrow" i18n="@@yourSelection">Your selection</p>
+      <h1 i18n="@@emptyBasket">Your basket is empty</h1>
+      <p i18n="@@emptyBasketDetail">
+        Discover something considered, useful, or unexpectedly delightful.
+      </p>
+      <a routerLink="/products" i18n="@@browseProducts">Browse products</a>
     </section>
   } @else {
     <header>
       <div>
-        <p class="eyebrow">Your selection</p>
-        <h1>Shopping basket</h1>
-        <p>{{ basket.itemCount() }} {{ basket.itemCount() === 1 ? 'item' : 'items' }}</p>
+        <p class="eyebrow" i18n="@@yourSelection">Your selection</p>
+        <h1 i18n="@@shoppingBasket">Shopping basket</h1>
+        <p>
+          <span>{{ basket.itemCount() }}</span> <span i18n="@@itemCountLabel">items</span>
+        </p>
       </div>
-      <button class="clear" type="button" (click)="clearBasket()">Clear basket</button>
+      <button class="clear" type="button" (click)="clearBasket()" i18n="@@clearBasket">
+        Clear basket
+      </button>
     </header>
 
     <div class="layout">
@@ -27,7 +33,7 @@
               <a [routerLink]="['/products', item.groupId, item.productId]"
                 ><h2>{{ item.name }}</h2></a
               >
-              <p>{{ item.unitPrice | currency: 'GBP' }} each</p>
+              <p>{{ item.unitPrice | currency: 'GBP' }} <span i18n="@@each">each</span></p>
               <div class="quantity">
                 <button
                   type="button"
@@ -54,7 +60,7 @@
                 [attr.aria-label]="'Remove ' + item.name"
                 (click)="removeItem(item)"
               >
-                Remove
+                <span i18n="@@remove">Remove</span>
               </button>
             </div>
           </article>
@@ -62,13 +68,14 @@
       </section>
 
       <aside class="summary" aria-labelledby="summary-title">
-        <h2 id="summary-title">Order summary</h2>
+        <h2 id="summary-title" i18n="@@orderSummary">Order summary</h2>
         <div>
-          <span>Subtotal</span><strong>{{ basket.subtotal() | currency: 'GBP' }}</strong>
+          <span i18n="@@subtotal">Subtotal</span
+          ><strong>{{ basket.subtotal() | currency: 'GBP' }}</strong>
         </div>
-        <p>Delivery and discounts are calculated at checkout.</p>
-        <a class="checkout" routerLink="/checkout">Proceed to checkout</a>
-        <a class="continue" routerLink="/products">Continue shopping</a>
+        <p i18n="@@deliveryCalculated">Delivery and discounts are calculated at checkout.</p>
+        <a class="checkout" routerLink="/checkout" i18n="@@proceedCheckout">Proceed to checkout</a>
+        <a class="continue" routerLink="/products" i18n="@@continueShopping">Continue shopping</a>
       </aside>
     </div>
   }
