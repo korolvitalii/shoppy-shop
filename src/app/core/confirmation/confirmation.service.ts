@@ -22,7 +22,7 @@ export class ConfirmationService {
 
     this.returnFocus =
       this.document.activeElement instanceof HTMLElement ? this.document.activeElement : null;
-    this.current.set({ cancelLabel: 'Cancel', tone: 'default', ...request });
+    this.current.set({ cancelLabel: $localize`:@@cancel:Cancel`, tone: 'default', ...request });
     return new Promise<boolean>((resolve) => (this.pendingResolution = resolve));
   }
 

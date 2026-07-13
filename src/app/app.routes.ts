@@ -20,7 +20,7 @@ export const routes: Routes = [
   {
     path: 'login',
     canActivate: [anonymousGuard],
-    title: 'Sign in | ShoppyShop',
+    title: $localize`:@@signInTitle:Sign in | ShoppyShop`,
     loadComponent: () =>
       import('./features/auth/login-page/login-page').then(({ LoginPage }) => LoginPage),
   },
@@ -30,7 +30,7 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        title: 'Products | ShoppyShop',
+        title: $localize`:@@productsTitle:Products | ShoppyShop`,
         loadComponent: () =>
           import('./features/catalogue/pages/product-groups-page/product-groups-page').then(
             ({ ProductGroupsPage }) => ProductGroupsPage,
@@ -38,7 +38,7 @@ export const routes: Routes = [
       },
       {
         path: 'search',
-        title: 'Search products | ShoppyShop',
+        title: $localize`:@@searchProductsTitle:Search products | ShoppyShop`,
         loadComponent: () =>
           import('./features/catalogue/pages/product-listing-page/product-listing-page').then(
             ({ ProductListingPage }) => ProductListingPage,
@@ -46,7 +46,7 @@ export const routes: Routes = [
       },
       {
         path: ':groupId/:productId',
-        title: 'Product | ShoppyShop',
+        title: $localize`:@@productTitle:Product | ShoppyShop`,
         loadComponent: () =>
           import('./features/catalogue/pages/product-details-page/product-details-page').then(
             ({ ProductDetailsPage }) => ProductDetailsPage,
@@ -54,7 +54,7 @@ export const routes: Routes = [
       },
       {
         path: ':groupId',
-        title: 'Collection | ShoppyShop',
+        title: $localize`:@@collectionTitle:Collection | ShoppyShop`,
         loadComponent: () =>
           import('./features/catalogue/pages/product-listing-page/product-listing-page').then(
             ({ ProductListingPage }) => ProductListingPage,
@@ -64,7 +64,7 @@ export const routes: Routes = [
   },
   {
     path: 'favorites',
-    title: 'My favourites | ShoppyShop',
+    title: $localize`:@@favouritesTitle:My favourites | ShoppyShop`,
     loadComponent: () =>
       import('./features/favorites/pages/favorites-page/favorites-page').then(
         ({ FavoritesPage }) => FavoritesPage,
@@ -73,7 +73,7 @@ export const routes: Routes = [
   {
     path: 'basket',
     canActivate: [authenticationGuard],
-    title: 'Basket | ShoppyShop',
+    title: $localize`:@@basketTitle:Basket | ShoppyShop`,
     loadComponent: () =>
       import('./features/basket/pages/basket-page/basket-page').then(
         ({ BasketPage }) => BasketPage,
@@ -110,7 +110,7 @@ export const routes: Routes = [
   {
     path: 'orders',
     canActivate: [authenticationGuard],
-    title: 'Purchase history | ShoppyShop',
+    title: $localize`:@@purchaseHistoryTitle:Purchase history | ShoppyShop`,
     providers: [{ provide: OrdersRepository, useClass: ApiOrdersRepository }],
     loadComponent: () =>
       import('./features/orders/pages/order-history-page/order-history-page').then(

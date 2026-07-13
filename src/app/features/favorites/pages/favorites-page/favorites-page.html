@@ -1,16 +1,17 @@
 <main class="favorites-page">
   <nav class="breadcrumbs" aria-label="Breadcrumb">
-    <a routerLink="/products">Products</a><span>/</span><span>Favourites</span>
+    <a routerLink="/products" i18n="@@products">Products</a><span>/</span
+    ><span i18n="@@favourites">Favourites</span>
   </nav>
 
   <header class="page-header">
     <div>
-      <p class="eyebrow">Saved for later</p>
-      <h1>My favourites</h1>
-      <p>{{ favorites.count() }} {{ favorites.count() === 1 ? 'product' : 'products' }} saved</p>
+      <p class="eyebrow" i18n="@@savedForLater">Saved for later</p>
+      <h1 i18n="@@myFavourites">My favourites</h1>
+      <p i18n="@@favouritesSavedCount">{{ favorites.count() }} products saved</p>
     </div>
     @if (favorites.count() > 0) {
-      <button type="button" (click)="favorites.clear()">Clear all</button>
+      <button type="button" (click)="favorites.clear()" i18n="@@clearAll">Clear all</button>
     }
   </header>
 
@@ -23,9 +24,11 @@
   } @else {
     <section class="empty-state">
       <span class="empty-heart" aria-hidden="true">♡</span>
-      <h2>No favourites yet</h2>
-      <p>Save the products you love and find them waiting here whenever you return.</p>
-      <a routerLink="/products">Discover products</a>
+      <h2 i18n="@@noFavourites">No favourites yet</h2>
+      <p i18n="@@noFavouritesDetail">
+        Save the products you love and find them waiting here whenever you return.
+      </p>
+      <a routerLink="/products" i18n="@@discoverProducts">Discover products</a>
     </section>
   }
 </main>

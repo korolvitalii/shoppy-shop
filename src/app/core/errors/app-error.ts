@@ -15,15 +15,15 @@ export const APP_ERROR_CODES = {
 export type AppErrorCode = (typeof APP_ERROR_CODES)[keyof typeof APP_ERROR_CODES];
 
 const messages: Record<AppErrorCode, string> = {
-  NETWORK_ERROR: 'We could not connect. Check your internet connection and try again.',
-  BAD_REQUEST: 'Some information was not accepted. Check your details and try again.',
-  UNAUTHORIZED: 'Your session has expired. Please sign in again.',
-  FORBIDDEN: 'You do not have permission to perform this action.',
-  NOT_FOUND: 'The requested information could not be found.',
-  CONFLICT: 'This request conflicts with a recent change. Refresh and try again.',
-  RATE_LIMITED: 'Too many requests were made. Please wait a moment and try again.',
-  SERVER_ERROR: 'Our service is temporarily unavailable. Please try again shortly.',
-  UNKNOWN_ERROR: 'Something went wrong. Please try again.',
+  NETWORK_ERROR: $localize`:@@networkError:We could not connect. Check your internet connection and try again.`,
+  BAD_REQUEST: $localize`:@@badRequestError:Some information was not accepted. Check your details and try again.`,
+  UNAUTHORIZED: $localize`:@@unauthorizedError:Your session has expired. Please sign in again.`,
+  FORBIDDEN: $localize`:@@forbiddenError:You do not have permission to perform this action.`,
+  NOT_FOUND: $localize`:@@notFoundError:The requested information could not be found.`,
+  CONFLICT: $localize`:@@conflictError:This request conflicts with a recent change. Refresh and try again.`,
+  RATE_LIMITED: $localize`:@@rateLimitedError:Too many requests were made. Please wait a moment and try again.`,
+  SERVER_ERROR: $localize`:@@serverError:Our service is temporarily unavailable. Please try again shortly.`,
+  UNKNOWN_ERROR: $localize`:@@unknownError:Something went wrong. Please try again.`,
 };
 
 export class AppError extends Error {

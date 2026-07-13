@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { finalize, take } from 'rxjs';
 
 import { ThemeService } from '../../../core/theme/theme.service';
+import { LanguageSelector } from '../../../shared/ui/language-selector/language-selector';
 import {
   AuthenticationService,
   type LoginCredentials,
@@ -22,7 +23,7 @@ const DEMO_CREDENTIALS: LoginCredentials = {
 
 @Component({
   selector: 'app-login-page',
-  imports: [ReactiveFormsModule],
+  imports: [LanguageSelector, ReactiveFormsModule],
   templateUrl: './login-page.html',
   styleUrl: './login-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

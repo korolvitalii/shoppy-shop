@@ -1,4 +1,5 @@
 <main class="login-page">
+  <app-language-selector class="language-toggle" />
   <button
     class="theme-toggle"
     type="button"
@@ -6,18 +7,22 @@
     [attr.aria-label]="theme.isDark() ? 'Switch to light theme' : 'Switch to dark theme'"
   >
     <span aria-hidden="true">{{ theme.isDark() ? '☀' : '☾' }}</span>
-    {{ theme.isDark() ? 'Light' : 'Dark' }} theme
+    @if (theme.isDark()) {
+      <span i18n="@@lightTheme">Light theme</span>
+    } @else {
+      <span i18n="@@darkTheme">Dark theme</span>
+    }
   </button>
   <section class="login-card" aria-labelledby="login-title">
     <header class="login-header">
       <a class="brand" href="/" aria-label="ShoppyShop">ShoppyShop</a>
-      <h1 id="login-title">Welcome back</h1>
-      <p>Sign in to your ShoppyShop account</p>
+      <h1 id="login-title" i18n="@@welcomeBack">Welcome back</h1>
+      <p i18n="@@signInIntro">Sign in to your ShoppyShop account</p>
     </header>
 
     <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
       <div class="field">
-        <label for="email">Email address</label>
+        <label for="email" i18n="@@emailAddress">Email address</label>
         <input
           id="email"
           type="email"
@@ -29,27 +34,28 @@
         />
         <div id="email-error" class="field-error" aria-live="polite">
           @if (form.controls.email.touched && form.controls.email.hasError('required')) {
-            Email is required.
+            <span i18n="@@emailRequired">Email is required.</span>
           } @else if (form.controls.email.touched && form.controls.email.hasError('email')) {
-            Enter a valid email address.
+            <span i18n="@@emailInvalid">Enter a valid email address.</span>
           }
         </div>
       </div>
 
       <div class="field">
-        <label for="password">Password</label>
+        <label for="password" i18n="@@password">Password</label>
         <input
           id="password"
           type="password"
           formControlName="password"
           autocomplete="current-password"
           placeholder="Your password"
+          i18n-placeholder="@@passwordPlaceholder"
           [attr.aria-invalid]="form.controls.password.invalid && form.controls.password.touched"
           aria-describedby="password-error"
         />
         <div id="password-error" class="field-error" aria-live="polite">
           @if (form.controls.password.touched && form.controls.password.hasError('required')) {
-            Password is required.
+            <span i18n="@@passwordRequired">Password is required.</span>
           }
         </div>
       </div>
@@ -58,12 +64,16 @@
         <p class="form-message form-message--error" role="alert">{{ authenticationError() }}</p>
       }
       <button class="submit-button" type="submit" [disabled]="isSubmitting()">
-        {{ isSubmitting() ? 'Signing in…' : 'Sign in' }}
+        @if (isSubmitting()) {
+          <span i18n="@@signingIn">Signing in…</span>
+        } @else {
+          <span i18n="@@signIn">Sign in</span>
+        }
       </button>
     </form>
 
     <aside class="demo-account" aria-label="Demo account">
-      <p>Explore with the demo customer</p>
+      <p i18n="@@demoAccountIntro">Explore with the demo customer</p>
       <button type="button" data-testid="demo-account" (click)="useDemoAccount()">
         demo&#64;shoppyshop.test / ShoppyShop123!
       </button>

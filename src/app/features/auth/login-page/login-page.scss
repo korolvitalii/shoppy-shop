@@ -48,6 +48,11 @@
     outline-offset: 3px;
   }
 }
+.language-toggle {
+  position: absolute;
+  top: 1.25rem;
+  left: 1.25rem;
+}
 
 .login-card {
   width: min(100%, 27rem);
