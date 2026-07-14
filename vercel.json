@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "angular",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/shoppy-shop/browser",
+  "git": {
+    "deploymentEnabled": false
+  },
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}

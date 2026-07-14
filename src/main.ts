@@ -1,6 +1,6 @@
 import { registerLocaleData } from '@angular/common';
 import localePl from '@angular/common/locales/pl';
-import { isDevMode, LOCALE_ID } from '@angular/core';
+import { LOCALE_ID } from '@angular/core';
 import { loadTranslations } from '@angular/localize';
 import { bootstrapApplication } from '@angular/platform-browser';
 
@@ -24,10 +24,6 @@ if (locale === 'pl') {
 }
 
 async function enableApiMocking(): Promise<void> {
-  if (!isDevMode()) {
-    return;
-  }
-
   const { worker } = await import('./mocks/browser');
   await worker.start({ onUnhandledRequest: 'bypass' });
 

@@ -37,3 +37,15 @@ npm run check
 ```
 
 The project uses Angular, TypeScript, RxJS, Signals, SCSS, Vitest, ESLint, and Prettier.
+
+## Deployment
+
+GitHub Actions creates a Vercel preview for non-`main` branch pushes and deploys production after checks pass on `main`.
+
+Create a Vercel project, then add these repository secrets under **GitHub → Settings → Secrets and variables → Actions**:
+
+- `VERCEL_TOKEN`
+- `VERCEL_ORG_ID`
+- `VERCEL_PROJECT_ID`
+
+Vercel's automatic Git deployments are disabled in `vercel.json` so each commit is deployed only by GitHub Actions.
