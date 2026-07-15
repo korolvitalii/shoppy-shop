@@ -1,0 +1,18 @@
+[
+  {
+    "locale": "en-GB",
+    "path": "en",
+    "hreflang": "en-GB",
+    "label": "English",
+    "shortLabel": "EN",
+    "default": true
+  },
+  {
+    "locale": "pl",
+    "path": "pl",
+    "hreflang": "pl-PL",
+    "label": "Polski",
+    "shortLabel": "PL",
+    "default": false
+  }
+]

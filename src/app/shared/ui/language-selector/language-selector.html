@@ -6,7 +6,10 @@
     aria-label="Language"
     i18n-aria-label="@@languageSelector"
   >
-    <option value="en-GB">{{ wide() ? 'English' : 'EN' }}</option>
-    <option value="pl">{{ wide() ? 'Polski' : 'PL' }}</option>
+    @for (option of locales; track option.locale) {
+      <option [value]="option.locale">
+        {{ wide() ? option.label : option.shortLabel }}
+      </option>
+    }
   </select>
 </label>
