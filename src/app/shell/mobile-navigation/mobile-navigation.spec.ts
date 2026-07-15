@@ -34,6 +34,7 @@ describe('MobileNavigation', () => {
     expect(element.querySelector('nav[aria-label="Mobile primary navigation"]')).toBeTruthy();
     expect(element.querySelector('a[href="/products"]')?.textContent).toContain('Shop');
     expect(element.querySelector('a[href="/basket"]')?.textContent).toContain('2');
+    expect(element.querySelectorAll('app-lucide-icon svg')).toHaveLength(4);
   });
 
   it('only shows the public shop tab while anonymous', async () => {

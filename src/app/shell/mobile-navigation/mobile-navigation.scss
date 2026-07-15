@@ -31,9 +31,9 @@ a.active {
   color: var(--color-primary);
   background: var(--color-primary-soft);
 }
-.tab-icon {
-  font-size: 1.25rem;
-  line-height: 1;
+app-lucide-icon {
+  width: 1.35rem;
+  height: 1.35rem;
 }
 .badge {
   position: absolute;
