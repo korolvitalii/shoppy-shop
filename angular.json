@@ -20,12 +20,12 @@
       "i18n": {
         "sourceLocale": {
           "code": "en-GB",
-          "baseHref": "/en/"
+          "subPath": "en"
         },
         "locales": {
           "pl": {
             "translation": "src/locale/messages.pl.json",
-            "baseHref": "/pl/"
+            "subPath": "pl"
           }
         }
       },
@@ -34,6 +34,9 @@
           "builder": "@angular/build:application",
           "options": {
             "browser": "src/main.ts",
+            "server": "src/main.server.ts",
+            "outputMode": "static",
+            "localize": ["en-GB", "pl"],
             "polyfills": ["@angular/localize/init"],
             "tsConfig": "tsconfig.app.json",
             "i18nMissingTranslation": "error",
@@ -65,7 +68,8 @@
             "development": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true
+              "sourceMap": true,
+              "localize": ["en-GB"]
             }
           },
           "defaultConfiguration": "production"

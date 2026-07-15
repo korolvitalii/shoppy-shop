@@ -43,7 +43,7 @@ export class ThemeService {
 
   private apply(theme: Theme): void {
     const root = this.document.documentElement;
-    root.dataset['theme'] = theme;
+    root.setAttribute('data-theme', theme);
     root.style.colorScheme = theme;
   }
 }
