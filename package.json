@@ -4,7 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "npm run build:angular && npm run seo:generate && npm run seo:verify",
+    "build:angular": "ng build",
     "build:i18n": "ng build",
     "extract:i18n": "ng extract-i18n",
     "watch": "ng build --watch --configuration development",
@@ -13,6 +14,8 @@
     "lint:fix": "ng lint --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "seo:generate": "node scripts/generate-seo-assets.mjs",
+    "seo:verify": "node scripts/verify-seo.mjs",
     "check": "npm run lint && npm run format:check && npm test -- --watch=false && npm run build"
   },
   "private": true,

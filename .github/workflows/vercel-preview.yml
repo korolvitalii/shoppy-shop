@@ -61,3 +61,6 @@ jobs:
           echo "url=$deployment_url" >> "$GITHUB_OUTPUT"
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+      - name: Audit deployed SEO
+        run: npx --yes @lhci/cli@0.15.1 autorun --collect.url="${{ steps.deploy.outputs.url }}/en/products"
