@@ -84,12 +84,8 @@ jobs:
         env:
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
 
-      - name: Audit deployed SEO
+      - name: Audit generated SEO
         run: |
-          node -e "require('node:fs').writeFileSync(process.env.LIGHTHOUSE_HEADERS_PATH, JSON.stringify({'x-vercel-protection-bypass': process.env.VERCEL_AUTOMATION_BYPASS_SECRET}))"
           npx --yes @lhci/cli@0.15.1 autorun \
-            --collect.url="${{ steps.deploy.outputs.url }}/en/products" \
-            --collect.settings.extraHeaders="$LIGHTHOUSE_HEADERS_PATH"
-        env:
-          LIGHTHOUSE_HEADERS_PATH: ${{ runner.temp }}/lighthouse-headers.json
-          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+            --collect.staticDistDir="dist/shoppy-shop/browser/en" \
+            --collect.url="http://localhost/products/"
