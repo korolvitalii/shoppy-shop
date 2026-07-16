@@ -69,19 +69,16 @@ jobs:
             exit 1
           fi
 
-          final_url="$(curl \
-            --fail \
-            --location \
+          http_code="$(curl \
             --silent \
             --show-error \
             --output /dev/null \
-            --write-out "%{url_effective}" \
+            --write-out "%{http_code}" \
             --header "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET" \
-            --header "x-vercel-set-bypass-cookie: true" \
             "${{ steps.deploy.outputs.url }}/en/products")"
 
-          if [[ "$final_url" == https://vercel.com/login* ]]; then
-            echo "::error::Vercel Deployment Protection was not bypassed."
+          if [ "$http_code" != "200" ]; then
+            echo "::error::Preview returned HTTP $http_code. Vercel Deployment Protection was not bypassed."
             exit 1
           fi
         env:
@@ -89,7 +86,7 @@ jobs:
 
       - name: Audit deployed SEO
         run: |
-          node -e "require('node:fs').writeFileSync(process.env.LIGHTHOUSE_HEADERS_PATH, JSON.stringify({'x-vercel-protection-bypass': process.env.VERCEL_AUTOMATION_BYPASS_SECRET, 'x-vercel-set-bypass-cookie': 'true'}))"
+          node -e "require('node:fs').writeFileSync(process.env.LIGHTHOUSE_HEADERS_PATH, JSON.stringify({'x-vercel-protection-bypass': process.env.VERCEL_AUTOMATION_BYPASS_SECRET}))"
           npx --yes @lhci/cli@0.15.1 autorun \
             --collect.url="${{ steps.deploy.outputs.url }}/en/products" \
             --collect.settings.extraHeaders="$LIGHTHOUSE_HEADERS_PATH"
