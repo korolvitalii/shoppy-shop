@@ -3,7 +3,10 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 
 import { type ProductGroup } from '../models/product-group';
-import { ApiProductGroupsRepository } from './product-groups.repository';
+import {
+  ApiProductGroupsRepository,
+  StaticProductGroupsRepository,
+} from './product-groups.repository';
 
 describe('ApiProductGroupsRepository', () => {
   let repository: ApiProductGroupsRepository;
@@ -38,5 +41,14 @@ describe('ApiProductGroupsRepository', () => {
     expect(request.request.method).toBe('GET');
     request.flush(groups);
     expect(actual).toEqual(groups);
+  });
+});
+
+describe('StaticProductGroupsRepository', () => {
+  it('serves all stable catalogue groups during prerendering', () => {
+    const repository = new StaticProductGroupsRepository();
+    let ids: readonly string[] = [];
+    repository.getAll().subscribe((groups) => (ids = groups.map((group) => group.id)));
+    expect(ids).toEqual(['beauty', 'electronics', 'fashion', 'home', 'accessories', 'gifts']);
   });
 });

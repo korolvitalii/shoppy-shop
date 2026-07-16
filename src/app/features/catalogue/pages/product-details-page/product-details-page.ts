@@ -11,6 +11,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { catchError, map, of, switchMap, tap } from 'rxjs';
 
+import { SeoService } from '../../../../core/seo/seo.service';
 import { AuthenticationSessionService } from '../../../auth/data-access/authentication-session.service';
 import { BasketService } from '../../../basket/data-access/basket.service';
 import { FavoritesService } from '../../../favorites/data-access/favorites.service';
@@ -35,6 +36,7 @@ export class ProductDetailsPage {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly session = inject(AuthenticationSessionService);
+  private readonly seo = inject(SeoService);
 
   readonly product = signal<Product | null>(null);
   readonly status = signal<DetailStatus>('loading');
@@ -78,6 +80,24 @@ export class ProductDetailsPage {
         if (product === undefined) return;
         this.product.set(product);
         this.status.set(product ? 'success' : 'not-found');
+        if (product) {
+          this.seo.apply({
+            title: product.name,
+            description: product.description,
+            path: `/products/${product.groupId}/${product.id}`,
+            image: product.imageUrl,
+            indexable: true,
+            type: 'product',
+            structuredData: this.seo.productStructuredData(product),
+          });
+        } else {
+          this.seo.apply({
+            title: $localize`:@@seoProductNotFoundTitle:Product not found`,
+            description: $localize`:@@seoProductNotFoundDescription:This product is not available.`,
+            path: '/products',
+            indexable: false,
+          });
+        }
       });
   }
 

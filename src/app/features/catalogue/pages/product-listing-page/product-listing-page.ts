@@ -14,7 +14,9 @@ import {
   tap,
 } from 'rxjs';
 
+import { SeoService } from '../../../../core/seo/seo.service';
 import { ProductCard } from '../../components/product-card/product-card';
+import catalogue from '../../data/catalogue.json';
 import { ProductsRepository } from '../../data-access/products.repository';
 import {
   type PriceRange,
@@ -38,6 +40,7 @@ export class ProductListingPage {
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
   private readonly refresh = new BehaviorSubject(0);
+  private readonly seo = inject(SeoService);
 
   readonly products = signal<readonly Product[]>([]);
   readonly status = signal<RequestStatus>('loading');
@@ -61,6 +64,7 @@ export class ProductListingPage {
           this.query.set(query);
           this.searchControl.setValue(query.search, { emitEvent: false });
           this.status.set('loading');
+          this.updateSeo(groupId, query.search);
         }),
         switchMap(({ groupId, query }) =>
           this.repository.search(groupId, query).pipe(
@@ -101,6 +105,41 @@ export class ProductListingPage {
       relativeTo: this.route,
       queryParams,
       queryParamsHandling: 'merge',
+    });
+  }
+
+  private updateSeo(groupId: string, search: string): void {
+    if (groupId === 'all') {
+      this.seo.apply({
+        title: $localize`:@@seoSearchTitle:Search products`,
+        description: $localize`:@@seoSearchDescription:Search and filter the ShoppyShop catalogue.`,
+        path: '/products/search',
+        indexable: false,
+      });
+      return;
+    }
+
+    const group = catalogue.groups.find((item) => item.id === groupId);
+    if (!group) return;
+    const description = $localize`:@@seoCategoryDescription:Browse selected products from ${group.name}:categoryName: at ShoppyShop.`;
+    this.seo.apply({
+      title: `${group.name}${search ? ` – ${search}` : ''}`,
+      description,
+      path: `/products/${group.id}`,
+      image: group.imageUrl,
+      indexable: !search,
+      structuredData: !search
+        ? {
+            '@context': 'https://schema.org',
+            '@graph': [
+              { '@type': 'CollectionPage', name: group.name, description },
+              this.seo.breadcrumbStructuredData([
+                { name: 'Products', path: '/products' },
+                { name: group.name, path: `/products/${group.id}` },
+              ]),
+            ],
+          }
+        : undefined,
     });
   }
 }

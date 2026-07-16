@@ -6,5 +6,6 @@
   "git": {
     "deploymentEnabled": false
   },
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "redirects": [{ "source": "/", "destination": "/en/products", "permanent": false }],
+  "rewrites": [{ "source": "/:locale/:path*", "destination": "/:locale/index.csr.html" }]
 }

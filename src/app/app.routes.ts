@@ -1,10 +1,6 @@
 import { type Routes } from '@angular/router';
 
 import { anonymousGuard, authenticationGuard } from './features/auth/guards/authentication.guard';
-import {
-  ApiProductGroupsRepository,
-  ProductGroupsRepository,
-} from './features/catalogue/data-access/product-groups.repository';
 import { CheckoutFacade } from './features/checkout/data-access/checkout.facade';
 import {
   ApiOrdersRepository,
@@ -26,11 +22,9 @@ export const routes: Routes = [
   },
   {
     path: 'products',
-    providers: [{ provide: ProductGroupsRepository, useClass: ApiProductGroupsRepository }],
     children: [
       {
         path: '',
-        title: $localize`:@@productsTitle:Products | ShoppyShop`,
         loadComponent: () =>
           import('./features/catalogue/pages/product-groups-page/product-groups-page').then(
             ({ ProductGroupsPage }) => ProductGroupsPage,
@@ -38,7 +32,6 @@ export const routes: Routes = [
       },
       {
         path: 'search',
-        title: $localize`:@@searchProductsTitle:Search products | ShoppyShop`,
         loadComponent: () =>
           import('./features/catalogue/pages/product-listing-page/product-listing-page').then(
             ({ ProductListingPage }) => ProductListingPage,
@@ -46,7 +39,6 @@ export const routes: Routes = [
       },
       {
         path: ':groupId/:productId',
-        title: $localize`:@@productTitle:Product | ShoppyShop`,
         loadComponent: () =>
           import('./features/catalogue/pages/product-details-page/product-details-page').then(
             ({ ProductDetailsPage }) => ProductDetailsPage,
@@ -54,7 +46,6 @@ export const routes: Routes = [
       },
       {
         path: ':groupId',
-        title: $localize`:@@collectionTitle:Collection | ShoppyShop`,
         loadComponent: () =>
           import('./features/catalogue/pages/product-listing-page/product-listing-page').then(
             ({ ProductListingPage }) => ProductListingPage,

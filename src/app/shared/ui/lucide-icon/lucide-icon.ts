@@ -1,7 +1,7 @@
 import {
+  afterNextRender,
   ChangeDetectionStrategy,
   Component,
-  effect,
   ElementRef,
   inject,
   input,
@@ -27,7 +27,7 @@ export class LucideIcon {
   private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
 
   constructor() {
-    effect(() => {
+    afterNextRender(() => {
       const svg = createElement(this.icon(), {
         width: '100%',
         height: '100%',
