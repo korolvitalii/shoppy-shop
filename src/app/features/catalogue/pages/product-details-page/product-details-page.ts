@@ -124,6 +124,13 @@ export class ProductDetailsPage {
 
   toggleFavorite(): void {
     const product = this.product();
-    if (product) this.favorites.toggle(product);
+    if (!product) return;
+    if (!this.session.isAuthenticated()) {
+      void this.router.navigate(['/login'], {
+        queryParams: { returnUrl: `/products/${product.groupId}/${product.id}` },
+      });
+      return;
+    }
+    this.favorites.toggle(product);
   }
 }

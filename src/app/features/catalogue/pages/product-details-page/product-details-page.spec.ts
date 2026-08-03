@@ -5,6 +5,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 
 import { AuthenticationSessionService } from '../../../auth/data-access/authentication-session.service';
 import { BasketService } from '../../../basket/data-access/basket.service';
+import { FavoritesService } from '../../../favorites/data-access/favorites.service';
 import { ProductsRepository } from '../../data-access/products.repository';
 import { type Product } from '../../models/product';
 import { ProductDetailsPage } from './product-details-page';
@@ -15,6 +16,7 @@ describe('ProductDetailsPage', () => {
   );
   const repository = { search: vi.fn(), getById: vi.fn() };
   const basket = { add: vi.fn() };
+  const favorites = { has: vi.fn(() => false), toggle: vi.fn() };
   const authenticated = signal(true);
   let response: Subject<Product | null>;
 
@@ -43,6 +45,7 @@ describe('ProductDetailsPage', () => {
         provideRouter([]),
         { provide: ProductsRepository, useValue: repository },
         { provide: BasketService, useValue: basket },
+        { provide: FavoritesService, useValue: favorites },
         {
           provide: AuthenticationSessionService,
           useValue: { isAuthenticated: authenticated },

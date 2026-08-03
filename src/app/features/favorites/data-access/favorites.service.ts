@@ -1,20 +1,28 @@
-import { computed, Injectable, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
+import { catchError, of } from 'rxjs';
 
+import { AuthenticationSessionService } from '../../auth/data-access/authentication-session.service';
 import { type Product } from '../../catalogue/models/product';
-
-const STORAGE_KEY = 'shoppyshop.favorites.v1';
 
 @Injectable({ providedIn: 'root' })
 export class FavoritesService {
+  private readonly http = inject(HttpClient);
+  private readonly session = inject(AuthenticationSessionService);
   private readonly productsState = signal<readonly Product[]>([]);
-  private revision = 0;
 
   readonly products = this.productsState.asReadonly();
   readonly count = computed(() => this.productsState().length);
   readonly productIds = computed(() => new Set(this.productsState().map((product) => product.id)));
 
   constructor() {
-    void this.restore();
+    effect(() => {
+      if (this.session.isAuthenticated()) {
+        this.load();
+      } else {
+        this.productsState.set([]);
+      }
+    });
   }
 
   has(productId: string): boolean {
@@ -26,54 +34,50 @@ export class FavoritesService {
       this.remove(product.id);
       return;
     }
-    this.commit([...this.productsState(), product]);
+
+    this.productsState.set([...this.productsState(), product]);
+    this.http
+      .put<void>(`/api/favorites/${product.id}`, {})
+      .pipe(catchError(() => this.revertTo(this.without(product.id))))
+      .subscribe();
   }
 
   remove(productId: string): void {
-    this.commit(this.productsState().filter((product) => product.id !== productId));
+    const previous = this.productsState();
+    this.productsState.set(this.without(productId));
+    this.http
+      .delete<void>(`/api/favorites/${productId}`)
+      .pipe(catchError(() => this.revertTo(previous)))
+      .subscribe();
   }
 
   clear(): void {
-    this.commit([]);
+    const previous = this.productsState();
+    this.productsState.set([]);
+    this.http
+      .delete<void>('/api/favorites')
+      .pipe(catchError(() => this.revertTo(previous)))
+      .subscribe();
   }
 
-  private commit(products: readonly Product[]): void {
-    this.revision += 1;
-    this.productsState.set(products);
-    this.persist(products);
+  private load(): void {
+    this.http
+      .get<readonly Product[]>('/api/favorites')
+      .pipe(catchError(() => of([])))
+      .subscribe((products) => this.productsState.set(products));
   }
 
-  private async restore(): Promise<void> {
-    try {
-      const value = localStorage.getItem(STORAGE_KEY);
-      if (!value) return;
-      const initialRevision = this.revision;
-      const { z } = await import('zod/mini');
-      const productSchema = z.object({
-        id: z.string().check(z.minLength(1)),
-        groupId: z.string().check(z.minLength(1)),
-        name: z.string().check(z.minLength(1)),
-        brand: z.string().check(z.minLength(1)),
-        description: z.string(),
-        imageUrl: z.string().check(z.minLength(1)),
-        price: z.number().check(z.nonnegative()),
-        salePrice: z.nullable(z.number().check(z.nonnegative())),
-        inStock: z.boolean(),
-      });
-      const result = z.array(productSchema).safeParse(JSON.parse(value) as unknown);
-      if (result.success && this.revision === initialRevision) {
-        this.productsState.set(result.data);
-      }
-    } catch {
-      // Invalid or unavailable storage is treated as an empty favourites list.
-    }
+  private without(productId: string): readonly Product[] {
+    return this.productsState().filter((product) => product.id !== productId);
   }
 
-  private persist(products: readonly Product[]): void {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
-    } catch {
-      // Favourites remain available in memory when storage is unavailable or full.
-    }
+  /**
+   * Reverts the optimistic update on failure. The api-error interceptor already normalizes and
+   * surfaces a toast for the underlying HTTP error, so this swallows it rather than rethrowing to
+   * an unhandled subscription.
+   */
+  private revertTo(previous: readonly Product[]) {
+    this.productsState.set(previous);
+    return of(undefined);
   }
 }

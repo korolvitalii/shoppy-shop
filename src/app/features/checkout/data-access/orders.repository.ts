@@ -5,7 +5,7 @@ import { type Observable } from 'rxjs';
 import { type CreateOrderRequest, type Order } from '../models/checkout.models';
 @Injectable()
 export abstract class OrdersRepository {
-  abstract createOrder(request: CreateOrderRequest): Observable<Order>;
+  abstract createOrder(request: CreateOrderRequest, idempotencyKey: string): Observable<Order>;
   abstract getOrders(): Observable<readonly Order[]>;
   abstract getOrderById(id: string): Observable<Order | null>;
 }
@@ -13,8 +13,10 @@ export abstract class OrdersRepository {
 export class ApiOrdersRepository implements OrdersRepository {
   private readonly http = inject(HttpClient);
 
-  createOrder(request: CreateOrderRequest) {
-    return this.http.post<Order>('/api/orders', request);
+  createOrder(request: CreateOrderRequest, idempotencyKey: string) {
+    return this.http.post<Order>('/api/orders', request, {
+      headers: { 'Idempotency-Key': idempotencyKey },
+    });
   }
 
   getOrders() {
