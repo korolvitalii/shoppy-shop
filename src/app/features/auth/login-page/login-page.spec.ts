@@ -1,24 +1,34 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
-import { of, Subject } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 
+import { APP_ERROR_CODES, AppError } from '../../../core/errors/app-error';
 import { AuthenticationService } from '../data-access/authentication.service';
+import { AuthenticationSessionService } from '../data-access/authentication-session.service';
+import { type AuthResult } from '../models/auth.models';
 import { LoginPage } from './login-page';
+
+const authResult: AuthResult = {
+  accessToken: 'token-1',
+  accessTokenExpiresAt: '2026-01-01T00:00:00Z',
+  user: { id: 'customer-1', email: 'demo@shoppyshop.test', displayName: null, roles: [] },
+};
 
 describe('LoginPage', () => {
   const authenticationService = { login: vi.fn() };
+  const session = { start: vi.fn() };
 
   beforeEach(async () => {
     authenticationService.login.mockReset();
-    authenticationService.login.mockReturnValue(
-      of({ success: true, user: { id: 'customer-1', email: 'demo@shoppyshop.test' } }),
-    );
+    authenticationService.login.mockReturnValue(of(authResult));
+    session.start.mockReset();
 
     await TestBed.configureTestingModule({
       imports: [LoginPage],
       providers: [
         provideRouter([]),
         { provide: AuthenticationService, useValue: authenticationService },
+        { provide: AuthenticationSessionService, useValue: session },
       ],
     }).compileComponents();
 
@@ -69,18 +79,11 @@ describe('LoginPage', () => {
     expect(authenticationService.login).not.toHaveBeenCalled();
   });
 
-  it('fills the form when a demo account is selected', () => {
+  it('links to the registration page', () => {
     const fixture = TestBed.createComponent(LoginPage);
     fixture.detectChanges();
 
-    (
-      fixture.nativeElement.querySelector('[data-testid="demo-account"]') as HTMLButtonElement
-    ).click();
-
-    expect(fixture.componentInstance.form.getRawValue()).toEqual({
-      email: 'demo@shoppyshop.test',
-      password: 'ShoppyShop123!',
-    });
+    expect(fixture.nativeElement.querySelector('a[href="/register"]')).toBeTruthy();
   });
 
   it('submits valid credentials through the authentication service', () => {
@@ -94,7 +97,7 @@ describe('LoginPage', () => {
     expect(authenticationService.login).toHaveBeenCalledWith(credentials);
   });
 
-  it('redirects to the catalogue after successful authentication', () => {
+  it('starts the session and redirects to the catalogue after successful authentication', () => {
     const navigate = vi.mocked(TestBed.inject(Router).navigateByUrl);
     const fixture = TestBed.createComponent(LoginPage);
     fixture.detectChanges();
@@ -105,13 +108,16 @@ describe('LoginPage', () => {
 
     fixture.componentInstance.submit();
 
+    expect(session.start).toHaveBeenCalledWith(authResult);
     expect(navigate).toHaveBeenCalledWith('/products', { replaceUrl: true });
   });
 
   it('announces rejected credentials as an alert', () => {
     const navigate = vi.mocked(TestBed.inject(Router).navigateByUrl);
     authenticationService.login.mockReturnValue(
-      of({ success: false, error: 'The email or password is incorrect.' }),
+      throwError(
+        () => new AppError(APP_ERROR_CODES.unauthorized, 'Invalid email or password.', 401),
+      ),
     );
     const fixture = TestBed.createComponent(LoginPage);
     fixture.detectChanges();
@@ -124,15 +130,12 @@ describe('LoginPage', () => {
     fixture.detectChanges();
 
     const alert = fixture.nativeElement.querySelector('[role="alert"]') as HTMLElement;
-    expect(alert.textContent).toContain('The email or password is incorrect.');
+    expect(alert.textContent).toContain('Invalid email or password.');
     expect(navigate).not.toHaveBeenCalled();
   });
 
   it('prevents duplicate submissions while authentication is pending', () => {
-    const result = new Subject<{
-      success: true;
-      user: { id: string; email: string };
-    }>();
+    const result = new Subject<AuthResult>();
     authenticationService.login.mockReturnValue(result);
     const fixture = TestBed.createComponent(LoginPage);
     fixture.detectChanges();
@@ -150,7 +153,7 @@ describe('LoginPage', () => {
     expect(submitButton.disabled).toBe(true);
     expect(submitButton.textContent).toContain('Signing in');
 
-    result.next({ success: true, user: { id: 'customer-1', email: 'demo@shoppyshop.test' } });
+    result.next(authResult);
     result.complete();
     fixture.detectChanges();
 

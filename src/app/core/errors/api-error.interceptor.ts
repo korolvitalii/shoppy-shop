@@ -3,6 +3,7 @@ import { inject } from '@angular/core';
 import { catchError, tap, throwError } from 'rxjs';
 
 import { normalizeError } from './app-error';
+import { SKIP_ERROR_NOTIFICATION } from './error-context';
 import { ErrorNotificationService } from './error-notification.service';
 
 export const apiErrorInterceptor: HttpInterceptorFn = (request, next) => {
@@ -15,7 +16,9 @@ export const apiErrorInterceptor: HttpInterceptorFn = (request, next) => {
     }),
     catchError((error: unknown) => {
       const normalized = normalizeError(error);
-      notifications.show(normalized, requestSource);
+      if (!request.context.get(SKIP_ERROR_NOTIFICATION)) {
+        notifications.show(normalized, requestSource);
+      }
       return throwError(() => normalized);
     }),
   );

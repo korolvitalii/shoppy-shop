@@ -1,33 +1,27 @@
 import { computed, Injectable, signal } from '@angular/core';
-export interface AuthenticatedSessionUser {
-  id: string;
-  email: string;
-}
-const KEY = 'shoppyshop.session.v1';
+
+import { type AuthResult, type UserDto } from '../models/auth.models';
+
 @Injectable({ providedIn: 'root' })
 export class AuthenticationSessionService {
-  private readonly state = signal<AuthenticatedSessionUser | null>(this.restore());
-  readonly user = this.state.asReadonly();
-  readonly isAuthenticated = computed(() => this.state() !== null);
+  private readonly userState = signal<UserDto | null>(null);
+  private readonly accessTokenState = signal<string | null>(null);
+  private readonly accessTokenExpiresAtState = signal<string | null>(null);
 
-  start(user: AuthenticatedSessionUser): void {
-    this.state.set(user);
-    sessionStorage.setItem(KEY, JSON.stringify(user));
+  readonly user = this.userState.asReadonly();
+  readonly accessToken = this.accessTokenState.asReadonly();
+  readonly accessTokenExpiresAt = this.accessTokenExpiresAtState.asReadonly();
+  readonly isAuthenticated = computed(() => this.userState() !== null);
+
+  start(result: AuthResult): void {
+    this.userState.set(result.user);
+    this.accessTokenState.set(result.accessToken);
+    this.accessTokenExpiresAtState.set(result.accessTokenExpiresAt);
   }
 
   end(): void {
-    this.state.set(null);
-    sessionStorage.removeItem(KEY);
-  }
-
-  private restore(): AuthenticatedSessionUser | null {
-    try {
-      const value = JSON.parse(sessionStorage.getItem(KEY) ?? 'null') as unknown;
-      return typeof value === 'object' && value !== null && 'id' in value && 'email' in value
-        ? (value as AuthenticatedSessionUser)
-        : null;
-    } catch {
-      return null;
-    }
+    this.userState.set(null);
+    this.accessTokenState.set(null);
+    this.accessTokenExpiresAtState.set(null);
   }
 }

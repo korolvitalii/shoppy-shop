@@ -1,10 +1,11 @@
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HttpContext, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
 import { apiErrorInterceptor } from './api-error.interceptor';
 import { APP_ERROR_CODES, AppError } from './app-error';
+import { SKIP_ERROR_NOTIFICATION } from './error-context';
 import { ErrorNotificationService } from './error-notification.service';
 
 describe('apiErrorInterceptor', () => {
@@ -74,5 +75,32 @@ describe('apiErrorInterceptor', () => {
     controller.expectOne('/api/products?search=gold').flush([]);
 
     expect(notifications.current()?.code).toBe(APP_ERROR_CODES.server);
+  });
+
+  it('normalizes and rethrows but suppresses the notification when asked to stay silent', () => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideHttpClient(withInterceptors([apiErrorInterceptor])),
+        provideHttpClientTesting(),
+      ],
+    });
+    const http = TestBed.inject(HttpClient);
+    const controller = TestBed.inject(HttpTestingController);
+    const notifications = TestBed.inject(ErrorNotificationService);
+    let received: unknown;
+
+    http
+      .post(
+        '/api/auth/login',
+        {},
+        { context: new HttpContext().set(SKIP_ERROR_NOTIFICATION, true) },
+      )
+      .subscribe({ error: (error: unknown) => (received = error) });
+    controller
+      .expectOne('/api/auth/login')
+      .flush({ message: 'Invalid credentials' }, { status: 401, statusText: 'Unauthorized' });
+
+    expect(received).toBeInstanceOf(AppError);
+    expect(notifications.current()).toBeNull();
   });
 });

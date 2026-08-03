@@ -45,7 +45,8 @@ export function normalizeError(error: unknown): AppError {
 
   if (error instanceof HttpErrorResponse) {
     const code = codeFromStatus(error.status);
-    return new AppError(code, messages[code], error.status, isRetryable(error.status), {
+    const detail = error.status < 500 ? problemDetail(error) : null;
+    return new AppError(code, detail ?? messages[code], error.status, isRetryable(error.status), {
       cause: error,
     });
   }
@@ -53,6 +54,26 @@ export function normalizeError(error: unknown): AppError {
   return new AppError(APP_ERROR_CODES.unknown, messages.UNKNOWN_ERROR, null, false, {
     cause: error,
   });
+}
+
+/**
+ * The API returns RFC 7807 ProblemDetails bodies with a user-safe `detail` (and, for validation
+ * failures, an `errors` map of field -> messages) for every non-5xx response — surface that
+ * instead of the generic bucketed copy so people see e.g. the actual password rule that failed.
+ */
+function problemDetail(error: HttpErrorResponse): string | null {
+  const body = error.error as {
+    detail?: unknown;
+    errors?: Record<string, readonly string[]>;
+  } | null;
+  if (typeof body !== 'object' || body === null) return null;
+
+  if (body.errors && typeof body.errors === 'object') {
+    const messages = Object.values(body.errors).flat();
+    if (messages.length > 0) return messages.join(' ');
+  }
+
+  return typeof body.detail === 'string' && body.detail.trim() ? body.detail : null;
 }
 
 export function errorMessage(error: unknown): string {

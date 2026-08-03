@@ -24,6 +24,7 @@ import {
 
 import { ConfirmationService } from '../../core/confirmation/confirmation.service';
 import { ThemeService } from '../../core/theme/theme.service';
+import { AuthenticationService } from '../../features/auth/data-access/authentication.service';
 import { AuthenticationSessionService } from '../../features/auth/data-access/authentication-session.service';
 import { BasketService } from '../../features/basket/data-access/basket.service';
 import { ProductsRepository } from '../../features/catalogue/data-access/products.repository';
@@ -64,6 +65,7 @@ export class AppHeader {
     () => this.suggestions()[this.activeSuggestionIndex()] ?? null,
   );
   private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly authenticationService = inject(AuthenticationService);
   private readonly confirmation = inject(ConfirmationService);
   private readonly productsRepository = inject(ProductsRepository);
   private readonly router = inject(Router);
@@ -185,8 +187,13 @@ export class AppHeader {
     });
     if (!confirmed) return;
 
-    this.session.end();
-    void this.router.navigateByUrl('/login', { replaceUrl: true });
+    this.authenticationService
+      .logout()
+      .pipe(catchError(() => of(undefined)))
+      .subscribe(() => {
+        this.session.end();
+        void this.router.navigateByUrl('/login', { replaceUrl: true });
+      });
   }
 
   private closeSuggestions(): void {

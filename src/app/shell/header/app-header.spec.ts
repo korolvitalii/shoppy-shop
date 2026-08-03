@@ -4,16 +4,20 @@ import { provideRouter, Router } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ConfirmationService } from '../../core/confirmation/confirmation.service';
+import { AuthenticationService } from '../../features/auth/data-access/authentication.service';
 import { AuthenticationSessionService } from '../../features/auth/data-access/authentication-session.service';
 import { BasketService } from '../../features/basket/data-access/basket.service';
 import { ProductsRepository } from '../../features/catalogue/data-access/products.repository';
 import { type Product } from '../../features/catalogue/models/product';
+import { FavoritesService } from '../../features/favorites/data-access/favorites.service';
 import { AppHeader } from './app-header';
 
 describe('AppHeader', () => {
   const basket = { itemCount: signal(3) };
   const authenticated = signal(false);
   const session = { isAuthenticated: authenticated, end: vi.fn() };
+  const authenticationService = { logout: vi.fn() };
+  const favorites = { count: signal(0) };
   const product: Product = {
     id: 'electronics-1',
     groupId: 'electronics',
@@ -33,6 +37,8 @@ describe('AppHeader', () => {
   beforeEach(async () => {
     authenticated.set(false);
     session.end.mockReset();
+    authenticationService.logout.mockReset();
+    authenticationService.logout.mockReturnValue(of(undefined));
     productsRepository.search.mockReset();
     productsRepository.search.mockReturnValue(of([product]));
     confirmation.confirm.mockReset();
@@ -43,7 +49,9 @@ describe('AppHeader', () => {
         provideRouter([]),
         { provide: BasketService, useValue: basket },
         { provide: AuthenticationSessionService, useValue: session },
+        { provide: AuthenticationService, useValue: authenticationService },
         { provide: ProductsRepository, useValue: productsRepository },
+        { provide: FavoritesService, useValue: favorites },
         { provide: ConfirmationService, useValue: confirmation },
       ],
     }).compileComponents();
