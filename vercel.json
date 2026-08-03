@@ -7,5 +7,11 @@
     "deploymentEnabled": false
   },
   "redirects": [{ "source": "/", "destination": "/en/products", "permanent": false }],
-  "rewrites": [{ "source": "/:locale/:path*", "destination": "/:locale/index.csr.html" }]
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://kjpieyrj3g.eu-central-1.awsapprunner.com/api/:path*"
+    },
+    { "source": "/:locale/:path*", "destination": "/:locale/index.csr.html" }
+  ]
 }

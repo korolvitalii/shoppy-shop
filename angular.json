@@ -81,7 +81,9 @@
               "buildTarget": "shoppy-shop:build:production"
             },
             "development": {
-              "buildTarget": "shoppy-shop:build:development"
+              "buildTarget": "shoppy-shop:build:development",
+              "proxyConfig": "proxy.conf.json",
+              "ssl": true
             }
           },
           "defaultConfiguration": "development"
