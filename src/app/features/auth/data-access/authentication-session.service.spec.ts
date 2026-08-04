@@ -2,24 +2,37 @@ import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
 import { anonymousGuard, authenticationGuard } from '../guards/authentication.guard';
+import { type AuthResult } from '../models/auth.models';
 import { AuthenticationSessionService } from './authentication-session.service';
+
+const authResult = (overrides: Partial<AuthResult['user']> = {}): AuthResult => ({
+  accessToken: 'token-1',
+  accessTokenExpiresAt: '2026-01-01T00:00:00Z',
+  user: {
+    id: 'customer-1',
+    email: 'demo@shoppyshop.test',
+    displayName: null,
+    roles: [],
+    ...overrides,
+  },
+});
 
 describe('AuthenticationSessionService', () => {
   beforeEach(() => {
-    sessionStorage.clear();
     TestBed.configureTestingModule({});
   });
-  it('persists and restores only the mock user session', () => {
+  it('holds the authenticated user and access token in memory', () => {
     const service = TestBed.inject(AuthenticationSessionService);
-    service.start({ id: 'customer-1', email: 'demo@shoppyshop.test' });
+    service.start(authResult());
     expect(service.isAuthenticated()).toBe(true);
-    expect(sessionStorage.getItem('shoppyshop.session.v1')).not.toContain('password');
+    expect(service.accessToken()).toBe('token-1');
   });
   it('clears the session on logout', () => {
     const service = TestBed.inject(AuthenticationSessionService);
-    service.start({ id: '1', email: 'a@b.com' });
+    service.start(authResult());
     service.end();
     expect(service.user()).toBeNull();
+    expect(service.accessToken()).toBeNull();
   });
 });
 

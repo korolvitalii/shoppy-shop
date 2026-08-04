@@ -21,6 +21,15 @@ export const routes: Routes = [
       import('./features/auth/login-page/login-page').then(({ LoginPage }) => LoginPage),
   },
   {
+    path: 'register',
+    canActivate: [anonymousGuard],
+    title: $localize`:@@registerTitle:Create account | ShoppyShop`,
+    loadComponent: () =>
+      import('./features/auth/register-page/register-page').then(
+        ({ RegisterPage }) => RegisterPage,
+      ),
+  },
+  {
     path: 'products',
     children: [
       {
@@ -55,6 +64,7 @@ export const routes: Routes = [
   },
   {
     path: 'favorites',
+    canActivate: [authenticationGuard],
     title: $localize`:@@favouritesTitle:My favourites | ShoppyShop`,
     loadComponent: () =>
       import('./features/favorites/pages/favorites-page/favorites-page').then(

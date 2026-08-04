@@ -140,6 +140,12 @@ form {
   }
 }
 
+.field-hint {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+}
+
 .field-error {
   min-height: 1.1rem;
   color: var(--danger);

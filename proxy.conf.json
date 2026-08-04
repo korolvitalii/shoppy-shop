@@ -1,0 +1,7 @@
+{
+  "/api": {
+    "target": "https://kjpieyrj3g.eu-central-1.awsapprunner.com",
+    "secure": true,
+    "changeOrigin": true
+  }
+}

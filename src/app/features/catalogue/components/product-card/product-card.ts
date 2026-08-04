@@ -1,7 +1,8 @@
 import { CurrencyPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
+import { AuthenticationSessionService } from '../../../auth/data-access/authentication-session.service';
 import { FavoritesService } from '../../../favorites/data-access/favorites.service';
 import { type Product } from '../../models/product';
 
@@ -14,6 +15,8 @@ import { type Product } from '../../models/product';
 })
 export class ProductCard {
   protected readonly favorites = inject(FavoritesService);
+  private readonly router = inject(Router);
+  private readonly session = inject(AuthenticationSessionService);
   readonly product = input.required<Product>();
   readonly effectivePrice = computed(() => this.product().salePrice ?? this.product().price);
   readonly discount = computed(() => {
@@ -24,6 +27,10 @@ export class ProductCard {
   });
 
   protected toggleFavorite(): void {
+    if (!this.session.isAuthenticated()) {
+      void this.router.navigateByUrl(`/login?returnUrl=${encodeURIComponent(this.router.url)}`);
+      return;
+    }
     this.favorites.toggle(this.product());
   }
 }

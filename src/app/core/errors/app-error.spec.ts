@@ -23,4 +23,40 @@ describe('normalizeError', () => {
     expect(error.code).toBe(APP_ERROR_CODES.unknown);
     expect(error.userMessage).toBe('Something went wrong. Please try again.');
   });
+
+  it('surfaces the API-provided detail for a 4xx ProblemDetails response', () => {
+    const error = normalizeError(
+      new HttpErrorResponse({ status: 401, error: { detail: 'Invalid email or password.' } }),
+    );
+
+    expect(error.userMessage).toBe('Invalid email or password.');
+  });
+
+  it('flattens field-level validation errors from a ProblemDetails response', () => {
+    const error = normalizeError(
+      new HttpErrorResponse({
+        status: 400,
+        error: {
+          errors: {
+            PasswordTooShort: ['Passwords must be at least 10 characters.'],
+            PasswordRequiresUpper: ["Passwords must have at least one uppercase ('A'-'Z')."],
+          },
+        },
+      }),
+    );
+
+    expect(error.userMessage).toBe(
+      "Passwords must be at least 10 characters. Passwords must have at least one uppercase ('A'-'Z').",
+    );
+  });
+
+  it('falls back to the generic bucketed message for a 5xx response even with a detail', () => {
+    const error = normalizeError(
+      new HttpErrorResponse({ status: 503, error: { detail: 'Internal database details' } }),
+    );
+
+    expect(error.userMessage).toBe(
+      'Our service is temporarily unavailable. Please try again shortly.',
+    );
+  });
 });

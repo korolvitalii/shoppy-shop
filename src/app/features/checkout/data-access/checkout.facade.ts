@@ -19,6 +19,7 @@ export class CheckoutFacade {
   readonly subtotal = this.basket.subtotal;
   readonly items = this.basket.items;
   readonly total = computed(() => this.subtotal() + this.deliveryCharge());
+  private readonly idempotencyKey = crypto.randomUUID();
 
   setDelivery(value: DeliveryAddress) {
     this.delivery.set(value);
@@ -42,7 +43,7 @@ export class CheckoutFacade {
       deliveryCharge: this.deliveryCharge(),
       total: this.total(),
     };
-    return this.orders.createOrder(request);
+    return this.orders.createOrder(request, this.idempotencyKey);
   }
 
   clearBasket(): void {
