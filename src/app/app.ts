@@ -3,8 +3,10 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, NavigationStart, Router, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs';
 
+import { ConfigService } from './core/config/config.service';
 import { SeoService } from './core/seo/seo.service';
 import { ThemeService } from './core/theme/theme.service';
+import { AssistantWidget } from './features/assistant/components/assistant-widget/assistant-widget';
 import { ConfirmationDialog } from './shared/ui/confirmation-dialog/confirmation-dialog';
 import { ErrorBanner } from './shared/ui/error-banner/error-banner';
 import { LoadingIndicator } from './shared/ui/loading-indicator/loading-indicator';
@@ -15,6 +17,7 @@ import { MobileNavigation } from './shell/mobile-navigation/mobile-navigation';
   selector: 'app-root',
   imports: [
     AppHeader,
+    AssistantWidget,
     ConfirmationDialog,
     ErrorBanner,
     LoadingIndicator,
@@ -28,6 +31,7 @@ import { MobileNavigation } from './shell/mobile-navigation/mobile-navigation';
 export class App {
   private readonly theme = inject(ThemeService);
   private readonly seo = inject(SeoService);
+  protected readonly config = inject(ConfigService);
   private readonly router = inject(Router);
   private readonly currentUrl = toSignal(
     this.router.events.pipe(

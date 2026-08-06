@@ -14,6 +14,7 @@ import { catchError, of, tap } from 'rxjs';
 
 import { routes } from './app.routes';
 import { authInterceptor } from './core/auth/auth.interceptor';
+import { ConfigService } from './core/config/config.service';
 import { apiErrorInterceptor } from './core/errors/api-error.interceptor';
 import { GlobalErrorHandler } from './core/errors/global-error.handler';
 import { loadingInterceptor } from './core/loading/loading.interceptor';
@@ -49,6 +50,11 @@ export const appConfig: ApplicationConfig = {
         tap((result) => session.start(result)),
         catchError(() => of(null)),
       );
+    }),
+    provideAppInitializer(() => {
+      if (!isPlatformBrowser(inject(PLATFORM_ID))) return of(null);
+
+      return inject(ConfigService).load();
     }),
   ],
 };
