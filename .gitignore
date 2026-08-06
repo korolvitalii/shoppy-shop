@@ -47,3 +47,7 @@ Thumbs.db
 .vercel
 .env*
 .lighthouseci/
+
+# Agent knowledge scratch space (not synced via git)
+/agent-knowledge/
+/CLAUDE.md
