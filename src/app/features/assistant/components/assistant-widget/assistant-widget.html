@@ -1,0 +1,65 @@
+@if (assistant.isOpen()) {
+  <section
+    class="assistant-panel"
+    role="dialog"
+    aria-modal="false"
+    aria-labelledby="assistant-title"
+    (keydown)="handleKeydown($event)"
+  >
+    <header class="assistant-header">
+      <h2 id="assistant-title" i18n="@@assistantTitle">Shopping assistant</h2>
+      <button
+        type="button"
+        class="close-button"
+        i18n-aria-label="@@assistantClose"
+        aria-label="Close shopping assistant"
+        (click)="assistant.close()"
+      >
+        <app-lucide-icon [icon]="icons.close" />
+      </button>
+    </header>
+    <div class="assistant-messages" role="log" aria-live="polite">
+      @if (assistant.messages().length === 0) {
+        <p class="assistant-empty" i18n="@@assistantEmptyState">
+          Ask me to find something — try “waterproof jackets under $50”.
+        </p>
+      }
+      @for (message of assistant.messages(); track message.id) {
+        <div class="assistant-message" [class.assistant-message--user]="message.role === 'user'">
+          <p>{{ message.content }}</p>
+          @if (message.products.length > 0) {
+            <div class="assistant-results">
+              @for (product of message.products; track product.id) {
+                <app-assistant-product-result [product]="product" />
+              }
+            </div>
+          }
+        </div>
+      }
+      @if (assistant.isSending()) {
+        <p class="assistant-typing" i18n="@@assistantTyping">Thinking…</p>
+      }
+    </div>
+    <form class="assistant-input" (submit)="handleSubmit($event)">
+      <input
+        #messageInput
+        type="text"
+        [formControl]="messageControl"
+        i18n-aria-label="@@assistantInputLabel"
+        aria-label="Message the shopping assistant"
+        i18n-placeholder="@@assistantInputPlaceholder"
+        placeholder="Ask about products…"
+      />
+      <button type="submit" [disabled]="assistant.isSending()" i18n="@@assistantSend">Send</button>
+    </form>
+  </section>
+}
+<button
+  type="button"
+  class="assistant-launcher"
+  i18n-aria-label="@@assistantLauncherLabel"
+  aria-label="Open shopping assistant"
+  (click)="assistant.toggle()"
+>
+  <app-lucide-icon [icon]="icons.message" />
+</button>

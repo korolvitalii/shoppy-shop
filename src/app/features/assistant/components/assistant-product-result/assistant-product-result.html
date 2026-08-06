@@ -1,0 +1,10 @@
+<div class="assistant-product-result">
+  <app-product-card [product]="product()" />
+  <button type="button" class="add-to-basket" [disabled]="added()" (click)="addToBasket()">
+    @if (added()) {
+      <span i18n="@@assistantProductAdded">Added to basket</span>
+    } @else {
+      <span i18n="@@assistantAddToBasket">Add to basket</span>
+    }
+  </button>
+</div>
