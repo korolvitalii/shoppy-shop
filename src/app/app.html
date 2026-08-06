@@ -9,4 +9,7 @@
 </main>
 @if (showHeader()) {
   <app-mobile-navigation-tabs />
+  @if (config.assistantEnabled()) {
+    <app-assistant-widget />
+  }
 }

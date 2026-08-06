@@ -1,0 +1,28 @@
+.assistant-product-result {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 11rem;
+}
+
+.add-to-basket {
+  padding: 0.5rem 0.75rem;
+  border: 0;
+  border-radius: 0.6rem;
+  color: #fff;
+  background: var(--color-primary);
+  font: inherit;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.add-to-basket:disabled {
+  background: var(--color-muted);
+  cursor: default;
+}
+
+.add-to-basket:focus-visible {
+  outline: 3px solid rgba(104, 66, 232, 0.28);
+  outline-offset: 3px;
+}
