@@ -1,4 +1,4 @@
-import { type Product } from '../../../catalogue/models/product';
+import { type Product } from '../../../../shared/domain/product';
 
 export interface AssistantChatTurn {
   role: 'user' | 'assistant';

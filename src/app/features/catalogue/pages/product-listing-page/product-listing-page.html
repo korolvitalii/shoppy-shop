@@ -67,7 +67,11 @@
       } @else {
         <section class="product-grid" aria-label="Products">
           @for (product of products(); track product.id) {
-            <app-product-card [product]="product" />
+            <app-product-card
+              [product]="product"
+              [favorite]="favorites.has(product.id)"
+              (favoriteToggle)="toggleFavorite(product)"
+            />
           }
         </section>
       }

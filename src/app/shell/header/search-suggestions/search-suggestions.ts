@@ -1,7 +1,7 @@
 import { CurrencyPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
-import { type Product } from '../../../features/catalogue/models/product';
+import { type Product } from '../../../shared/domain/product';
 
 @Component({
   selector: 'app-search-suggestions',

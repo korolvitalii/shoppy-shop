@@ -2,7 +2,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
-import { type Product } from '../../catalogue/models/product';
+import { type Product } from '../../../shared/domain/product';
 import { AssistantChatService } from './assistant-chat.service';
 import {
   type AssistantChatRequest,

@@ -1,5 +1,9 @@
 <div class="assistant-product-result">
-  <app-product-card [product]="product()" />
+  <app-product-card
+    [product]="product()"
+    [favorite]="favorites.has(product().id)"
+    (favoriteToggle)="toggleFavorite()"
+  />
   <button type="button" class="add-to-basket" [disabled]="added()" (click)="addToBasket()">
     @if (added()) {
       <span i18n="@@assistantProductAdded">Added to basket</span>

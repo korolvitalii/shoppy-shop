@@ -4,12 +4,14 @@ import { provideRouter, Router } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ConfirmationService } from '../../core/confirmation/confirmation.service';
-import { AuthenticationService } from '../../features/auth/data-access/authentication.service';
-import { AuthenticationSessionService } from '../../features/auth/data-access/authentication-session.service';
-import { BasketService } from '../../features/basket/data-access/basket.service';
-import { ProductsRepository } from '../../features/catalogue/data-access/products.repository';
-import { type Product } from '../../features/catalogue/models/product';
-import { FavoritesService } from '../../features/favorites/data-access/favorites.service';
+import {
+  AuthenticationService,
+  AuthenticationSessionService,
+} from '../../features/auth/public-api';
+import { BasketService } from '../../features/basket/public-api';
+import { ProductsRepository } from '../../features/catalogue/public-api';
+import { FavoritesService } from '../../features/favorites/public-api';
+import { type Product } from '../../shared/domain/product';
 import { AppHeader } from './app-header';
 
 describe('AppHeader', () => {

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 
-import { supportedLocales } from '../../../core/locale/locale.config';
-import { LocaleService, type SupportedLocale } from '../../../core/locale/locale.service';
+import { supportedLocales } from '../locale.config';
+import { LocaleService, type SupportedLocale } from '../locale.service';
 
 @Component({
   selector: 'app-language-selector',

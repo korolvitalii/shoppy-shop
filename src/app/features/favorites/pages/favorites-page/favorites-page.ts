@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { ProductCard } from '../../../catalogue/components/product-card/product-card';
+import { ProductCard } from '../../../../shared/ui/product-card/product-card';
 import { FavoritesService } from '../../data-access/favorites.service';
 
 @Component({

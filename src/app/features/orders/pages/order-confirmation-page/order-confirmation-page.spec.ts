@@ -3,7 +3,7 @@ import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/route
 import { of } from 'rxjs';
 
 import { OrdersRepository } from '../../data-access/orders.repository';
-import { type Order } from '../../models/checkout.models';
+import { type Order } from '../../models/order.models';
 import { OrderConfirmationPage } from './order-confirmation-page';
 
 describe('OrderConfirmationPage', () => {

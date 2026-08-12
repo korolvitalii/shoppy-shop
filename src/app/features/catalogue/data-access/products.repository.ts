@@ -2,8 +2,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { type Observable, of } from 'rxjs';
 
+import { type Product } from '../../../shared/domain/product';
 import catalogue from '../data/catalogue.json';
-import { type Product, type ProductSearchQuery } from '../models/product';
+import { type ProductSearchQuery } from '../models/product';
 
 @Injectable()
 export abstract class ProductsRepository {

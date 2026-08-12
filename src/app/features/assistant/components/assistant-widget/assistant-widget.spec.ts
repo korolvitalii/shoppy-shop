@@ -3,7 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
-import { type Product } from '../../../catalogue/models/product';
+import { type Product } from '../../../../shared/domain/product';
 import { AssistantChatService } from '../../data-access/assistant-chat.service';
 import { AssistantWidget } from './assistant-widget';
 

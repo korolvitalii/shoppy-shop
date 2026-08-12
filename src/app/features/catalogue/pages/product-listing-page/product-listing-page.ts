@@ -15,15 +15,13 @@ import {
 } from 'rxjs';
 
 import { SeoService } from '../../../../core/seo/seo.service';
-import { ProductCard } from '../../components/product-card/product-card';
+import { type Product } from '../../../../shared/domain/product';
+import { ProductCard } from '../../../../shared/ui/product-card/product-card';
+import { AuthenticationSessionService } from '../../../auth/public-api';
+import { FavoritesService } from '../../../favorites/public-api';
 import catalogue from '../../data/catalogue.json';
 import { ProductsRepository } from '../../data-access/products.repository';
-import {
-  type PriceRange,
-  type Product,
-  type ProductSearchQuery,
-  type ProductSort,
-} from '../../models/product';
+import { type PriceRange, type ProductSearchQuery, type ProductSort } from '../../models/product';
 
 type RequestStatus = 'loading' | 'success' | 'error';
 
@@ -35,12 +33,14 @@ type RequestStatus = 'loading' | 'success' | 'error';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductListingPage {
+  protected readonly favorites = inject(FavoritesService);
   private readonly repository = inject(ProductsRepository);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
   private readonly refresh = new BehaviorSubject(0);
   private readonly seo = inject(SeoService);
+  private readonly session = inject(AuthenticationSessionService);
 
   readonly products = signal<readonly Product[]>([]);
   readonly status = signal<RequestStatus>('loading');
@@ -98,6 +98,14 @@ export class ProductListingPage {
 
   clearFilters(): void {
     void this.router.navigate([], { relativeTo: this.route, queryParams: {} });
+  }
+
+  protected toggleFavorite(product: Product): void {
+    if (!this.session.isAuthenticated()) {
+      void this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
+      return;
+    }
+    this.favorites.toggle(product);
   }
 
   private updateQuery(queryParams: Record<string, string | null>): void {

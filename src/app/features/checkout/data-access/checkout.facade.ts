@@ -1,14 +1,10 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { type Observable } from 'rxjs';
 
-import { BasketService } from '../../basket/data-access/basket.service';
-import {
-  type CheckoutPaymentToken,
-  type CreateOrderRequest,
-  type DeliveryAddress,
-  type Order,
-} from '../models/checkout.models';
-import { OrdersRepository } from './orders.repository';
+import { BasketService } from '../../basket/public-api';
+import { type CreateOrderRequest, type Order, OrdersRepository } from '../../orders/public-api';
+import { type CheckoutPaymentToken, type DeliveryAddress } from '../models/checkout.models';
+
 @Injectable()
 export class CheckoutFacade {
   private readonly basket = inject(BasketService);

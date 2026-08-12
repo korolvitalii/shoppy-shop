@@ -1,6 +1,6 @@
 import { computed, Injectable, signal } from '@angular/core';
 
-import { type Product } from '../../catalogue/models/product';
+import { type Product } from '../../../shared/domain/product';
 import { type BasketItem } from '../models/basket-item';
 
 const STORAGE_KEY = 'shoppyshop.basket.v1';

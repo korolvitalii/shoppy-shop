@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { type Observable } from 'rxjs';
 
-import { type CreateOrderRequest, type Order } from '../models/checkout.models';
+import { type CreateOrderRequest, type Order } from '../models/order.models';
 @Injectable()
 export abstract class OrdersRepository {
   abstract createOrder(request: CreateOrderRequest, idempotencyKey: string): Observable<Order>;

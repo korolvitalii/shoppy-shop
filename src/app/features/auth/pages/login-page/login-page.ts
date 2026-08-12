@@ -3,12 +3,12 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { finalize, take } from 'rxjs';
 
-import { errorMessage } from '../../../core/errors/app-error';
-import { ThemeService } from '../../../core/theme/theme.service';
-import { LanguageSelector } from '../../../shared/ui/language-selector/language-selector';
-import { AuthenticationService } from '../data-access/authentication.service';
-import { AuthenticationSessionService } from '../data-access/authentication-session.service';
-import { type LoginRequest } from '../models/auth.models';
+import { errorMessage } from '../../../../core/errors/app-error';
+import { LanguageSelector } from '../../../../core/locale/language-selector/language-selector';
+import { ThemeService } from '../../../../core/theme/theme.service';
+import { AuthenticationService } from '../../data-access/authentication.service';
+import { AuthenticationSessionService } from '../../data-access/authentication-session.service';
+import { type LoginRequest } from '../../models/auth.models';
 
 interface LoginForm {
   email: FormControl<string>;

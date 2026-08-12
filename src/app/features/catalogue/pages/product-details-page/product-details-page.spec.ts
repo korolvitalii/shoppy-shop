@@ -3,11 +3,11 @@ import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angular/router';
 import { BehaviorSubject, Subject } from 'rxjs';
 
-import { AuthenticationSessionService } from '../../../auth/data-access/authentication-session.service';
-import { BasketService } from '../../../basket/data-access/basket.service';
-import { FavoritesService } from '../../../favorites/data-access/favorites.service';
+import { type Product } from '../../../../shared/domain/product';
+import { AuthenticationSessionService } from '../../../auth/public-api';
+import { BasketService } from '../../../basket/public-api';
+import { FavoritesService } from '../../../favorites/public-api';
 import { ProductsRepository } from '../../data-access/products.repository';
-import { type Product } from '../../models/product';
 import { ProductDetailsPage } from './product-details-page';
 
 describe('ProductDetailsPage', () => {
