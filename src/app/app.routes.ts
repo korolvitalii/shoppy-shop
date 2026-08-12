@@ -1,16 +1,13 @@
 import { type Routes } from '@angular/router';
 
-import { anonymousGuard, authenticationGuard } from './features/auth/guards/authentication.guard';
-import { CheckoutFacade } from './features/checkout/data-access/checkout.facade';
-import {
-  ApiOrdersRepository,
-  OrdersRepository,
-} from './features/checkout/data-access/orders.repository';
+import { anonymousGuard, authenticationGuard } from './features/auth/public-api';
 import {
   basketRequiredGuard,
+  CheckoutFacade,
   deliveryRequiredGuard,
   paymentRequiredGuard,
-} from './features/checkout/guards/checkout.guards';
+} from './features/checkout/public-api';
+import { ApiOrdersRepository, OrdersRepository } from './features/orders/public-api';
 
 export const routes: Routes = [
   {
@@ -18,14 +15,14 @@ export const routes: Routes = [
     canActivate: [anonymousGuard],
     title: $localize`:@@signInTitle:Sign in | ShoppyShop`,
     loadComponent: () =>
-      import('./features/auth/login-page/login-page').then(({ LoginPage }) => LoginPage),
+      import('./features/auth/pages/login-page/login-page').then(({ LoginPage }) => LoginPage),
   },
   {
     path: 'register',
     canActivate: [anonymousGuard],
     title: $localize`:@@registerTitle:Create account | ShoppyShop`,
     loadComponent: () =>
-      import('./features/auth/register-page/register-page').then(
+      import('./features/auth/pages/register-page/register-page').then(
         ({ RegisterPage }) => RegisterPage,
       ),
   },
@@ -123,7 +120,7 @@ export const routes: Routes = [
     canActivate: [authenticationGuard],
     providers: [{ provide: OrdersRepository, useClass: ApiOrdersRepository }],
     loadComponent: () =>
-      import('./features/checkout/pages/order-confirmation-page/order-confirmation-page').then(
+      import('./features/orders/pages/order-confirmation-page/order-confirmation-page').then(
         (m) => m.OrderConfirmationPage,
       ),
   },

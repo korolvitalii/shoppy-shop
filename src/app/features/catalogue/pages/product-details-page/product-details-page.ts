@@ -12,12 +12,12 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { catchError, map, of, switchMap, tap } from 'rxjs';
 
 import { SeoService } from '../../../../core/seo/seo.service';
-import { AuthenticationSessionService } from '../../../auth/data-access/authentication-session.service';
-import { BasketService } from '../../../basket/data-access/basket.service';
-import { FavoritesService } from '../../../favorites/data-access/favorites.service';
+import { type Product } from '../../../../shared/domain/product';
+import { AuthenticationSessionService } from '../../../auth/public-api';
+import { BasketService } from '../../../basket/public-api';
+import { FavoritesService } from '../../../favorites/public-api';
 import { ProductInformation } from '../../components/product-information/product-information';
 import { ProductsRepository } from '../../data-access/products.repository';
-import { type Product } from '../../models/product';
 
 type DetailStatus = 'loading' | 'success' | 'not-found' | 'error';
 

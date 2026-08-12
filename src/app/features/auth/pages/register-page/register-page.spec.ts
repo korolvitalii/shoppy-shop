@@ -2,10 +2,10 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 
-import { APP_ERROR_CODES, AppError } from '../../../core/errors/app-error';
-import { AuthenticationService } from '../data-access/authentication.service';
-import { AuthenticationSessionService } from '../data-access/authentication-session.service';
-import { type AuthResult } from '../models/auth.models';
+import { APP_ERROR_CODES, AppError } from '../../../../core/errors/app-error';
+import { AuthenticationService } from '../../data-access/authentication.service';
+import { AuthenticationSessionService } from '../../data-access/authentication-session.service';
+import { type AuthResult } from '../../models/auth.models';
 import { RegisterPage } from './register-page';
 
 const authResult: AuthResult = {

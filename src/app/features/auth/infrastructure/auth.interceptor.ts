@@ -2,8 +2,8 @@ import { HttpErrorResponse, type HttpInterceptorFn, type HttpRequest } from '@an
 import { inject } from '@angular/core';
 import { catchError, switchMap, throwError } from 'rxjs';
 
-import { AuthenticationService } from '../../features/auth/data-access/authentication.service';
-import { AuthenticationSessionService } from '../../features/auth/data-access/authentication-session.service';
+import { AuthenticationService } from '../data-access/authentication.service';
+import { AuthenticationSessionService } from '../data-access/authentication-session.service';
 
 const AUTH_ENDPOINTS = ['/api/auth/refresh', '/api/auth/login', '/api/auth/register'];
 

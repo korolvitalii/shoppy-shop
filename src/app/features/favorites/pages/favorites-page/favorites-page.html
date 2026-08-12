@@ -18,7 +18,11 @@
   @if (favorites.count() > 0) {
     <section class="product-grid" aria-label="Favourite products">
       @for (product of favorites.products(); track product.id) {
-        <app-product-card [product]="product" />
+        <app-product-card
+          [product]="product"
+          [favorite]="true"
+          (favoriteToggle)="favorites.toggle(product)"
+        />
       }
     </section>
   } @else {

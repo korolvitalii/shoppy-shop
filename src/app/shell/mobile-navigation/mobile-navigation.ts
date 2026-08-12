@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Heart, History, House, ShoppingBasket } from 'lucide';
 
-import { AuthenticationSessionService } from '../../features/auth/data-access/authentication-session.service';
-import { BasketService } from '../../features/basket/data-access/basket.service';
-import { FavoritesService } from '../../features/favorites/data-access/favorites.service';
+import { AuthenticationSessionService } from '../../features/auth/public-api';
+import { BasketService } from '../../features/basket/public-api';
+import { FavoritesService } from '../../features/favorites/public-api';
 import { LucideIcon } from '../../shared/ui/lucide-icon/lucide-icon';
 
 @Component({

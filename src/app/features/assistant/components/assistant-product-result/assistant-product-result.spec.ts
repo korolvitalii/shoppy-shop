@@ -3,8 +3,8 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
-import { BasketService } from '../../../basket/data-access/basket.service';
-import { type Product } from '../../../catalogue/models/product';
+import { type Product } from '../../../../shared/domain/product';
+import { BasketService } from '../../../basket/public-api';
 import { AssistantProductResult } from './assistant-product-result';
 
 const product: Product = {

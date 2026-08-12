@@ -2,9 +2,9 @@ import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
-import { AuthenticationSessionService } from '../../features/auth/data-access/authentication-session.service';
-import { BasketService } from '../../features/basket/data-access/basket.service';
-import { FavoritesService } from '../../features/favorites/data-access/favorites.service';
+import { AuthenticationSessionService } from '../../features/auth/public-api';
+import { BasketService } from '../../features/basket/public-api';
+import { FavoritesService } from '../../features/favorites/public-api';
 import { MobileNavigation } from './mobile-navigation';
 
 describe('MobileNavigation', () => {

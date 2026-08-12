@@ -4,11 +4,12 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { catchError, of, switchMap } from 'rxjs';
 
 import { OrdersRepository } from '../../data-access/orders.repository';
-import { type Order } from '../../models/checkout.models';
+import { type Order } from '../../models/order.models';
+
 @Component({
   selector: 'app-order-confirmation-page',
   imports: [CurrencyPipe, RouterLink],
-  template: `<main class="checkout">
+  template: `<main class="confirmation-page">
     @if (order(); as value) {
       <section class="confirmation" role="status" aria-live="polite">
         <span class="confirmation-icon" aria-hidden="true">✓</span>
@@ -22,7 +23,7 @@ import { type Order } from '../../models/checkout.models';
           <span i18n="@@totalPaid">Total paid</span>
           <strong>{{ value.total | currency: 'GBP' }}</strong>
         </p>
-        <div class="checkout-actions">
+        <div class="confirmation-actions">
           <a class="secondary-action" routerLink="/orders" i18n="@@viewPurchaseHistory"
             >View purchase history</a
           >
@@ -42,7 +43,7 @@ import { type Order } from '../../models/checkout.models';
       <p role="status" i18n="@@loadingOrder">Loading order…</p>
     }
   </main>`,
-  styleUrl: '../checkout.scss',
+  styleUrl: './order-confirmation-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrderConfirmationPage {

@@ -7,9 +7,9 @@ import { ConfigService } from './core/config/config.service';
 import { SeoService } from './core/seo/seo.service';
 import { ThemeService } from './core/theme/theme.service';
 import { AssistantWidget } from './features/assistant/components/assistant-widget/assistant-widget';
-import { ConfirmationDialog } from './shared/ui/confirmation-dialog/confirmation-dialog';
-import { ErrorBanner } from './shared/ui/error-banner/error-banner';
-import { LoadingIndicator } from './shared/ui/loading-indicator/loading-indicator';
+import { ConfirmationDialog } from './shell/global-ui/confirmation-dialog/confirmation-dialog';
+import { ErrorBanner } from './shell/global-ui/error-banner/error-banner';
+import { LoadingIndicator } from './shell/global-ui/loading-indicator/loading-indicator';
 import { AppHeader } from './shell/header/app-header';
 import { MobileNavigation } from './shell/mobile-navigation/mobile-navigation';
 

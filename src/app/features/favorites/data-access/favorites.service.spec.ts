@@ -2,9 +2,8 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
-import { AuthenticationSessionService } from '../../auth/data-access/authentication-session.service';
-import { type AuthResult } from '../../auth/models/auth.models';
-import { type Product } from '../../catalogue/models/product';
+import { type Product } from '../../../shared/domain/product';
+import { AuthenticationSessionService, type AuthResult } from '../../auth/public-api';
 import { FavoritesService } from './favorites.service';
 
 const product: Product = {

@@ -13,21 +13,21 @@ import { provideRouter } from '@angular/router';
 import { catchError, of, tap } from 'rxjs';
 
 import { routes } from './app.routes';
-import { authInterceptor } from './core/auth/auth.interceptor';
 import { ConfigService } from './core/config/config.service';
 import { apiErrorInterceptor } from './core/errors/api-error.interceptor';
 import { GlobalErrorHandler } from './core/errors/global-error.handler';
 import { loadingInterceptor } from './core/loading/loading.interceptor';
-import { AuthenticationService } from './features/auth/data-access/authentication.service';
-import { AuthenticationSessionService } from './features/auth/data-access/authentication-session.service';
+import {
+  AuthenticationService,
+  AuthenticationSessionService,
+  authInterceptor,
+} from './features/auth/public-api';
 import {
   ApiProductGroupsRepository,
-  ProductGroupsRepository,
-} from './features/catalogue/data-access/product-groups.repository';
-import {
   ApiProductsRepository,
+  ProductGroupsRepository,
   ProductsRepository,
-} from './features/catalogue/data-access/products.repository';
+} from './features/catalogue/public-api';
 
 export const appConfig: ApplicationConfig = {
   providers: [

@@ -1,13 +1,13 @@
-import { HttpClient } from '@angular/common/http';
 import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { catchError, of } from 'rxjs';
 
-import { AuthenticationSessionService } from '../../auth/data-access/authentication-session.service';
-import { type Product } from '../../catalogue/models/product';
+import { type Product } from '../../../shared/domain/product';
+import { AuthenticationSessionService } from '../../auth/public-api';
+import { FavoritesApiClient } from './favorites-api.client';
 
 @Injectable({ providedIn: 'root' })
 export class FavoritesService {
-  private readonly http = inject(HttpClient);
+  private readonly api = inject(FavoritesApiClient);
   private readonly session = inject(AuthenticationSessionService);
   private readonly productsState = signal<readonly Product[]>([]);
 
@@ -36,8 +36,8 @@ export class FavoritesService {
     }
 
     this.productsState.set([...this.productsState(), product]);
-    this.http
-      .put<void>(`/api/favorites/${product.id}`, {})
+    this.api
+      .add(product.id)
       .pipe(catchError(() => this.revertTo(this.without(product.id))))
       .subscribe();
   }
@@ -45,8 +45,8 @@ export class FavoritesService {
   remove(productId: string): void {
     const previous = this.productsState();
     this.productsState.set(this.without(productId));
-    this.http
-      .delete<void>(`/api/favorites/${productId}`)
+    this.api
+      .remove(productId)
       .pipe(catchError(() => this.revertTo(previous)))
       .subscribe();
   }
@@ -54,15 +54,15 @@ export class FavoritesService {
   clear(): void {
     const previous = this.productsState();
     this.productsState.set([]);
-    this.http
-      .delete<void>('/api/favorites')
+    this.api
+      .clear()
       .pipe(catchError(() => this.revertTo(previous)))
       .subscribe();
   }
 
   private load(): void {
-    this.http
-      .get<readonly Product[]>('/api/favorites')
+    this.api
+      .getAll()
       .pipe(catchError(() => of([])))
       .subscribe((products) => this.productsState.set(products));
   }

@@ -4,9 +4,9 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 
-import { AuthenticationService } from '../../features/auth/data-access/authentication.service';
-import { AuthenticationSessionService } from '../../features/auth/data-access/authentication-session.service';
-import { type AuthResult } from '../../features/auth/models/auth.models';
+import { AuthenticationService } from '../data-access/authentication.service';
+import { AuthenticationSessionService } from '../data-access/authentication-session.service';
+import { type AuthResult } from '../models/auth.models';
 import { authInterceptor } from './auth.interceptor';
 
 const authResult: AuthResult = {

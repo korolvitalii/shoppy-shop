@@ -2,8 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { Subject } from 'rxjs';
 
-import { OrdersRepository } from '../../../checkout/data-access/orders.repository';
-import { type Order } from '../../../checkout/models/checkout.models';
+import { OrdersRepository } from '../../data-access/orders.repository';
+import { type Order } from '../../models/order.models';
 import { OrderHistoryPage } from './order-history-page';
 
 describe('OrderHistoryPage', () => {

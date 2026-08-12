@@ -4,8 +4,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { take } from 'rxjs';
 
-import { OrdersRepository } from '../../../checkout/data-access/orders.repository';
-import { type Order } from '../../../checkout/models/checkout.models';
+import { OrdersRepository } from '../../data-access/orders.repository';
+import { type Order } from '../../models/order.models';
 
 type HistoryStatus = 'loading' | 'success' | 'error';
 
