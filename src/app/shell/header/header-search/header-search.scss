@@ -42,6 +42,7 @@ input::placeholder {
 select {
   width: 10.5rem;
   padding: 0.7rem 2.1rem 0.7rem 0.85rem;
+  margin-right: 10px;
   border-left: 1px solid var(--header-border);
   outline: 0;
   cursor: pointer;
