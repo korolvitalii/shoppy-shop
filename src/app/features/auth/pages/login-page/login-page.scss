@@ -140,6 +140,51 @@ form {
   }
 }
 
+.password-input {
+  position: relative;
+  display: flex;
+
+  input {
+    flex: 1;
+    padding-right: 2.75rem;
+  }
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.55rem;
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  border-radius: 0.5rem;
+  color: var(--text-secondary);
+  background: none;
+  place-items: center;
+  cursor: pointer;
+  transform: translateY(-50%);
+
+  &:hover {
+    color: var(--accent);
+  }
+
+  &:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--accent) 28%, transparent);
+    outline-offset: 2px;
+  }
+
+  svg {
+    width: 1.1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.8;
+  }
+}
+
 .field-error {
   min-height: 1.1rem;
   color: var(--danger);

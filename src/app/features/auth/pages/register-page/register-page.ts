@@ -50,6 +50,7 @@ export class RegisterPage {
 
   readonly isSubmitting = signal(false);
   readonly registrationError = signal<string | null>(null);
+  readonly showPassword = signal(false);
 
   submit(): void {
     this.registrationError.set(null);
