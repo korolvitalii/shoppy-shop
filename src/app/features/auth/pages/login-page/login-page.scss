@@ -64,6 +64,25 @@
   backdrop-filter: blur(1rem);
 }
 
+.back-link {
+  display: block;
+  margin-top: 1.25rem;
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+  font-weight: 650;
+  text-align: center;
+  text-decoration: none;
+
+  &:hover {
+    color: var(--accent);
+  }
+
+  &:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--accent) 28%, transparent);
+    outline-offset: 3px;
+  }
+}
+
 .login-header {
   margin-bottom: 2rem;
   text-align: center;

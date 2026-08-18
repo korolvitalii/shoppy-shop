@@ -15,7 +15,7 @@
   </button>
   <section class="login-card" aria-labelledby="login-title">
     <header class="login-header">
-      <a class="brand" href="/" aria-label="ShoppyShop">ShoppyShop</a>
+      <a class="brand" routerLink="/products" aria-label="ShoppyShop">ShoppyShop</a>
       <h1 id="login-title" i18n="@@welcomeBack">Welcome back</h1>
       <p i18n="@@signInIntro">Sign in to your ShoppyShop account</p>
     </header>
@@ -100,5 +100,7 @@
       <p i18n="@@noAccountYet">New to ShoppyShop?</p>
       <a routerLink="/register" i18n="@@createAccountLink">Create an account</a>
     </aside>
+
+    <a class="back-link" routerLink="/products" i18n="@@backToShop">Back to shop</a>
   </section>
 </main>
