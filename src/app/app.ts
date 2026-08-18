@@ -41,7 +41,10 @@ export class App {
     { initialValue: this.router.url },
   );
 
-  protected readonly showHeader = computed(() => !this.currentUrl().startsWith('/login'));
+  private static readonly FULL_PAGE_ROUTES = ['/login', '/register'];
+  protected readonly showHeader = computed(
+    () => !App.FULL_PAGE_ROUTES.some((path) => this.currentUrl().startsWith(path)),
+  );
 
   constructor() {
     void this.theme;

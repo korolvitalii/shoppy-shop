@@ -42,6 +42,7 @@ export class LoginPage {
 
   readonly isSubmitting = signal(false);
   readonly authenticationError = signal<string | null>(null);
+  readonly showPassword = signal(false);
 
   submit(): void {
     this.authenticationError.set(null);
