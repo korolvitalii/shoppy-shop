@@ -20,7 +20,8 @@ export class LanguageSelector {
 
   protected keydown(event: KeyboardEvent, current: AppLocale): void {
     let index = this.locales.indexOf(current);
-    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') index = (index + 1) % this.locales.length;
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown')
+      index = (index + 1) % this.locales.length;
     else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp')
       index = (index - 1 + this.locales.length) % this.locales.length;
     else if (event.key === 'Home') index = 0;
