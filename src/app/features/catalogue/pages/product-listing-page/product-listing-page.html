@@ -3,21 +3,6 @@
     <a routerLink="/products" i18n="@@products">Products</a><span>/</span
     ><span>{{ groupId() === 'all' ? 'Search' : groupId() }}</span>
   </nav>
-  <header>
-    <p class="eyebrow" i18n="@@curatedCollection">Curated collection</p>
-    @if (groupId() === 'all') {
-      <h1 i18n="@@allProducts">All products</h1>
-    } @else {
-      <h1>{{ groupId() }}</h1>
-    }
-    <p>
-      @if (products().length === 1) {
-        <span i18n="@@oneProduct">{{ products().length }} product</span>
-      } @else {
-        <span i18n="@@manyProducts">{{ products().length }} products</span>
-      }
-    </p>
-  </header>
   <section class="toolbar" aria-label="Product filters">
     <label
       ><span i18n="@@searchAction">Search</span>

@@ -85,7 +85,6 @@ describe('ProductListingPage', () => {
     fixture.detectChanges();
 
     expect((fixture.nativeElement as HTMLElement).textContent).toContain('Studio headphones');
-    expect((fixture.nativeElement as HTMLElement).textContent).toContain('1 product');
     expect(
       fixture.nativeElement.querySelector('a[href="/products/electronics/headphones"]'),
     ).toBeTruthy();

@@ -1,15 +1,18 @@
-<label [class.wide]="wide()">
+<div class="language-selector" [class.wide]="wide()">
   <span [class.visually-hidden]="!wide()" i18n="@@languageSelector">Language</span>
-  <select
-    [value]="locale.currentLocale"
-    (change)="changeLocale($event)"
-    aria-label="Language"
-    i18n-aria-label="@@languageSelector"
-  >
+  <div class="switch" role="radiogroup" aria-label="Language" i18n-aria-label="@@languageSelector">
     @for (option of locales; track option.locale) {
-      <option [value]="option.locale">
+      <button
+        type="button"
+        role="radio"
+        [attr.aria-checked]="option.locale === locale.currentLocale"
+        [class.active]="option.locale === locale.currentLocale"
+        [tabIndex]="option.locale === locale.currentLocale ? 0 : -1"
+        (click)="select(option)"
+        (keydown)="keydown($event, option)"
+      >
         {{ wide() ? option.label : option.shortLabel }}
-      </option>
+      </button>
     }
-  </select>
-</label>
+  </div>
+</div>
