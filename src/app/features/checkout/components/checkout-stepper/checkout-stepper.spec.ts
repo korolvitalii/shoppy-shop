@@ -23,6 +23,12 @@ describe('CheckoutStepper', () => {
     expect(fixture.nativeElement.querySelector('[aria-current="step"]')?.textContent).toContain(
       'Review',
     );
+    expect(fixture.nativeElement.querySelectorAll('.step-marker')).toHaveLength(3);
+    expect(
+      [...fixture.nativeElement.querySelectorAll('.step-label')].map((label) =>
+        label.textContent?.trim(),
+      ),
+    ).toEqual(['Delivery', 'Payment', 'Review']);
   });
 
   it('does not link steps whose requirements are incomplete', async () => {

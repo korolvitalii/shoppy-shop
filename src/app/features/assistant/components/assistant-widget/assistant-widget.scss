@@ -152,9 +152,15 @@
   outline-offset: 3px;
 }
 
-@media (max-width: 28rem) {
+@media (max-width: 42rem) {
+  .assistant-launcher {
+    right: 1rem;
+    bottom: calc(4.95rem + env(safe-area-inset-bottom));
+  }
+
   .assistant-panel {
     right: 1rem;
-    bottom: 4.75rem;
+    bottom: calc(8.95rem + env(safe-area-inset-bottom));
+    height: min(calc(100dvh - 10rem - env(safe-area-inset-bottom)), 32rem);
   }
 }

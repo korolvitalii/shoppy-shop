@@ -49,8 +49,7 @@ li.complete:not(:last-child)::after {
   color: var(--color-ink);
 }
 
-.step-link > span,
-.disabled > span {
+.step-marker {
   position: relative;
   z-index: 1;
   display: grid;
@@ -62,8 +61,12 @@ li.complete:not(:last-child)::after {
   background: var(--color-surface);
 }
 
-.complete .step-link > span,
-.current .step-link > span {
+.step-label {
+  white-space: nowrap;
+}
+
+.complete .step-marker,
+.current .step-marker {
   border-color: var(--color-primary);
   color: #fff;
   background: var(--color-primary);
