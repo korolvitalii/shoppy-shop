@@ -1,6 +1,6 @@
 {
   "/api": {
-    "target": "https://kjpieyrj3g.eu-central-1.awsapprunner.com",
+    "target": "https://api-production-a9fd.up.railway.app",
     "secure": true,
     "changeOrigin": true
   }
