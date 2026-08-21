@@ -110,7 +110,8 @@ The backend uses:
 - PostgreSQL 17
 - JWT authentication
 - Docker
-- AWS CDK
+- Railway deployment
+- Neon PostgreSQL
 
 The solution is divided into the following projects:
 
@@ -131,7 +132,7 @@ Backend functionality includes:
 - Server-side checkout price calculation
 - Idempotency-key-protected order creation
 - PostgreSQL persistence
-- AWS infrastructure deployment
+- Railway and Neon cloud deployment
 
 ## Running locally
 
@@ -214,7 +215,7 @@ The deployment workflow works as follows:
 - Pushes to `main` create production deployments
 - Deployment runs only after all quality checks pass
 
-The `vercel.json` configuration rewrites `/api/:path*` requests to the AWS App Runner backend.
+The `vercel.json` configuration rewrites `/api/:path*` requests to the Railway backend.
 
 This makes API calls same-origin from the browser, which is required for the `Secure` and `SameSite=Strict` refresh-token cookie.
 
@@ -222,19 +223,16 @@ The API rewrite must be declared before the locale catch-all rewrite. Otherwise,
 
 ### Backend
 
-The backend is deployed to AWS in the `eu-central-1` region through AWS CDK.
+The backend is deployed as a Docker container on Railway, with its PostgreSQL 17 database hosted by Neon in Frankfurt.
 
 The infrastructure includes:
 
-- AWS App Runner for the containerized API
-- Private Amazon RDS PostgreSQL instance
-- AWS Secrets Manager
-- GitHub Actions deployment
-- OpenID Connect authentication between GitHub and AWS
+- Railway for the containerized API
+- Neon for managed PostgreSQL
+- Railway encrypted service variables
+- GitHub Actions deployment to Railway
 
-GitHub Actions authenticates to AWS using OIDC, so no long-lived AWS access keys are stored in GitHub.
-
-An AWS Budget is configured to send alerts when estimated or actual monthly spending approaches **$35**. This is a cost-monitoring alert and does not technically prevent AWS spending from exceeding that amount.
+This replaces the previous AWS App Runner and RDS deployment to keep the portfolio project's recurring infrastructure cost low.
 
 ## Known limitations
 
@@ -254,15 +252,13 @@ It stores only:
 
 Full card details are not stored.
 
-### Single-AZ database
+### Managed database availability
 
-The RDS database uses a Single-AZ deployment without a standby replica.
-
-This is a deliberate cost-saving decision for a portfolio project rather than a production-scale availability configuration.
+The Neon database uses the portfolio project's managed service allowance and may scale down while inactive. A first request after inactivity can therefore be slower.
 
 ### Single backend region
 
-The API and database are deployed in one AWS region and do not provide multi-region failover.
+The API and database are deployed in single provider regions and do not provide multi-region failover.
 
 ### No offline development mode
 
@@ -283,7 +279,7 @@ This project was created to demonstrate practical experience with:
 - Dockerized backend services
 - PostgreSQL persistence
 - Infrastructure as code
-- AWS cloud deployment
+- Railway and Neon cloud deployment
 
 ## Related repository
 
