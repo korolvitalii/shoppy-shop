@@ -1,14 +1,12 @@
 # ShoppyShop
 
-ShoppyShop is a full-stack e-commerce application built with **Angular 22** and an **ASP.NET Core 10 REST API**.
+ShoppyShop is a full-stack shopping application built with **Angular 22** and an **ASP.NET Core 10 REST API**.
 
-It demonstrates a production-oriented architecture with authentication, product discovery, persistent favourites, basket management, checkout, order history, automated testing, CI/CD, server-side rendering, and cloud deployment.
-
-## Live demo
+## Live site
 
 [Open ShoppyShop](https://shoppy-shop-zeta.vercel.app/en/products)
 
-There is no seeded demo account. Register a new account through the `/register` page to test authenticated features such as favourites, checkout, and order history.
+There is no pre-created customer account. Register through the `/register` page to use authenticated features such as favourites, checkout, and order history.
 
 The product catalogue can be browsed without authentication.
 
@@ -17,6 +15,7 @@ The product catalogue can be browsed without authentication.
 - Responsive product catalogue and product detail pages
 - Search suggestions
 - Category, price, and sorting filters
+- Catalogue-grounded shopping assistant with product cards
 - Persistent favourites and shopping basket
 - Multi-step checkout flow
 - Mock payment processing
@@ -124,6 +123,7 @@ ShoppyShop.Infrastructure
 
 Backend functionality includes:
 
+- Anthropic-powered shopping assistant with catalogue search tools
 - JWT authentication
 - Rotating hashed refresh tokens
 - Public catalogue endpoints
@@ -138,16 +138,16 @@ Backend functionality includes:
 
 ### Requirements
 
-- Node.js
-- npm
+- Node.js 24
+- npm 11
 - Network access to the deployed API
 
 The application always communicates with the real backend. There is currently no offline or mocked API mode.
 
-Install the dependencies:
+Install the locked dependencies:
 
 ```bash
-npm install
+npm ci
 ```
 
 Start the development server:
@@ -176,12 +176,12 @@ npm run check
 
 This command runs:
 
-- ESLint
+- ESLint and architecture-boundary checks
 - Prettier validation
 - Unit and component tests
-- Production build
+- Localized production build and SEO validation
 
-The same checks run in CI on every push.
+The same checks run before every Vercel deployment. Non-`main` pushes create preview deployments, while `main` pushes create the production deployment.
 
 ## Testing strategy
 
@@ -232,13 +232,13 @@ The infrastructure includes:
 - Railway encrypted service variables
 - GitHub Actions deployment to Railway
 
-This replaces the previous AWS App Runner and RDS deployment to keep the portfolio project's recurring infrastructure cost low.
+The current application deployment does not use AWS App Runner or Amazon RDS.
 
 ## Known limitations
 
-### No seeded demo account
+### No pre-created account
 
-Each reviewer must register a new account before testing authenticated features.
+Each user must register a new account before using authenticated features.
 
 ### Mock payment processing
 
@@ -248,13 +248,9 @@ It stores only:
 
 - Card brand
 - Last four digits
-- Demo payment token identifier
+- Mock payment token identifier
 
 Full card details are not stored.
-
-### Managed database availability
-
-The Neon database uses the portfolio project's managed service allowance and may scale down while inactive. A first request after inactivity can therefore be slower.
 
 ### Single backend region
 
@@ -263,23 +259,6 @@ The API and database are deployed in single provider regions and do not provide 
 ### No offline development mode
 
 The frontend currently requires access to the deployed backend because there is no local mock API mode.
-
-## Project goals
-
-This project was created to demonstrate practical experience with:
-
-- Modern Angular architecture
-- Reactive state management
-- Secure authentication flows
-- REST API integration
-- Server-side rendering
-- Accessibility
-- Automated testing
-- CI/CD pipelines
-- Dockerized backend services
-- PostgreSQL persistence
-- Infrastructure as code
-- Railway and Neon cloud deployment
 
 ## Related repository
 
