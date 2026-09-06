@@ -8,9 +8,13 @@ import {
   combineLatest,
   debounceTime,
   distinctUntilChanged,
+  exhaustMap,
+  finalize,
   map,
   of,
+  Subject,
   switchMap,
+  takeUntil,
   tap,
 } from 'rxjs';
 
@@ -41,12 +45,22 @@ export class ProductListingPage {
   private readonly refresh = new BehaviorSubject(0);
   private readonly seo = inject(SeoService);
   private readonly session = inject(AuthenticationSessionService);
+  private readonly loadMoreRequests = new Subject<void>();
+
+  /**
+   * Fires whenever the filter/sort combination changes, to tear down any page still loading for the
+   * listing being replaced.
+   */
+  private readonly listingChanges = new Subject<void>();
 
   readonly products = signal<readonly Product[]>([]);
   readonly status = signal<RequestStatus>('loading');
   readonly groupId = signal('');
   readonly query = signal<ProductSearchQuery>({ search: '', sort: 'featured', price: 'all' });
   readonly searchControl = new FormControl('', { nonNullable: true });
+  readonly nextCursor = signal<string | null>(null);
+  readonly loadingMore = signal(false);
+  readonly loadMoreFailed = signal(false);
 
   constructor() {
     combineLatest([this.route.paramMap, this.route.queryParamMap, this.refresh])
@@ -64,6 +78,11 @@ export class ProductListingPage {
           this.query.set(query);
           this.searchControl.setValue(query.search, { emitEvent: false });
           this.status.set('loading');
+          // A cursor is only valid for the query it was issued under, so a new listing always
+          // restarts from the first page and abandons any page still loading for the old one.
+          this.listingChanges.next();
+          this.nextCursor.set(null);
+          this.loadMoreFailed.set(false);
           this.updateSeo(groupId, query.search);
         }),
         switchMap(({ groupId, query }) =>
@@ -76,16 +95,53 @@ export class ProductListingPage {
         ),
         takeUntilDestroyed(this.destroyRef),
       )
-      .subscribe((products) => {
-        if (products) {
-          this.products.set(products);
+      .subscribe((page) => {
+        if (page) {
+          this.products.set(page.items);
+          this.nextCursor.set(page.nextCursor);
           this.status.set('success');
         }
+      });
+
+    this.loadMoreRequests
+      .pipe(
+        // exhaustMap, not switchMap: a second click while a page is loading should be ignored
+        // rather than cancel and restart it, which would append the same rows twice.
+        exhaustMap(() => {
+          const cursor = this.nextCursor();
+          if (!cursor) return of(null);
+
+          this.loadingMore.set(true);
+          this.loadMoreFailed.set(false);
+          return this.repository.search(this.groupId(), this.query(), { cursor }).pipe(
+            // Abandon this page the moment the filters change. Without it the request outlives the
+            // listing it belongs to: its rows are for a query nobody is looking at any more, it
+            // keeps `loadingMore` set so the new listing's button stays disabled, it holds
+            // exhaustMap open so the new listing cannot fetch anything further, and on failure it
+            // reports an error against a listing that never made the request.
+            takeUntil(this.listingChanges),
+            catchError(() => {
+              this.loadMoreFailed.set(true);
+              return of(null);
+            }),
+            finalize(() => this.loadingMore.set(false)),
+          );
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((page) => {
+        if (!page) return;
+        this.products.update((current) => [...current, ...page.items]);
+        this.nextCursor.set(page.nextCursor);
       });
 
     this.searchControl.valueChanges
       .pipe(debounceTime(300), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
       .subscribe((search) => this.updateQuery({ search: search || null }));
+  }
+
+  loadMore(): void {
+    this.loadMoreRequests.next();
   }
 
   updateFilter(key: 'sort' | 'price', event: Event): void {

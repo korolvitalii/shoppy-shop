@@ -42,7 +42,7 @@ describe('AppHeader', () => {
     authenticationService.logout.mockReset();
     authenticationService.logout.mockReturnValue(of(undefined));
     productsRepository.search.mockReset();
-    productsRepository.search.mockReturnValue(of([product]));
+    productsRepository.search.mockReturnValue(of({ items: [product], nextCursor: null }));
     confirmation.confirm.mockReset();
     confirmation.confirm.mockResolvedValue(true);
     await TestBed.configureTestingModule({
@@ -152,11 +152,13 @@ describe('AppHeader', () => {
     await vi.advanceTimersByTimeAsync(250);
     fixture.detectChanges();
 
-    expect(productsRepository.search).toHaveBeenCalledWith('electronics', {
-      search: 'wire',
-      sort: 'featured',
-      price: 'all',
-    });
+    // The suggestion cap is a page size, so the dropdown asks the API for six rows rather than
+    // fetching every match and discarding most of them.
+    expect(productsRepository.search).toHaveBeenCalledWith(
+      'electronics',
+      { search: 'wire', sort: 'featured', price: 'all' },
+      { limit: 6 },
+    );
     expect(input.getAttribute('role')).toBe('combobox');
     expect(input.getAttribute('aria-expanded')).toBe('true');
     expect(fixture.nativeElement.querySelector('[role="listbox"]')).toBeTruthy();
