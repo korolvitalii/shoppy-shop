@@ -4,7 +4,7 @@
   "semi": true,
   "tabWidth": 2,
   "trailingComma": "all",
-  "endOfLine": "lf",
+  "endOfLine": "auto",
   "overrides": [
     {
       "files": "*.html",
