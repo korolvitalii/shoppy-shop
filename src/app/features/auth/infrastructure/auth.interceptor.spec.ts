@@ -80,6 +80,29 @@ describe('authInterceptor', () => {
     expect((error as { status: number }).status).toBe(401);
   });
 
+  it.each([400, 500, 0])(
+    'preserves the refreshed session when the retry fails with %s',
+    (status) => {
+      authenticationService.refresh.mockReturnValue(of(authResult));
+      const { http, controller } = setup();
+      let error: unknown;
+
+      http.get('/api/orders').subscribe({ error: (err: unknown) => (error = err) });
+      controller.expectOne('/api/orders').flush(null, { status: 401, statusText: 'Unauthorized' });
+      const retry = controller.expectOne('/api/orders');
+      if (status === 0) {
+        retry.error(new ProgressEvent('error'));
+      } else {
+        retry.flush(null, { status, statusText: 'Retry failed' });
+      }
+
+      expect(session.start).toHaveBeenCalledWith(authResult);
+      expect(session.end).not.toHaveBeenCalled();
+      expect((error as { status: number }).status).toBe(status);
+      controller.verify();
+    },
+  );
+
   it('does not attempt a refresh for the refresh endpoint itself', () => {
     const { http, controller } = setup();
     let error: unknown;

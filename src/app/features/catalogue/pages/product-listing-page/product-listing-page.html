@@ -59,6 +59,22 @@
             />
           }
         </section>
+        @if (nextCursor()) {
+          <section class="load-more">
+            @if (loadMoreFailed()) {
+              <p class="load-more__error" role="alert" i18n="@@loadMoreFailed">
+                Could not load more products.
+              </p>
+            }
+            <button type="button" (click)="loadMore()" [disabled]="loadingMore()">
+              @if (loadingMore()) {
+                <span i18n="@@loadingMoreProducts">Loading more products…</span>
+              } @else {
+                <span i18n="@@loadMore">Load more</span>
+              }
+            </button>
+          </section>
+        }
       }
     }
   }

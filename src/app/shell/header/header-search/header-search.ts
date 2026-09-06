@@ -70,9 +70,11 @@ export class HeaderSearch {
           query.length < 2
             ? of([])
             : this.products
-                .search(category, { search: query, sort: 'featured', price: 'all' })
+                // The six-suggestion cap is a page size now, so the API returns six rows rather
+                // than the whole matching catalogue for the dropdown to throw most of away.
+                .search(category, { search: query, sort: 'featured', price: 'all' }, { limit: 6 })
                 .pipe(
-                  map((products) => products.slice(0, 6)),
+                  map((page) => page.items),
                   catchError(() => of([])),
                 ),
         ),
