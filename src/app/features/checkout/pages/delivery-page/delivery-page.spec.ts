@@ -47,4 +47,24 @@ describe('DeliveryPage', () => {
     expect(fixture.componentInstance.form.controls.name.value).toBe('Alex Morgan');
     expect(fixture.nativeElement.querySelector('.checkout-actions a')).toBeNull();
   });
+
+  it('keeps country values stable when option labels are translated', () => {
+    const fixture = TestBed.createComponent(DeliveryPage);
+    fixture.detectChanges();
+    const select: HTMLSelectElement = fixture.nativeElement.querySelector('#country');
+    const labels = ['Wielka Brytania', 'Irlandia', 'Francja', 'Niemcy', 'Hiszpania'];
+    Array.from(select.options).forEach((option, index) => (option.textContent = labels[index]));
+
+    expect(select.value).toBe('United Kingdom');
+    expect(Array.from(select.options, (option) => option.value)).toEqual([
+      'United Kingdom',
+      'Ireland',
+      'France',
+      'Germany',
+      'Spain',
+    ]);
+    select.selectedIndex = 1;
+    select.dispatchEvent(new Event('change'));
+    expect(fixture.componentInstance.form.controls.country.value).toBe('Ireland');
+  });
 });

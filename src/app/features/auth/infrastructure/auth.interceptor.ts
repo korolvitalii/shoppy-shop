@@ -20,13 +20,13 @@ export const authInterceptor: HttpInterceptorFn = (request, next) => {
       if (!isRefreshable) return throwError(() => error);
 
       return authService.refresh().pipe(
-        switchMap((result) => {
-          session.start(result);
-          return next(withBearer(request, result.accessToken));
-        }),
         catchError(() => {
           session.end();
           return throwError(() => error);
+        }),
+        switchMap((result) => {
+          session.start(result);
+          return next(withBearer(request, result.accessToken));
         }),
       );
     }),
