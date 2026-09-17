@@ -26,6 +26,12 @@ export class AssistantWidget {
   protected readonly icons = { message: MessageCircle, close: X };
   private readonly messageInput = viewChild<ElementRef<HTMLInputElement>>('messageInput');
 
+  protected readonly examplePrompts = [
+    $localize`:@@assistantExamplePromptOne:Waterproof jackets under £50`,
+    $localize`:@@assistantExamplePromptTwo:Gifts for a coffee lover`,
+    $localize`:@@assistantExamplePromptThree:Comfortable shoes for travel`,
+  ];
+
   constructor() {
     effect(() => {
       if (this.assistant.isOpen()) this.messageInput()?.nativeElement.focus();
@@ -38,6 +44,10 @@ export class AssistantWidget {
     if (!value.trim()) return;
     this.assistant.send(value);
     this.messageControl.reset('');
+  }
+
+  protected sendExample(prompt: string): void {
+    this.assistant.send(prompt);
   }
 
   protected handleKeydown(event: KeyboardEvent): void {

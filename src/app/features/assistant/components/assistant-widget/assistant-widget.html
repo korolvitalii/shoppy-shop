@@ -20,9 +20,16 @@
     </header>
     <div class="assistant-messages" role="log" aria-live="polite">
       @if (assistant.messages().length === 0) {
-        <p class="assistant-empty" i18n="@@assistantEmptyState">
-          Ask me to find something — try “waterproof jackets under $50”.
-        </p>
+        <div class="assistant-empty">
+          <p i18n="@@assistantEmptyState">Ask me to find something, or try one of these:</p>
+          <ul class="assistant-prompts">
+            @for (prompt of examplePrompts; track prompt) {
+              <li>
+                <button type="button" (click)="sendExample(prompt)">{{ prompt }}</button>
+              </li>
+            }
+          </ul>
+        </div>
       }
       @for (message of assistant.messages(); track message.id) {
         <div class="assistant-message" [class.assistant-message--user]="message.role === 'user'">
