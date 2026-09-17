@@ -6,7 +6,7 @@
         routerLink="/checkout/delivery"
         [attr.aria-current]="currentStep() === 1 ? 'step' : null"
       >
-        <span class="step-marker" aria-hidden="true">1</span>
+        <span class="step-marker" aria-hidden="true">01</span>
         <span class="step-label" i18n="@@delivery">Delivery</span>
       </a>
     </li>
@@ -17,12 +17,12 @@
           routerLink="/checkout/payment"
           [attr.aria-current]="currentStep() === 2 ? 'step' : null"
         >
-          <span class="step-marker" aria-hidden="true">2</span>
+          <span class="step-marker" aria-hidden="true">02</span>
           <span class="step-label" i18n="@@payment">Payment</span>
         </a>
       } @else {
         <span class="disabled" aria-disabled="true">
-          <span class="step-marker" aria-hidden="true">2</span>
+          <span class="step-marker" aria-hidden="true">02</span>
           <span class="step-label" i18n="@@payment">Payment</span>
         </span>
       }
@@ -34,12 +34,12 @@
           routerLink="/checkout/review"
           [attr.aria-current]="currentStep() === 3 ? 'step' : null"
         >
-          <span class="step-marker" aria-hidden="true">3</span>
+          <span class="step-marker" aria-hidden="true">03</span>
           <span class="step-label" i18n="@@review">Review</span>
         </a>
       } @else {
         <span class="disabled" aria-disabled="true">
-          <span class="step-marker" aria-hidden="true">3</span>
+          <span class="step-marker" aria-hidden="true">03</span>
           <span class="step-label" i18n="@@review">Review</span>
         </span>
       }

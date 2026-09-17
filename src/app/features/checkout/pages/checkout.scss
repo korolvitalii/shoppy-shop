@@ -18,7 +18,7 @@
 
 h1 {
   margin: 0;
-  font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+  font-weight: 800;
   font-size: clamp(2.6rem, 7vw, 4rem);
   letter-spacing: -0.035em;
   line-height: 1;
@@ -34,9 +34,8 @@ form,
 .review-card,
 .saved-payment {
   border: 1px solid var(--checkout-border);
-  border-radius: 1.1rem;
+  border-radius: var(--radius-lg);
   background: var(--color-surface);
-  box-shadow: 0 1rem 2.5rem rgba(22, 33, 62, 0.07);
 }
 
 form {
@@ -65,7 +64,7 @@ form {
   height: 2.25rem;
   flex: 0 0 auto;
   place-items: center;
-  border-radius: 0.65rem;
+  border-radius: var(--radius-sm);
   color: var(--checkout-violet);
   background: var(--color-primary-soft);
   font-size: 0.7rem;
@@ -109,47 +108,43 @@ select {
   width: 100%;
   min-height: 3.35rem;
   padding: 0.8rem 0.9rem;
-  border: 1px solid rgba(22, 33, 62, 0.18);
-  border-radius: 0.75rem;
+  border: 1px solid var(--checkout-border);
+  border-radius: var(--radius-sm);
   outline: 0;
   color: var(--checkout-ink);
   background: var(--color-input);
   font: inherit;
   font-size: 0.88rem;
   font-weight: 600;
-  transition:
-    border-color 160ms ease,
-    box-shadow 160ms ease;
+  transition: border-color 160ms ease;
 }
 
 input::placeholder {
-  color: #9aa1b1;
+  color: var(--checkout-muted);
   font-weight: 500;
 }
 
 input:focus,
 select:focus {
   border-color: var(--checkout-violet);
-  box-shadow: 0 0 0 3px rgba(104, 66, 232, 0.13);
 }
 
 input[aria-invalid='true'] {
-  border-color: #c63f4d;
-  box-shadow: 0 0 0 3px rgba(198, 63, 77, 0.1);
+  border-color: var(--color-danger);
 }
 
 label > span {
-  color: #c63f4d;
+  color: var(--color-danger);
   font-size: 0.7rem;
 }
 
 .form-error {
   padding: 0.75rem 1rem;
   margin: 0;
-  border: 1px solid #c63f4d;
-  border-radius: 0.6rem;
-  color: #8e2634;
-  background: #fff2f2;
+  border: 1px solid var(--color-danger);
+  border-radius: var(--radius-sm);
+  color: var(--color-danger);
+  background: color-mix(in srgb, var(--color-danger) 9%, transparent);
 }
 
 .checkout button,
@@ -157,20 +152,17 @@ label > span {
   min-height: 3.25rem;
   padding-inline: 1.25rem;
   border: 0;
-  border-radius: 0.75rem;
+  border-radius: var(--radius-md);
   color: #fff;
   background: var(--checkout-violet);
   font-weight: 850;
   cursor: pointer;
-  transition:
-    background 160ms ease,
-    transform 160ms ease;
+  transition: background 160ms ease;
 }
 
 .checkout button:hover,
 .primary-action:hover {
   background: var(--color-primary-hover);
-  transform: translateY(-1px);
 }
 
 .checkout button:disabled {
@@ -194,7 +186,7 @@ label > span {
   display: grid;
   min-height: 3.1rem;
   place-items: center;
-  border-radius: 0.75rem;
+  border-radius: var(--radius-md);
   font-weight: 800;
   text-decoration: none;
 }
@@ -274,9 +266,10 @@ label > span {
 .review-item img {
   width: 4.5rem;
   height: 4rem;
-  border-radius: 0.65rem;
+  border-radius: var(--radius-md);
   object-fit: cover;
   background: var(--color-surface-muted);
+  filter: grayscale(1) contrast(1.08);
 }
 
 .review-item h3 {

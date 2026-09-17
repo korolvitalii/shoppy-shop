@@ -12,24 +12,34 @@ import { type Order } from '../../models/order.models';
   template: `<main class="confirmation-page">
     @if (order(); as value) {
       <section class="confirmation" role="status" aria-live="polite">
-        <span class="confirmation-icon" aria-hidden="true">✓</span>
-        <p class="step" i18n="@@orderConfirmed">Order confirmed</p>
-        <h1 i18n="@@thankYouOrder">Thank you for your order</h1>
-        <p i18n="@@orderConfirmationDetail">
-          Your new order <strong>{{ value.id }}</strong> has been placed successfully. We sent the
-          confirmation to {{ value.delivery.email }}.
-        </p>
-        <p class="confirmation-total">
-          <span i18n="@@totalPaid">Total paid</span>
-          <strong>{{ value.total | currency: 'GBP' }}</strong>
-        </p>
-        <div class="confirmation-actions">
-          <a class="secondary-action" routerLink="/orders" i18n="@@viewPurchaseHistory"
-            >View purchase history</a
-          >
-          <a class="primary-action" routerLink="/products" i18n="@@continueShopping"
-            >Continue shopping</a
-          >
+        <div class="confirmation-poster">
+          <span class="confirmation-icon" aria-hidden="true">✓</span>
+          <p class="step" i18n="@@orderConfirmed">Order confirmed</p>
+          <h1 i18n="@@thankYouOrder">Thank you for your order</h1>
+          <p i18n="@@orderConfirmationDetail">
+            Your new order <strong>{{ value.id }}</strong> has been placed successfully. We sent the
+            confirmation to {{ value.delivery.email }}.
+          </p>
+        </div>
+        <div class="confirmation-receipt">
+          <dl>
+            <div>
+              <dt i18n="@@deliveringTo">Delivering to</dt>
+              <dd>{{ value.delivery.city }}, {{ value.delivery.postcode }}</dd>
+            </div>
+            <div>
+              <dt i18n="@@totalPaid">Total paid</dt>
+              <dd>{{ value.total | currency: 'GBP' }}</dd>
+            </div>
+          </dl>
+          <div class="confirmation-actions">
+            <a class="secondary-action" routerLink="/orders" i18n="@@viewPurchaseHistory"
+              >View purchase history</a
+            >
+            <a class="primary-action" routerLink="/products" i18n="@@continueShopping"
+              >Continue shopping</a
+            >
+          </div>
         </div>
       </section>
     } @else if (error()) {
