@@ -42,6 +42,11 @@
     "languageSelector": "Język",
     "lightTheme": "Jasny motyw",
     "darkTheme": "Ciemny motyw",
+    "memberAccessEyebrow": "Dostęp do konta",
+    "authIntroHeadline": "Twój koszyk, zamówienia i ulubione — zawsze w tym samym miejscu.",
+    "authReasonOne": "Śledź każde zamówienie od zakupu po dostawę.",
+    "authReasonTwo": "Zapisuj ulubione produkty i wracaj do koszyka na każdym urządzeniu.",
+    "authReasonThree": "Finalizuj zakupy szybciej dzięki zapisanym danym.",
     "welcomeBack": "Witaj ponownie",
     "signInIntro": "Zaloguj się do swojego konta ShoppyShop",
     "emailAddress": "Adres e-mail",
@@ -59,6 +64,12 @@
     "displayNameOptional": "Imię (opcjonalnie)",
     "displayNamePlaceholder": "Twoje imię",
     "registerPasswordPlaceholder": "Co najmniej 10 znaków",
+    "passwordRequirementsLabel": "Wymagania dotyczące hasła",
+    "passwordCheckLength": "Co najmniej 10 znaków",
+    "passwordCheckLowercase": "Mała litera",
+    "passwordCheckUppercase": "Wielka litera",
+    "passwordCheckDigit": "Cyfra",
+    "passwordCheckSymbol": "Symbol",
     "passwordDoesNotMeetRequirements": "Hasło nie spełnia powyższych wymagań.",
     "creatingAccount": "Tworzenie konta…",
     "createAccount": "Utwórz konto",
@@ -274,7 +285,6 @@
     "logoutMessage": "Koszyk pozostanie na tym urządzeniu, ale ponowne korzystanie z konta będzie wymagało zalogowania.",
     "suggestedProducts": "Sugerowane produkty",
     "viewAllSearchResults": "Zobacz wszystkie wyniki dla „{$INTERPOLATION}”",
-    "shop": "Sklep",
-    "passwordRequirements": "Co najmniej 10 znaków, w tym wielka litera, mała litera, cyfra i symbol."
+    "shop": "Sklep"
   }
 }

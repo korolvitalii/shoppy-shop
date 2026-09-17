@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import {
   type AbstractControl,
   FormControl,
@@ -51,6 +52,22 @@ export class RegisterPage {
   readonly isSubmitting = signal(false);
   readonly registrationError = signal<string | null>(null);
   readonly showPassword = signal(false);
+
+  private readonly passwordValue = toSignal(this.form.controls.password.valueChanges, {
+    initialValue: this.form.controls.password.value,
+  });
+
+  /** Mirrors passwordPolicyValidator's regex checks so the live checklist stays in sync with it. */
+  readonly passwordChecks = computed(() => {
+    const value = this.passwordValue();
+    return {
+      length: value.length >= 10,
+      lowercase: /[a-z]/.test(value),
+      uppercase: /[A-Z]/.test(value),
+      digit: /\d/.test(value),
+      symbol: /[^a-zA-Z0-9]/.test(value),
+    };
+  });
 
   submit(): void {
     this.registrationError.set(null);

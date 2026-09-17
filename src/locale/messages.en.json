@@ -31,6 +31,11 @@
     "assistantLauncherLabel": "Open shopping assistant",
     "lightTheme": "Light theme",
     "darkTheme": "Dark theme",
+    "memberAccessEyebrow": "Member access",
+    "authIntroHeadline": " Your basket, orders and favourites — always in the same place. ",
+    "authReasonOne": "Track every order from checkout to delivery.",
+    "authReasonTwo": "Save favourites and pick up your basket on any device.",
+    "authReasonThree": "Check out faster next time with your details ready.",
     "welcomeBack": "Welcome back",
     "signInIntro": "Sign in to your ShoppyShop account",
     "emailAddress": "Email address",
@@ -49,6 +54,12 @@
     "displayNameOptional": "Name (optional)",
     "displayNamePlaceholder": "Your name",
     "registerPasswordPlaceholder": "At least 10 characters",
+    "passwordRequirementsLabel": "Password requirements",
+    "passwordCheckLength": " At least 10 characters ",
+    "passwordCheckLowercase": " A lowercase letter ",
+    "passwordCheckUppercase": " An uppercase letter ",
+    "passwordCheckDigit": "A number",
+    "passwordCheckSymbol": "A symbol",
     "passwordDoesNotMeetRequirements": "Password does not meet the requirements above.",
     "creatingAccount": "Creating account…",
     "createAccount": "Create account",
@@ -265,7 +276,6 @@
     "logOutConfirm": "Log out",
     "suggestedProducts": "Suggested products",
     "viewAllSearchResults": "View all results for “{$INTERPOLATION}”",
-    "shop": "Shop",
-    "passwordRequirements": " At least 10 characters, with an uppercase letter, a lowercase letter, a number, and a symbol. "
+    "shop": "Shop"
   }
 }
