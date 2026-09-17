@@ -30,6 +30,8 @@ describe('AppHeader', () => {
     price: 129,
     salePrice: 99,
     inStock: true,
+    isNew: false,
+    giftWrappable: false,
   };
   const productsRepository = { search: vi.fn(), getById: vi.fn() };
   const confirmation = { confirm: vi.fn() };
@@ -156,7 +158,14 @@ describe('AppHeader', () => {
     // fetching every match and discarding most of them.
     expect(productsRepository.search).toHaveBeenCalledWith(
       'electronics',
-      { search: 'wire', sort: 'featured', price: 'all' },
+      {
+        search: 'wire',
+        sort: 'featured',
+        price: 'all',
+        inStock: false,
+        isNew: false,
+        giftWrappable: false,
+      },
       { limit: 6 },
     );
     expect(input.getAttribute('role')).toBe('combobox');

@@ -30,6 +30,8 @@ describe('ProductDetailsPage', () => {
     price: 249,
     salePrice: 199,
     inStock: true,
+    isNew: false,
+    giftWrappable: false,
   };
 
   beforeEach(async () => {

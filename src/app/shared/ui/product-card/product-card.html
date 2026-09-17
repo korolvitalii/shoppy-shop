@@ -20,21 +20,31 @@
   <a [routerLink]="['/products', product().groupId, product().id]">
     <div class="image-frame">
       <img [src]="product().imageUrl" [alt]="product().name" loading="lazy" />
-      @if (discount(); as amount) {
-        <span class="discount" i18n="@@savePercent">Save {{ amount }}%</span>
-      }
-      @if (!product().inStock) {
-        <span class="stock" i18n="@@outOfStock">Out of stock</span>
+      <div class="badge-row">
+        @if (categoryLabel(); as label) {
+          <span class="category-label">{{ label }}</span>
+        }
+        @if (!product().inStock) {
+          <span class="stock" i18n="@@outOfStock">Out of stock</span>
+        }
+      </div>
+      @if (product().isNew) {
+        <span class="flag flag--new" i18n="@@newFlag">New</span>
+      } @else if (discount(); as amount) {
+        <span class="flag flag--sale" i18n="@@savePercent">Save {{ amount }}%</span>
       }
     </div>
     <div class="content">
       <p class="brand">{{ product().brand }}</p>
       <h2>{{ product().name }}</h2>
       <div class="pricing">
-        <strong>{{ effectivePrice() | currency: 'GBP' }}</strong>
-        @if (product().salePrice) {
-          <del>{{ product().price | currency: 'GBP' }}</del>
-        }
+        <span class="price">
+          <strong>{{ effectivePrice() | currency: 'GBP' }}</strong>
+          @if (product().salePrice) {
+            <del>{{ product().price | currency: 'GBP' }}</del>
+          }
+        </span>
+        <span class="view-link" aria-hidden="true" i18n="@@view">View →</span>
       </div>
     </div>
   </a>

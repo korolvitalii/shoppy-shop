@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  inject,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -14,6 +21,7 @@ import {
   of,
   Subject,
   switchMap,
+  take,
   takeUntil,
   tap,
 } from 'rxjs';
@@ -23,15 +31,31 @@ import { type Product } from '../../../../shared/domain/product';
 import { ProductCard } from '../../../../shared/ui/product-card/product-card';
 import { AuthenticationSessionService } from '../../../auth/public-api';
 import { FavoritesService } from '../../../favorites/public-api';
+import { CatalogueFilters } from '../../components/catalogue-filters/catalogue-filters';
 import catalogue from '../../data/catalogue.json';
+import { ProductGroupsRepository } from '../../data-access/product-groups.repository';
 import { ProductsRepository } from '../../data-access/products.repository';
 import { type PriceRange, type ProductSearchQuery, type ProductSort } from '../../models/product';
+import { type ProductGroup } from '../../models/product-group';
 
 type RequestStatus = 'loading' | 'success' | 'error';
 
+function priceRangeLabel(price: PriceRange): string {
+  switch (price) {
+    case '0-50':
+      return $localize`:@@priceFilterChipUnder50:Under £50`;
+    case '50-200':
+      return $localize`:@@priceFilterChip50To200:£50–£200`;
+    case '200+':
+      return $localize`:@@priceFilterChipOver200:£200 and over`;
+    default:
+      return '';
+  }
+}
+
 @Component({
   selector: 'app-product-listing-page',
-  imports: [ProductCard, ReactiveFormsModule, RouterLink],
+  imports: [CatalogueFilters, ProductCard, ReactiveFormsModule, RouterLink],
   templateUrl: './product-listing-page.html',
   styleUrl: './product-listing-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,6 +63,7 @@ type RequestStatus = 'loading' | 'success' | 'error';
 export class ProductListingPage {
   protected readonly favorites = inject(FavoritesService);
   private readonly repository = inject(ProductsRepository);
+  private readonly groupsRepository = inject(ProductGroupsRepository);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
@@ -56,13 +81,50 @@ export class ProductListingPage {
   readonly products = signal<readonly Product[]>([]);
   readonly status = signal<RequestStatus>('loading');
   readonly groupId = signal('');
-  readonly query = signal<ProductSearchQuery>({ search: '', sort: 'featured', price: 'all' });
+  readonly query = signal<ProductSearchQuery>({
+    search: '',
+    sort: 'featured',
+    price: 'all',
+    inStock: false,
+    isNew: false,
+    giftWrappable: false,
+  });
   readonly searchControl = new FormControl('', { nonNullable: true });
   readonly nextCursor = signal<string | null>(null);
+  readonly totalCount = signal<number | null>(null);
   readonly loadingMore = signal(false);
   readonly loadMoreFailed = signal(false);
+  readonly categories = signal<readonly ProductGroup[]>([]);
+
+  protected readonly categoryIndex = computed(() => {
+    const index = this.categories().findIndex((group) => group.id === this.groupId());
+    return String(index >= 0 ? index + 1 : 1).padStart(2, '0');
+  });
+
+  protected readonly activeFilterChips = computed(() => {
+    const query = this.query();
+    const chips: { key: 'price' | 'inStock' | 'isNew' | 'giftWrappable'; label: string }[] = [];
+    if (query.price !== 'all') {
+      chips.push({ key: 'price', label: priceRangeLabel(query.price) });
+    }
+    if (query.inStock) {
+      chips.push({ key: 'inStock', label: $localize`:@@inStockOnly:In stock only` });
+    }
+    if (query.isNew) {
+      chips.push({ key: 'isNew', label: $localize`:@@newThisSeason:New this season` });
+    }
+    if (query.giftWrappable) {
+      chips.push({ key: 'giftWrappable', label: $localize`:@@giftWrappableLabel:Gift-wrappable` });
+    }
+    return chips;
+  });
 
   constructor() {
+    this.groupsRepository
+      .getAll()
+      .pipe(take(1), takeUntilDestroyed(this.destroyRef))
+      .subscribe((groups) => this.categories.set(groups));
+
     combineLatest([this.route.paramMap, this.route.queryParamMap, this.refresh])
       .pipe(
         map(([params, queryParams]) => ({
@@ -71,6 +133,9 @@ export class ProductListingPage {
             search: queryParams.get('search') ?? '',
             sort: (queryParams.get('sort') ?? 'featured') as ProductSort,
             price: (queryParams.get('price') ?? 'all') as PriceRange,
+            inStock: queryParams.get('inStock') === 'true',
+            isNew: queryParams.get('isNew') === 'true',
+            giftWrappable: queryParams.get('giftWrappable') === 'true',
           },
         })),
         tap(({ groupId, query }) => {
@@ -99,6 +164,7 @@ export class ProductListingPage {
         if (page) {
           this.products.set(page.items);
           this.nextCursor.set(page.nextCursor);
+          this.totalCount.set(page.totalCount);
           this.status.set('success');
         }
       });
@@ -144,8 +210,24 @@ export class ProductListingPage {
     this.loadMoreRequests.next();
   }
 
-  updateFilter(key: 'sort' | 'price', event: Event): void {
-    this.updateQuery({ [key]: (event.target as HTMLSelectElement).value });
+  setSort(sort: ProductSort): void {
+    this.updateQuery({ sort });
+  }
+
+  setPrice(price: PriceRange): void {
+    this.updateQuery({ price: price === 'all' ? null : price });
+  }
+
+  setInStock(value: boolean): void {
+    this.updateQuery({ inStock: value ? 'true' : null });
+  }
+
+  setIsNew(value: boolean): void {
+    this.updateQuery({ isNew: value ? 'true' : null });
+  }
+
+  setGiftWrappable(value: boolean): void {
+    this.updateQuery({ giftWrappable: value ? 'true' : null });
   }
 
   retry(): void {
@@ -156,12 +238,42 @@ export class ProductListingPage {
     void this.router.navigate([], { relativeTo: this.route, queryParams: {} });
   }
 
+  resetSidebarFilters(): void {
+    this.updateQuery({ price: null, inStock: null, isNew: null, giftWrappable: null });
+  }
+
   protected toggleFavorite(product: Product): void {
     if (!this.session.isAuthenticated()) {
       void this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
       return;
     }
     this.favorites.toggle(product);
+  }
+
+  protected categoryName(groupId: string): string | null {
+    return this.categories().find((group) => group.id === groupId)?.name ?? null;
+  }
+
+  protected breadcrumbLabel(): string {
+    if (this.groupId() === 'all') {
+      return $localize`:@@searchAction:Search`;
+    }
+    return this.categoryName(this.groupId()) ?? '';
+  }
+
+  protected categoryDescription(): string {
+    return this.categories().find((group) => group.id === this.groupId())?.description ?? '';
+  }
+
+  protected categoryImage(): string | null {
+    return this.categories().find((group) => group.id === this.groupId())?.imageUrl ?? null;
+  }
+
+  protected removeFilterChip(key: 'price' | 'inStock' | 'isNew' | 'giftWrappable'): void {
+    if (key === 'price') this.setPrice('all');
+    if (key === 'inStock') this.setInStock(false);
+    if (key === 'isNew') this.setIsNew(false);
+    if (key === 'giftWrappable') this.setGiftWrappable(false);
   }
 
   private updateQuery(queryParams: Record<string, string | null>): void {

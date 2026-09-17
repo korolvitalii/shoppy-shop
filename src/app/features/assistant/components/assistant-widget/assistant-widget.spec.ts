@@ -17,6 +17,8 @@ const product: Product = {
   price: 45,
   salePrice: null,
   inStock: true,
+  isNew: false,
+  giftWrappable: false,
 };
 
 describe('AssistantWidget', () => {

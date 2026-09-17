@@ -11,7 +11,7 @@
   h1 {
     margin: 0;
     color: var(--color-ink);
-    font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+    font-weight: 800;
     font-size: clamp(2.5rem, 8vw, 4.75rem);
     line-height: 0.98;
     letter-spacing: -0.045em;
@@ -37,8 +37,8 @@
   justify-items: center;
   gap: 0.75rem;
   padding: clamp(2rem, 8vw, 5rem);
-  border: 1px dashed rgba(22, 33, 62, 0.2);
-  border-radius: 1.35rem;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
   color: var(--color-muted);
   background: var(--color-header);
   text-align: center;
@@ -50,14 +50,14 @@
 
   h2 {
     color: var(--color-ink);
-    font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+    font-weight: 800;
   }
 
   button {
     margin-top: 0.5rem;
     padding: 0.75rem 1.1rem;
     border: 0;
-    border-radius: 0.7rem;
+    border-radius: var(--radius-md);
     color: #ffffff;
     background: var(--color-primary);
     font-weight: 750;
