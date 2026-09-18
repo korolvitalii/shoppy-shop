@@ -96,11 +96,6 @@ export class ProductListingPage {
   readonly loadMoreFailed = signal(false);
   readonly categories = signal<readonly ProductGroup[]>([]);
 
-  protected readonly categoryIndex = computed(() => {
-    const index = this.categories().findIndex((group) => group.id === this.groupId());
-    return String(index >= 0 ? index + 1 : 1).padStart(2, '0');
-  });
-
   protected readonly activeFilterChips = computed(() => {
     const query = this.query();
     const chips: { key: 'price' | 'inStock' | 'isNew' | 'giftWrappable'; label: string }[] = [];
@@ -252,21 +247,6 @@ export class ProductListingPage {
 
   protected categoryName(groupId: string): string | null {
     return this.categories().find((group) => group.id === groupId)?.name ?? null;
-  }
-
-  protected breadcrumbLabel(): string {
-    if (this.groupId() === 'all') {
-      return $localize`:@@searchAction:Search`;
-    }
-    return this.categoryName(this.groupId()) ?? '';
-  }
-
-  protected categoryDescription(): string {
-    return this.categories().find((group) => group.id === this.groupId())?.description ?? '';
-  }
-
-  protected categoryImage(): string | null {
-    return this.categories().find((group) => group.id === this.groupId())?.imageUrl ?? null;
   }
 
   protected removeFilterChip(key: 'price' | 'inStock' | 'isNew' | 'giftWrappable'): void {

@@ -1,33 +1,4 @@
 <main class="listing-page">
-  <nav class="breadcrumbs" aria-label="Breadcrumb">
-    <a routerLink="/products" i18n="@@products">Products</a><span>/</span
-    ><span>{{ breadcrumbLabel() }}</span>
-  </nav>
-
-  @if (groupId() === 'all') {
-    <header class="masthead">
-      <h1 i18n="@@allProducts">All products</h1>
-      <p i18n="@@allProductsIntro">
-        Thoughtfully selected products for everyday life and memorable journeys.
-      </p>
-    </header>
-  } @else {
-    <header class="masthead masthead--category">
-      <div class="masthead-copy">
-        <span class="masthead-index" aria-hidden="true">{{ categoryIndex() }}</span>
-        <div>
-          <h1>{{ categoryName(groupId()) }}</h1>
-          <p>{{ categoryDescription() }}</p>
-        </div>
-      </div>
-      @if (categoryImage(); as image) {
-        <div class="masthead-photo">
-          <img [src]="image" alt="" />
-        </div>
-      }
-    </header>
-  }
-
   <div class="layout">
     <app-catalogue-filters
       class="sidebar"
