@@ -16,6 +16,8 @@ const product: Product = {
   price: 120,
   salePrice: null,
   inStock: true,
+  isNew: false,
+  giftWrappable: false,
 };
 
 const authResult: AuthResult = {

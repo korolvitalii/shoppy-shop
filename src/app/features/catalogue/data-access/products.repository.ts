@@ -34,7 +34,10 @@ export class ApiProductsRepository implements ProductsRepository {
     let params = new HttpParams()
       .set('search', query.search)
       .set('sort', query.sort)
-      .set('price', query.price);
+      .set('price', query.price)
+      .set('inStock', query.inStock)
+      .set('isNew', query.isNew)
+      .set('giftWrappable', query.giftWrappable);
     if (page?.cursor) {
       params = params.set('cursor', page.cursor);
     }
@@ -72,7 +75,10 @@ export class StaticProductsRepository implements ProductsRepository {
         if (query.price === '50-200') return amount >= 50 && amount < 200;
         if (query.price === '200+') return amount >= 200;
         return true;
-      });
+      })
+      .filter((product) => !query.inStock || product.inStock)
+      .filter((product) => !query.isNew || product.isNew)
+      .filter((product) => !query.giftWrappable || product.giftWrappable);
     const sorted = [...products].sort((left, right) => {
       if (query.sort === 'price-asc') return effectivePrice(left) - effectivePrice(right);
       if (query.sort === 'price-desc') return effectivePrice(right) - effectivePrice(left);
@@ -92,6 +98,7 @@ export class StaticProductsRepository implements ProductsRepository {
     return of({
       items,
       nextCursor: nextOffset < sorted.length ? String(nextOffset) : null,
+      totalCount: page?.cursor ? null : sorted.length,
     });
   }
 

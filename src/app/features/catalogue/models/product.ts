@@ -7,15 +7,21 @@ export interface ProductSearchQuery {
   search: string;
   sort: ProductSort;
   price: PriceRange;
+  inStock: boolean;
+  isNew: boolean;
+  giftWrappable: boolean;
 }
 
 /**
  * One page of a listing. `nextCursor` is the only end-of-list signal — the API pages by keyset
- * rather than by page number, so it never reports a total count.
+ * rather than by page number, so it never reports a total count on every page. `totalCount` is the
+ * one exception: it is only populated on the first page of a given filter set (a null `cursor` on
+ * the request), so the UI can show "Showing X of Y" without paying for a count on every "load more".
  */
 export interface ProductPage {
   items: readonly Product[];
   nextCursor: string | null;
+  totalCount: number | null;
 }
 
 /**

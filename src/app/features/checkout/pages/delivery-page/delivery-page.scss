@@ -1,0 +1,68 @@
+.option {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  padding: 1rem;
+  border: 2px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.option--selected {
+  border-color: var(--color-primary);
+}
+
+.option-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.option-name {
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+}
+
+.option-price {
+  font-weight: 800;
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+}
+
+.option-detail {
+  margin: 0;
+  color: var(--color-muted);
+}
+
+.rail-item {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.rail-item img {
+  width: 3.5rem;
+  height: 3.5rem;
+  object-fit: cover;
+  background: var(--color-image-placeholder);
+  filter: grayscale(1) contrast(1.08);
+}
+
+.rail-item-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1.2;
+}
+
+.rail-item-meta {
+  color: var(--color-muted);
+  font-size: 0.8rem;
+}
+
+.rail-item-total {
+  font-weight: 800;
+  font-size: 0.95rem;
+}

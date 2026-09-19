@@ -1,106 +1,172 @@
 <main class="checkout">
-  <app-checkout-stepper
-    [currentStep]="1"
-    [deliveryComplete]="facade.delivery() !== null"
-    [paymentComplete]="facade.paymentToken() !== null"
-  />
-  <h1 i18n="@@deliveryDetails">Delivery details</h1>
-  <p class="page-intro" i18n="@@deliveryIntro">Tell us where your order should arrive.</p>
-  <form [formGroup]="form" (submit)="continue($event)" novalidate>
-    <div class="form-heading">
-      <span aria-hidden="true">01</span>
-      <div>
-        <h2 i18n="@@contactInformation">Contact information</h2>
-        <p i18n="@@contactInformationDetail">We’ll use these details for delivery updates.</p>
+  <div class="panel">
+    <app-checkout-summary-bar [itemCount]="facade.itemCount()" [total]="facade.total()" />
+
+    <app-checkout-stepper
+      [currentStep]="1"
+      [deliveryComplete]="facade.delivery() !== null"
+      [paymentComplete]="facade.paymentToken() !== null"
+    />
+
+    <div class="layout">
+      <div class="checkout-main">
+        <div class="page-head">
+          <h1 i18n="@@deliveryDetails">Delivery details</h1>
+          <p class="page-intro" i18n="@@deliveryIntro">Tell us where your order should arrive.</p>
+        </div>
+
+        <hr class="rule" />
+
+        <form class="checkout-form" [formGroup]="form" (submit)="continue($event)" novalidate>
+          <!-- 01 Contact information -->
+          <div class="form-section">
+            <div class="section-heading">
+              <span class="section-number" aria-hidden="true">01</span>
+              <h2 class="section-title" i18n="@@contactInformation">Contact information</h2>
+            </div>
+            <div class="field-grid field-grid--two">
+              <div class="field">
+                <label for="name" i18n="@@fullName">Full name</label>
+                <input
+                  id="name"
+                  autocomplete="name"
+                  formControlName="name"
+                  placeholder="Alex Morgan"
+                  [attr.aria-invalid]="form.controls.name.touched && form.controls.name.invalid"
+                />
+                @if (form.controls.name.touched && form.controls.name.invalid) {
+                  <p class="field-error" i18n="@@nameRequired">Name is required</p>
+                }
+              </div>
+              <div class="field">
+                <label for="email" i18n="@@emailAddress">Email address</label>
+                <input
+                  id="email"
+                  type="email"
+                  autocomplete="email"
+                  formControlName="email"
+                  placeholder="alex@example.com"
+                  [attr.aria-invalid]="form.controls.email.touched && form.controls.email.invalid"
+                />
+                @if (form.controls.email.touched && form.controls.email.invalid) {
+                  <p class="field-error" i18n="@@emailInvalid">Enter a valid email address.</p>
+                }
+              </div>
+            </div>
+          </div>
+
+          <!-- 02 Delivery address -->
+          <div class="form-section">
+            <div class="section-heading">
+              <span class="section-number" aria-hidden="true">02</span>
+              <h2 class="section-title" i18n="@@deliveryAddress">Delivery address</h2>
+            </div>
+            <div class="field">
+              <label for="address" i18n="@@streetAddress">Street address</label>
+              <input
+                id="address"
+                autocomplete="street-address"
+                formControlName="address"
+                placeholder="4 Market Street"
+                [attr.aria-invalid]="form.controls.address.touched && form.controls.address.invalid"
+              />
+              @if (form.controls.address.touched && form.controls.address.invalid) {
+                <p class="field-error" i18n="@@addressRequired">Address is required</p>
+              }
+            </div>
+            <div class="field-grid field-grid--three">
+              <div class="field">
+                <label for="city" i18n="@@city">City</label>
+                <input
+                  id="city"
+                  autocomplete="address-level2"
+                  formControlName="city"
+                  placeholder="London"
+                  [attr.aria-invalid]="form.controls.city.touched && form.controls.city.invalid"
+                />
+                @if (form.controls.city.touched && form.controls.city.invalid) {
+                  <p class="field-error" i18n="@@cityRequired">City is required</p>
+                }
+              </div>
+              <div class="field">
+                <label for="postcode" i18n="@@postcode">Postcode</label>
+                <input
+                  id="postcode"
+                  autocomplete="postal-code"
+                  formControlName="postcode"
+                  placeholder="SW1A 1AA"
+                  [attr.aria-invalid]="
+                    form.controls.postcode.touched && form.controls.postcode.invalid
+                  "
+                />
+                @if (form.controls.postcode.touched && form.controls.postcode.invalid) {
+                  <p class="field-error" i18n="@@postcodeInvalid">Enter a valid postcode</p>
+                }
+              </div>
+              <div class="field">
+                <label for="country" i18n="@@country">Country</label>
+                <select id="country" autocomplete="country-name" formControlName="country">
+                  <option value="United Kingdom" i18n="@@countryUnitedKingdom">
+                    United Kingdom
+                  </option>
+                  <option value="Ireland" i18n="@@countryIreland">Ireland</option>
+                  <option value="France" i18n="@@countryFrance">France</option>
+                  <option value="Germany" i18n="@@countryGermany">Germany</option>
+                  <option value="Spain" i18n="@@countrySpain">Spain</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- 03 Delivery speed -->
+          <div class="form-section">
+            <div class="section-heading">
+              <span class="section-number" aria-hidden="true">03</span>
+              <h2 class="section-title" i18n="@@deliverySpeed">Delivery speed</h2>
+            </div>
+            <div class="option option--selected">
+              <div class="option-head">
+                <span class="option-name" i18n="@@deliverySpeedStandardName">Standard</span>
+                <span class="option-price">{{ facade.deliveryCharge() | currency: 'GBP' }}</span>
+              </div>
+              <p class="option-detail" i18n="@@deliverySpeedDetail">3–5 working days</p>
+            </div>
+          </div>
+
+          <div class="checkout-actions">
+            <button type="submit" class="primary-action">
+              <span i18n="@@continuePayment">Continue to payment</span> →
+            </button>
+          </div>
+        </form>
+
+        <a class="back-link" routerLink="/basket"
+          >← <span i18n="@@backToBasket">Back to basket</span></a
+        >
       </div>
+
+      <aside class="order-rail" aria-labelledby="rail-title">
+        <h2 id="rail-title" class="rail-title" i18n="@@yourOrder">Your order</h2>
+
+        @for (item of facade.items(); track item.productId) {
+          <div class="rail-item">
+            <img [src]="item.imageUrl" alt="" width="56" height="56" />
+            <div>
+              <div class="rail-item-name">{{ item.name }}</div>
+              <div class="rail-item-meta" i18n="@@railQuantity">Qty {{ item.quantity }}</div>
+            </div>
+            <div class="rail-item-total">
+              {{ item.unitPrice * item.quantity | currency: 'GBP' }}
+            </div>
+          </div>
+        }
+
+        <app-checkout-totals
+          [subtotal]="facade.subtotal()"
+          [deliveryCharge]="facade.deliveryCharge()"
+          [total]="facade.total()"
+        />
+      </aside>
     </div>
-    <label for="name">
-      <span i18n="@@fullName">Full name</span>
-      <input
-        id="name"
-        autocomplete="name"
-        formControlName="name"
-        placeholder="Alex Morgan"
-        [attr.aria-invalid]="form.controls.name.touched && form.controls.name.invalid"
-      />
-      @if (form.controls.name.touched && form.controls.name.invalid) {
-        <span i18n="@@nameRequired">Name is required</span>
-      }
-    </label>
-    <label for="email">
-      <span i18n="@@emailAddress">Email address</span>
-      <input
-        id="email"
-        type="email"
-        autocomplete="email"
-        formControlName="email"
-        placeholder="alex@example.com"
-        [attr.aria-invalid]="form.controls.email.touched && form.controls.email.invalid"
-      />
-      @if (form.controls.email.touched && form.controls.email.invalid) {
-        <span i18n="@@emailInvalid">Enter a valid email address.</span>
-      }
-    </label>
-    <div class="form-heading form-heading--address">
-      <span aria-hidden="true">02</span>
-      <div>
-        <h2 i18n="@@deliveryAddress">Delivery address</h2>
-        <p i18n="@@deliveryAddressDetail">
-          Choose an address where someone can receive the parcel.
-        </p>
-      </div>
-    </div>
-    <label class="full-width" for="address">
-      <span i18n="@@streetAddress">Street address</span>
-      <input
-        id="address"
-        autocomplete="street-address"
-        formControlName="address"
-        placeholder="4 Market Street"
-        [attr.aria-invalid]="form.controls.address.touched && form.controls.address.invalid"
-      />
-      @if (form.controls.address.touched && form.controls.address.invalid) {
-        <span i18n="@@addressRequired">Address is required</span>
-      }
-    </label>
-    <label for="city">
-      <span i18n="@@city">City</span>
-      <input
-        id="city"
-        autocomplete="address-level2"
-        formControlName="city"
-        placeholder="London"
-        [attr.aria-invalid]="form.controls.city.touched && form.controls.city.invalid"
-      />
-      @if (form.controls.city.touched && form.controls.city.invalid) {
-        <span i18n="@@cityRequired">City is required</span>
-      }
-    </label>
-    <label for="postcode">
-      <span i18n="@@postcode">Postcode</span>
-      <input
-        id="postcode"
-        autocomplete="postal-code"
-        formControlName="postcode"
-        placeholder="SW1A 1AA"
-        [attr.aria-invalid]="form.controls.postcode.touched && form.controls.postcode.invalid"
-      />
-      @if (form.controls.postcode.touched && form.controls.postcode.invalid) {
-        <span i18n="@@postcodeInvalid">Enter a valid postcode</span>
-      }
-    </label>
-    <label class="full-width" for="country">
-      <span i18n="@@country">Country</span>
-      <select id="country" autocomplete="country-name" formControlName="country">
-        <option value="United Kingdom" i18n="@@countryUnitedKingdom">United Kingdom</option>
-        <option value="Ireland" i18n="@@countryIreland">Ireland</option>
-        <option value="France" i18n="@@countryFrance">France</option>
-        <option value="Germany" i18n="@@countryGermany">Germany</option>
-        <option value="Spain" i18n="@@countrySpain">Spain</option>
-      </select>
-    </label>
-    <div class="checkout-actions">
-      <button type="submit" i18n="@@continuePayment">Continue to payment</button>
-    </div>
-  </form>
+  </div>
 </main>

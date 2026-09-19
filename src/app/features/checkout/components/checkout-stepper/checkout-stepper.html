@@ -1,45 +1,51 @@
 <nav aria-label="Checkout progress">
   <ol>
-    <li [class.complete]="deliveryComplete()" [class.current]="currentStep() === 1">
+    <li class="step reached">
       <a
         class="step-link"
         routerLink="/checkout/delivery"
         [attr.aria-current]="currentStep() === 1 ? 'step' : null"
       >
-        <span class="step-marker" aria-hidden="true">1</span>
+        <span class="step-marker" aria-hidden="true">01</span>
         <span class="step-label" i18n="@@delivery">Delivery</span>
+        @if (deliveryComplete() && currentStep() > 1) {
+          <span class="step-state" i18n="@@stepDone">— done</span>
+        }
       </a>
     </li>
-    <li [class.complete]="paymentComplete()" [class.current]="currentStep() === 2">
+    <li class="step" [class.reached]="currentStep() >= 2">
       @if (deliveryComplete()) {
         <a
           class="step-link"
           routerLink="/checkout/payment"
           [attr.aria-current]="currentStep() === 2 ? 'step' : null"
         >
-          <span class="step-marker" aria-hidden="true">2</span>
+          <span class="step-marker" aria-hidden="true">02</span>
           <span class="step-label" i18n="@@payment">Payment</span>
+          @if (paymentComplete() && currentStep() > 2) {
+            <span class="step-state" i18n="@@stepDone">— done</span>
+          }
         </a>
       } @else {
-        <span class="disabled" aria-disabled="true">
-          <span class="step-marker" aria-hidden="true">2</span>
+        <span class="step-link disabled" aria-disabled="true">
+          <span class="step-marker" aria-hidden="true">02</span>
           <span class="step-label" i18n="@@payment">Payment</span>
         </span>
       }
     </li>
-    <li [class.current]="currentStep() === 3">
+    <li class="step" [class.reached]="currentStep() >= 3">
       @if (paymentComplete()) {
         <a
           class="step-link"
           routerLink="/checkout/review"
           [attr.aria-current]="currentStep() === 3 ? 'step' : null"
         >
-          <span class="step-marker" aria-hidden="true">3</span>
+          <span class="step-marker" aria-hidden="true">03</span>
           <span class="step-label" i18n="@@review">Review</span>
         </a>
       } @else {
-        <span class="disabled" aria-disabled="true">
-          <span class="step-marker" aria-hidden="true">3</span>
+        <span class="step-link disabled" aria-disabled="true">
+          <span class="step-marker" aria-hidden="true">03</span>
           <span class="step-label" i18n="@@review">Review</span>
         </span>
       }

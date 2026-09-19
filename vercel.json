@@ -12,6 +12,7 @@
       "source": "/api/:path*",
       "destination": "https://api-production-a9fd.up.railway.app/api/:path*"
     },
+    { "source": "/fonts/:file*", "destination": "/en/fonts/:file*" },
     { "source": "/:locale/:path*", "destination": "/:locale/index.csr.html" }
   ]
 }

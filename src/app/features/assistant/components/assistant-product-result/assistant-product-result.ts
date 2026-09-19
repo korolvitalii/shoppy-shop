@@ -1,15 +1,15 @@
-import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { CurrencyPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 
 import { type Product } from '../../../../shared/domain/product';
-import { ProductCard } from '../../../../shared/ui/product-card/product-card';
 import { AuthenticationSessionService } from '../../../auth/public-api';
 import { BasketService } from '../../../basket/public-api';
 import { FavoritesService } from '../../../favorites/public-api';
 
 @Component({
   selector: 'app-assistant-product-result',
-  imports: [ProductCard],
+  imports: [CurrencyPipe, RouterLink],
   templateUrl: './assistant-product-result.html',
   styleUrl: './assistant-product-result.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,6 +21,9 @@ export class AssistantProductResult {
   private readonly session = inject(AuthenticationSessionService);
   readonly product = input.required<Product>();
   protected readonly added = signal(false);
+  protected readonly effectivePrice = computed(
+    () => this.product().salePrice ?? this.product().price,
+  );
 
   protected addToBasket(): void {
     this.basket.add(this.product());

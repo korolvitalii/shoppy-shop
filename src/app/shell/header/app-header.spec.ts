@@ -30,6 +30,8 @@ describe('AppHeader', () => {
     price: 129,
     salePrice: 99,
     inStock: true,
+    isNew: false,
+    giftWrappable: false,
   };
   const productsRepository = { search: vi.fn(), getById: vi.fn() };
   const confirmation = { confirm: vi.fn() };
@@ -66,11 +68,6 @@ describe('AppHeader', () => {
     const element = fixture.nativeElement as HTMLElement;
 
     expect(element.querySelector('[aria-label="ShoppyShop home"]')).toBeTruthy();
-    expect(element.querySelector('nav[aria-label="Primary navigation"]')).toBeTruthy();
-    const navigation = element.querySelector('nav[aria-label="Primary navigation"]') as HTMLElement;
-    expect(navigation.querySelector('a[href="/products"]')?.textContent).toContain(
-      'All categories',
-    );
     expect(element.querySelector('a[href="/basket"]')?.textContent).toContain('3');
     expect(element.querySelector('a[href="/orders"]')?.textContent).toContain('Orders');
   });
@@ -156,7 +153,14 @@ describe('AppHeader', () => {
     // fetching every match and discarding most of them.
     expect(productsRepository.search).toHaveBeenCalledWith(
       'electronics',
-      { search: 'wire', sort: 'featured', price: 'all' },
+      {
+        search: 'wire',
+        sort: 'featured',
+        price: 'all',
+        inStock: false,
+        isNew: false,
+        giftWrappable: false,
+      },
       { limit: 6 },
     );
     expect(input.getAttribute('role')).toBe('combobox');

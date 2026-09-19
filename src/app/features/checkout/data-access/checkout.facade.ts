@@ -14,6 +14,7 @@ export class CheckoutFacade {
   readonly deliveryCharge = signal(4.99);
   readonly subtotal = this.basket.subtotal;
   readonly items = this.basket.items;
+  readonly itemCount = this.basket.itemCount;
   readonly total = computed(() => this.subtotal() + this.deliveryCharge());
   private readonly idempotencyKey = crypto.randomUUID();
 

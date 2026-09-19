@@ -121,7 +121,7 @@ describe('BasketPage', () => {
     const fixture = TestBed.createComponent(BasketPage);
     fixture.detectChanges();
 
-    (fixture.nativeElement.querySelector('.clear') as HTMLButtonElement).click();
+    (fixture.nativeElement.querySelector('button.clear') as HTMLButtonElement).click();
     await fixture.whenStable();
 
     expect(confirmation.confirm).toHaveBeenCalledWith(
