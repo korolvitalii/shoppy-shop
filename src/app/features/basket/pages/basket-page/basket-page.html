@@ -9,32 +9,57 @@
       <a routerLink="/products" i18n="@@browseProducts">Browse products</a>
     </section>
   } @else {
-    <header>
-      <div>
-        <p class="eyebrow" i18n="@@yourSelection">Your selection</p>
-        <h1 i18n="@@shoppingBasket">Shopping basket</h1>
-        <p>
-          <span>{{ basket.itemCount() }}</span> <span i18n="@@itemCountLabel">items</span>
-        </p>
-      </div>
-      <button class="clear" type="button" (click)="clearBasket()" i18n="@@clearBasket">
-        Clear basket
-      </button>
-    </header>
+    <div class="panel">
+      <header>
+        <div>
+          <p class="eyebrow" i18n="@@yourSelection">Your selection</p>
+          <h1 i18n="@@shoppingBasket">Shopping basket</h1>
+          <p class="item-info">
+            <ng-container i18n="@@itemCountPlural">{basket.itemCount(), plural,
+              =1 {1 item}
+              other {{{ basket.itemCount() }} items}
+            }</ng-container>
+          </p>
+        </div>
+        <button class="clear" type="button" (click)="clearBasket()">
+          <span i18n="@@clearBasket">Clear basket</span>
+          <span aria-hidden="true">✕</span>
+        </button>
+      </header>
 
-    <div class="layout">
-      <section class="items" aria-label="Basket items">
-        @for (item of basket.items(); track item.productId) {
-          <article class="item">
-            <a class="image" [routerLink]="['/products', item.groupId, item.productId]">
-              <img [src]="item.imageUrl" [alt]="item.name" />
-            </a>
-            <div class="details">
-              <a [routerLink]="['/products', item.groupId, item.productId]"
-                ><h2>{{ item.name }}</h2></a
-              >
-              <p>{{ item.unitPrice | currency: 'GBP' }} <span i18n="@@each">each</span></p>
-              <div class="quantity">
+      <div class="layout">
+        <section class="items-section" aria-label="Basket items">
+          <div class="items-header" aria-hidden="true">
+            <span i18n="@@item">Item</span>
+            <span></span>
+            <span i18n="@@quantity">Quantity</span>
+            <span i18n="@@total">Total</span>
+          </div>
+
+          @for (item of basket.items(); track item.productId) {
+            <article class="item">
+              <a class="image" [routerLink]="['/products', item.groupId, item.productId]">
+                <img [src]="item.imageUrl" [alt]="item.name" />
+              </a>
+              <div class="details">
+                <p class="category">{{ item.groupId | titlecase }}</p>
+                <a [routerLink]="['/products', item.groupId, item.productId]"
+                  ><h2>{{ item.name }}</h2></a
+                >
+                <p class="price-per-item">
+                  {{ item.unitPrice | currency: 'GBP' }} <span i18n="@@each">each</span>
+                </p>
+                <button
+                  class="remove-link"
+                  type="button"
+                  [attr.aria-label]="'Remove ' + item.name"
+                  (click)="removeItem(item)"
+                  i18n="@@remove"
+                >
+                  Remove
+                </button>
+              </div>
+              <div class="quantity-control">
                 <button
                   type="button"
                   [attr.aria-label]="'Decrease ' + item.name + ' quantity'"
@@ -51,32 +76,65 @@
                   +
                 </button>
               </div>
-            </div>
-            <div class="item-summary">
-              <strong>{{ item.unitPrice * item.quantity | currency: 'GBP' }}</strong>
-              <button
-                class="remove"
-                type="button"
-                [attr.aria-label]="'Remove ' + item.name"
-                (click)="removeItem(item)"
-              >
-                <span i18n="@@remove">Remove</span>
-              </button>
-            </div>
-          </article>
-        }
-      </section>
+              <strong class="item-total">{{
+                item.unitPrice * item.quantity | currency: 'GBP'
+              }}</strong>
+            </article>
+          }
 
-      <aside class="summary" aria-labelledby="summary-title">
-        <h2 id="summary-title" i18n="@@orderSummary">Order summary</h2>
-        <div>
-          <span i18n="@@subtotal">Subtotal</span
-          ><strong>{{ basket.subtotal() | currency: 'GBP' }}</strong>
-        </div>
-        <p i18n="@@deliveryCalculated">Delivery and discounts are calculated at checkout.</p>
-        <a class="checkout" routerLink="/checkout" i18n="@@proceedCheckout">Proceed to checkout</a>
-        <a class="continue" routerLink="/products" i18n="@@continueShopping">Continue shopping</a>
-      </aside>
+          <div class="continue-section">
+            <a routerLink="/products"
+              ><span aria-hidden="true">←</span>
+              <span i18n="@@continueShopping">Continue shopping</span></a
+            >
+          </div>
+        </section>
+
+        <aside class="summary" aria-labelledby="summary-title">
+          <div class="summary-header">
+            <p class="summary-eyebrow" i18n="@@summary">Summary</p>
+            <h2 id="summary-title" i18n="@@orderTotal">Order total</h2>
+          </div>
+
+          <hr class="divider" />
+
+          <div class="summary-rows">
+            <div class="summary-row">
+              <span i18n="@@subtotal">Subtotal</span>
+              <strong>{{ basket.subtotal() | currency: 'GBP' }}</strong>
+            </div>
+            <div class="summary-row">
+              <span i18n="@@delivery">Delivery</span>
+              <span class="muted" i18n="@@atCheckout">At checkout</span>
+            </div>
+            <div class="summary-row">
+              <span i18n="@@discounts">Discounts</span>
+              <span class="muted" i18n="@@noneApplied">None applied</span>
+            </div>
+            <div class="summary-row total-row">
+              <span i18n="@@estimated">Estimated</span>
+              <strong class="estimated-total">{{ basket.subtotal() | currency: 'GBP' }}</strong>
+            </div>
+          </div>
+
+          <a class="checkout" routerLink="/checkout">
+            <span i18n="@@proceedCheckout">Proceed to checkout</span>
+            <span aria-hidden="true">→</span>
+          </a>
+
+          <div class="summary-footer">
+            <p i18n="@@deliveryCalculated">Delivery and discounts are calculated at checkout.</p>
+            <p i18n="@@returnsThirty">Returns free within 30 days.</p>
+          </div>
+
+          <div class="gift-wrap-banner">
+            <p class="gift-wrap-label" i18n="@@giftWrap">Gift wrap</p>
+            <p class="gift-wrap-description" i18n="@@giftWrapDescription">
+              Add hand-folded wrap and a written note for £4.
+            </p>
+          </div>
+        </aside>
+      </div>
     </div>
   }
 </main>

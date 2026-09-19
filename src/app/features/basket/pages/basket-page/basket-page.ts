@@ -1,4 +1,4 @@
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
@@ -8,7 +8,7 @@ import { type BasketItem } from '../../models/basket-item';
 
 @Component({
   selector: 'app-basket-page',
-  imports: [CurrencyPipe, RouterLink],
+  imports: [CurrencyPipe, TitleCasePipe, RouterLink],
   templateUrl: './basket-page.html',
   styleUrl: './basket-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

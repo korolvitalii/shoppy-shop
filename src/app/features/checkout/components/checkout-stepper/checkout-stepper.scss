@@ -1,80 +1,92 @@
 :host {
   display: block;
-  margin-bottom: 2rem;
-}
-
-nav {
-  position: relative;
+  border-bottom: 2px solid var(--color-ink);
 }
 
 ol {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  padding: 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   margin: 0;
-  border: 1px solid var(--color-border);
+  padding: 0;
   list-style: none;
 }
 
-li {
-  position: relative;
-  border-right: 1px solid var(--color-border);
-  border-top: 3px solid transparent;
-}
-
-li:last-child {
-  border-right: 0;
-}
-
-li.complete,
-li.current {
-  border-top-color: var(--color-primary);
-}
-
-.step-link,
-.disabled {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  padding: 0.9rem 1rem;
+.step {
+  border-top: 6px solid color-mix(in srgb, var(--color-ink) 20%, transparent);
   color: var(--color-muted);
-  font-size: 0.72rem;
-  font-weight: 800;
-  text-decoration: none;
 }
 
-.step-link:hover,
-.current .step-link {
+.step + .step {
+  border-left: 1px solid var(--color-border);
+}
+
+.step.reached {
+  border-top-color: var(--color-primary);
   color: var(--color-ink);
 }
 
-.step-marker {
-  color: var(--color-muted);
-  font-size: 0.85rem;
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
+.step-link {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  color: inherit;
+  text-decoration: none;
 }
 
-.complete .step-marker,
-.current .step-marker {
+.step-link.disabled {
+  cursor: not-allowed;
+}
+
+.step-marker {
+  font-weight: 800;
+  font-size: 1.75rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.step.reached .step-marker {
   color: var(--color-primary);
 }
 
 .step-label {
-  white-space: nowrap;
-  letter-spacing: 0.04em;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
-.disabled {
-  opacity: 0.5;
+.step-state {
+  color: var(--color-muted);
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
-@media (max-width: 35rem) {
-  .step-link,
-  .disabled {
-    gap: 0.4rem;
-    padding: 0.7rem 0.6rem;
-    font-size: 0.62rem;
+a.step-link:hover .step-label {
+  color: var(--color-primary);
+}
+
+a:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--color-primary) 25%, transparent);
+  outline-offset: -3px;
+}
+
+@media (max-width: 40rem) {
+  .step-link {
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .step-marker {
+    font-size: 1.25rem;
+  }
+
+  .step-label,
+  .step-state {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
   }
 }

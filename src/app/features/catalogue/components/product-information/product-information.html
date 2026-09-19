@@ -45,46 +45,6 @@
     </aside>
   </div>
 
-  <div class="specifications" aria-labelledby="specifications-title">
-    <div class="subsection-heading">
-      <p i18n="@@atGlance">At a glance</p>
-      <h2 id="specifications-title" i18n="@@productDetails">Product details</h2>
-    </div>
-    <dl class="specification-list">
-      <div>
-        <dt i18n="@@brand">Brand</dt>
-        <dd>{{ product().brand }}</dd>
-      </div>
-      <div>
-        <dt i18n="@@category">Category</dt>
-        <dd>{{ product().groupId | titlecase }}</dd>
-      </div>
-      <div>
-        <dt i18n="@@productCode">Product code</dt>
-        <dd>{{ product().id | uppercase }}</dd>
-      </div>
-      <div>
-        <dt i18n="@@availability">Availability</dt>
-        <dd>
-          <span class="status-dot" [class.unavailable]="!product().inStock"></span>
-          @if (product().inStock) {
-            <span i18n="@@readyToDispatch">Ready to dispatch</span>
-          } @else {
-            <span i18n="@@currentlyUnavailable">Currently unavailable</span>
-          }
-        </dd>
-      </div>
-      <div>
-        <dt i18n="@@currentPrice">Current price</dt>
-        <dd>{{ effectivePrice() | currency: 'GBP' }}</dd>
-      </div>
-      <div>
-        <dt i18n="@@returns">Returns</dt>
-        <dd i18n="@@returnsPeriod">30 days from delivery</dd>
-      </div>
-    </dl>
-  </div>
-
   <div class="service-grid" aria-label="Delivery and support information">
     <article>
       <span aria-hidden="true">▱</span>

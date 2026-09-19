@@ -1,0 +1,12 @@
+<div class="rail-row">
+  <span i18n="@@subtotal">Subtotal</span>
+  <strong>{{ subtotal() | currency: 'GBP' }}</strong>
+</div>
+<div class="rail-row">
+  <span i18n="@@standardDelivery">Standard delivery</span>
+  <strong>{{ deliveryCharge() | currency: 'GBP' }}</strong>
+</div>
+<div class="rail-total">
+  <span class="rail-total-label" i18n="@@total">Total</span>
+  <span class="rail-total-value">{{ total() | currency: 'GBP' }}</span>
+</div>

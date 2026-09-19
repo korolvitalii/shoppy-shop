@@ -23,95 +23,162 @@
           ><a [routerLink]="['/products', item.groupId]">{{ item.groupId }}</a
           ><span>/</span><span>{{ item.name }}</span>
         </nav>
-        <div class="layout">
-          <div class="image-frame">
-            <img [src]="item.imageUrl" [alt]="item.name" />
-            <button
-              class="favorite-button"
-              type="button"
-              [class.active]="favorites.has(item.id)"
-              [attr.aria-pressed]="favorites.has(item.id)"
-              [attr.aria-label]="
-                favorites.has(item.id) ? 'Remove from favourites' : 'Add to favourites'
-              "
-              (click)="toggleFavorite()"
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path
-                  d="M20.8 4.8a5.5 5.5 0 0 0-7.8 0L12 5.9l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.4a5.5 5.5 0 0 0 0-7.8Z"
-                />
-              </svg>
-            </button>
-            @if (saving()) {
-              <span class="sale">Save {{ saving() | currency: 'GBP' }}</span>
-            }
-          </div>
-          <section class="information">
-            <p class="brand">{{ item.brand }}</p>
-            <h1>{{ item.name }}</h1>
-            <div class="pricing">
-              <strong>{{ effectivePrice() | currency: 'GBP' }}</strong>
-              @if (item.salePrice) {
-                <del>{{ item.price | currency: 'GBP' }}</del>
-              }
-            </div>
-            <p class="availability" [class.unavailable]="!item.inStock">
-              @if (item.inStock) {
-                <span i18n="@@inStock">In stock</span>
-              } @else {
-                <span i18n="@@currentlyUnavailable">Currently unavailable</span>
-              }
-            </p>
-            <div class="purchase">
-              <div class="quantity" aria-label="Quantity selector">
-                <button
-                  type="button"
-                  aria-label="Decrease quantity"
-                  [disabled]="quantity() === 1"
-                  (click)="decrement()"
-                >
-                  −</button
-                ><output aria-live="polite">{{ quantity() }}</output
-                ><button
-                  type="button"
-                  aria-label="Increase quantity"
-                  [disabled]="quantity() === 10"
-                  (click)="increment()"
-                >
-                  +
-                </button>
-              </div>
+        <div class="panel">
+          <div class="layout">
+            <div class="image-frame">
+              <img [src]="item.imageUrl" [alt]="item.name" />
               <button
-                class="add-button"
-                data-testid="add-to-basket"
+                class="favorite-button"
                 type="button"
-                [disabled]="!item.inStock"
-                (click)="addToBasket()"
+                [class.active]="favorites.has(item.id)"
+                [attr.aria-pressed]="favorites.has(item.id)"
+                [attr.aria-label]="
+                  favorites.has(item.id) ? 'Remove from favourites' : 'Add to favourites'
+                "
+                (click)="toggleFavorite()"
               >
-                {{ addButtonLabel() }}
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M20.8 4.8a5.5 5.5 0 0 0-7.8 0L12 5.9l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.4a5.5 5.5 0 0 0 0-7.8Z"
+                  />
+                </svg>
               </button>
-              @if (isAuthenticated()) {
-                <a class="basket-link" routerLink="/basket" i18n="@@viewBasket">View basket</a>
+              @if (saving()) {
+                <span class="sale">Save {{ saving() | currency: 'GBP' }}</span>
               }
             </div>
-            <ul class="purchase-assurances" aria-label="Shopping assurances">
-              <li>
-                <span aria-hidden="true">✓</span>
-                <span i18n="@@secureCheckout">Secure checkout</span>
-              </li>
-              <li>
-                <span aria-hidden="true">↻</span>
-                <span i18n="@@thirtyDayReturns">30-day returns</span>
-              </li>
-              <li>
-                <span aria-hidden="true">◇</span>
-                <span i18n="@@trackedUkDelivery">Tracked UK delivery</span>
-              </li>
-            </ul>
-          </section>
+            <section class="information">
+              <div class="tags">
+                @if (item.isNew) {
+                  <span class="tag tag-accent" i18n="@@newFlag">New</span>
+                }
+                <span class="tag tag-outline" [class.unavailable]="!item.inStock">
+                  @if (item.inStock) {
+                    <span i18n="@@inStock">In stock</span>
+                  } @else {
+                    <span i18n="@@currentlyUnavailable">Currently unavailable</span>
+                  }
+                </span>
+              </div>
+              <p class="brand">{{ item.brand }}</p>
+              <h1>{{ item.name }}</h1>
+              <div class="pricing">
+                <strong>{{ effectivePrice() | currency: 'GBP' }}</strong>
+                @if (item.salePrice) {
+                  <del>{{ item.price | currency: 'GBP' }}</del>
+                }
+              </div>
+              <p class="description">{{ item.description }}</p>
+              <div class="purchase">
+                <div class="quantity" aria-label="Quantity selector">
+                  <button
+                    type="button"
+                    aria-label="Decrease quantity"
+                    [disabled]="quantity() === 1"
+                    (click)="decrement()"
+                  >
+                    −</button
+                  ><output aria-live="polite">{{ quantity() }}</output
+                  ><button
+                    type="button"
+                    aria-label="Increase quantity"
+                    [disabled]="quantity() === 10"
+                    (click)="increment()"
+                  >
+                    +
+                  </button>
+                </div>
+                <button
+                  class="add-button"
+                  data-testid="add-to-basket"
+                  type="button"
+                  [disabled]="!item.inStock"
+                  (click)="addToBasket()"
+                >
+                  {{ addButtonLabel() }}
+                </button>
+                @if (isAuthenticated()) {
+                  <a class="basket-link" routerLink="/basket" i18n="@@viewBasket">View basket</a>
+                }
+              </div>
+              <ul class="purchase-assurances" aria-label="Shopping assurances">
+                <li>
+                  <span aria-hidden="true">✓</span>
+                  <span i18n="@@secureCheckout">Secure checkout</span>
+                </li>
+                <li>
+                  <span aria-hidden="true">↻</span>
+                  <span i18n="@@thirtyDayReturns">30-day returns</span>
+                </li>
+                <li>
+                  <span aria-hidden="true">◇</span>
+                  <span i18n="@@trackedUkDelivery">Tracked UK delivery</span>
+                </li>
+              </ul>
+              <table class="table">
+                <caption class="table-caption" i18n="@@productSpecifications">
+                  Product specifications
+                </caption>
+                <tbody>
+                  <tr>
+                    <th scope="row" i18n="@@brand">Brand</th>
+                    <td>{{ item.brand }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row" i18n="@@category">Category</th>
+                    <td>{{ item.groupId | titlecase }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row" i18n="@@productCode">Product code</th>
+                    <td>{{ item.id | uppercase }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row" i18n="@@availability">Availability</th>
+                    <td>
+                      @if (item.inStock) {
+                        <span i18n="@@readyToDispatch">Ready to dispatch</span>
+                      } @else {
+                        <span i18n="@@currentlyUnavailable">Currently unavailable</span>
+                      }
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row" i18n="@@returns">Returns</th>
+                    <td i18n="@@returnsPeriod">30 days from delivery</td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+          </div>
+
+          @if (related().length > 0) {
+            <section class="related" aria-labelledby="related-title">
+              <header>
+                <h2 id="related-title">
+                  <ng-container i18n="@@moreInCategory"
+                    >More in {{ item.groupId | titlecase }}</ng-container
+                  >
+                </h2>
+                @if (relatedTotal(); as total) {
+                  <a [routerLink]="['/products', item.groupId]" class="view-all">
+                    <ng-container i18n="@@viewAllInCategory">All {{ total }} →</ng-container>
+                  </a>
+                }
+              </header>
+              <div class="related-grid">
+                @for (relatedProduct of related(); track relatedProduct.id) {
+                  <app-product-card
+                    [product]="relatedProduct"
+                    [favorite]="favorites.has(relatedProduct.id)"
+                    (favoriteToggle)="toggleFavorite(relatedProduct)"
+                  />
+                }
+              </div>
+            </section>
+          }
         </div>
 
-        <app-product-information [product]="item" [effectivePrice]="effectivePrice()" />
+        <app-product-information [product]="item" />
       }
     }
   }

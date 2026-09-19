@@ -1,0 +1,60 @@
+.notice-band {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1rem 1.5rem;
+  color: #fff;
+  background: var(--color-primary-fill);
+}
+
+.notice-band-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+}
+
+.notice-band-text {
+  margin: 0;
+  font-weight: 800;
+  font-size: clamp(1.15rem, 3vw, 1.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.75rem;
+  border: 2px solid var(--color-primary);
+  color: var(--color-primary);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+}
+
+.tag--filled {
+  color: #fff;
+  background: var(--color-primary-fill);
+}
+
+.text-button {
+  padding: 0;
+  border: 0;
+  color: var(--color-primary);
+  background: none;
+  font: inherit;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+}
+
+.saved-payment {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+  border: 2px solid var(--color-border);
+}
+
+.saved-payment p {
+  margin: 0;
+}

@@ -1,0 +1,8 @@
+<span class="panel-bar-title" i18n="@@secureCheckout">Secure checkout</span>
+<span class="panel-bar-meta">
+  <ng-container i18n="@@itemCountPlural">{itemCount(), plural,
+    =1 {1 item}
+    other {{{ itemCount() }} items}
+  }</ng-container>
+  · {{ total() | currency: 'GBP' }}
+</span>
