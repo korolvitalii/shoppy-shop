@@ -1,0 +1,88 @@
+<main class="confirmation-page">
+  <!-- A live region only announces content inserted into it, so it lives outside the
+       @if and carries a short summary; the panel itself is too long to read out. -->
+  <p class="status-announcement" role="status">{{ announcement() }}</p>
+  @if (order(); as value) {
+    <div class="panel">
+      <div class="panel-bar">
+        <p class="panel-bar-title" i18n="@@orderConfirmed">Order confirmed</p>
+        <p class="panel-bar-meta" i18n="@@orderNumber">Order {{ value.id }}</p>
+      </div>
+      <div class="layout">
+        <div class="poster">
+          <span class="poster-eyebrow" i18n="@@orderConfirmed">Order confirmed</span>
+          <h1 i18n="@@thankYouOrder">Thank you for your order.</h1>
+          <p class="poster-text">
+            <span i18n="@@orderConfirmationDetail"
+              >Order <strong>{{ value.id }}</strong> is placed. A confirmation is on its way to
+              {{ value.delivery.email }}.</span
+            >
+          </p>
+          <div class="poster-stats">
+            <div>
+              <span class="poster-stat-label" i18n="@@totalPaid">Total paid</span>
+              <span class="poster-stat-value">{{ value.total | currency: 'GBP' }}</span>
+            </div>
+            @if (estimatedArrival(); as arrival) {
+              <div>
+                <span class="poster-stat-label" i18n="@@estimatedArrival">Estimated arrival</span>
+                <span class="poster-stat-value"
+                  >{{ arrival[0] | date: 'd MMM' : 'UTC' }}–{{
+                    arrival[1] | date: 'd MMM' : 'UTC'
+                  }}</span
+                >
+              </div>
+            }
+          </div>
+        </div>
+        <div class="receipt">
+          <h2 class="receipt-title" i18n="@@receipt">Receipt</h2>
+          @for (line of value.lines; track line.productId) {
+            <div class="receipt-line">
+              <span
+                >{{ line.name }} <span class="line-qty">× {{ line.quantity }}</span></span
+              >
+              <span class="line-total">{{ line.unitPrice * line.quantity | currency: 'GBP' }}</span>
+            </div>
+          }
+          <div class="receipt-line">
+            <span i18n="@@standardDelivery">Standard delivery</span>
+            <span class="line-total">{{ value.deliveryCharge | currency: 'GBP' }}</span>
+          </div>
+          <div class="receipt-total">
+            <span class="receipt-total-label" i18n="@@paid">Paid</span>
+            <span class="receipt-total-value">{{ value.total | currency: 'GBP' }}</span>
+          </div>
+          <div class="receipt-actions">
+            <a class="primary-action" routerLink="/orders"
+              ><span i18n="@@viewPurchaseHistory">View purchase history</span> →</a
+            >
+            <a class="secondary-action" routerLink="/products" i18n="@@continueShopping"
+              >Continue shopping</a
+            >
+          </div>
+          <p class="receipt-note" i18n="@@trackingReturns">
+            Track the parcel from Orders at any time. Returns are free within 30 days.
+          </p>
+        </div>
+      </div>
+    </div>
+  } @else if (error()) {
+    <section class="error-section">
+      <h1 i18n="@@orderUnavailable">Order unavailable</h1>
+      <p i18n="@@orderUnavailableDetail">
+        We could not load this confirmation. Your purchase history may still contain the order.
+      </p>
+      <div class="error-actions">
+        <a class="primary-action" routerLink="/orders" i18n="@@viewPurchaseHistory"
+          >View purchase history</a
+        >
+        <a class="secondary-action" routerLink="/products" i18n="@@browseProducts"
+          >Browse products</a
+        >
+      </div>
+    </section>
+  } @else {
+    <p class="loading" i18n="@@loadingOrder">Loading order…</p>
+  }
+</main>
