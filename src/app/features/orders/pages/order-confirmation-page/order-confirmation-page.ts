@@ -1,5 +1,6 @@
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { catchError, of, switchMap } from 'rxjs';
 
@@ -38,6 +39,7 @@ export class OrderConfirmationPage {
             }),
           ),
         ),
+        takeUntilDestroyed(),
       )
       .subscribe((value) => {
         this.order.set(value);
