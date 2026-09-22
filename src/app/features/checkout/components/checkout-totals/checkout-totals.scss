@@ -1,0 +1,40 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.rail-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.rail-row strong {
+  font-weight: 700;
+}
+
+.rail-total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 0.75rem;
+  border-top: 2px solid var(--color-ink);
+}
+
+.rail-total-label {
+  font-weight: 800;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.rail-total-value {
+  color: var(--color-primary);
+  font-weight: 800;
+  font-size: 1.9rem;
+  letter-spacing: -0.03em;
+}

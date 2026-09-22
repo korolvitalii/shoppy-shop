@@ -1,4 +1,4 @@
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, TitleCasePipe, UpperCasePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -9,21 +9,45 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { catchError, map, of, switchMap, tap } from 'rxjs';
+import { catchError, concat, EMPTY, map, of, switchMap, tap } from 'rxjs';
 
 import { SeoService } from '../../../../core/seo/seo.service';
 import { type Product } from '../../../../shared/domain/product';
+import { ProductCard } from '../../../../shared/ui/product-card/product-card';
 import { AuthenticationSessionService } from '../../../auth/public-api';
 import { BasketService } from '../../../basket/public-api';
 import { FavoritesService } from '../../../favorites/public-api';
 import { ProductInformation } from '../../components/product-information/product-information';
 import { ProductsRepository } from '../../data-access/products.repository';
+import { type ProductSearchQuery } from '../../models/product';
 
 type DetailStatus = 'loading' | 'success' | 'not-found' | 'error';
 
+type DetailEvent =
+  | { kind: 'product'; product: Product }
+  | { kind: 'related'; related: readonly Product[]; total: number | null }
+  | { kind: 'not-found' }
+  | { kind: 'error' };
+
+const RELATED_PRODUCTS_QUERY: ProductSearchQuery = {
+  search: '',
+  sort: 'featured',
+  price: 'all',
+  inStock: false,
+  isNew: false,
+  giftWrappable: false,
+};
+
 @Component({
   selector: 'app-product-details-page',
-  imports: [CurrencyPipe, ProductInformation, RouterLink],
+  imports: [
+    CurrencyPipe,
+    TitleCasePipe,
+    UpperCasePipe,
+    ProductCard,
+    ProductInformation,
+    RouterLink,
+  ],
   templateUrl: './product-details-page.html',
   styleUrl: './product-details-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,6 +63,8 @@ export class ProductDetailsPage {
   private readonly seo = inject(SeoService);
 
   readonly product = signal<Product | null>(null);
+  readonly related = signal<readonly Product[]>([]);
+  readonly relatedTotal = signal<number | null>(null);
   readonly status = signal<DetailStatus>('loading');
   readonly quantity = signal(1);
   readonly added = signal(false);
@@ -65,38 +91,65 @@ export class ProductDetailsPage {
           groupId: params.get('groupId') ?? '',
           productId: params.get('productId') ?? '',
         })),
-        tap(() => this.status.set('loading')),
+        tap(() => {
+          this.status.set('loading');
+          this.related.set([]);
+          this.relatedTotal.set(null);
+        }),
         switchMap(({ groupId, productId }) =>
           this.repository.getById(groupId, productId).pipe(
-            catchError(() => {
-              this.status.set('error');
-              return of(undefined);
+            switchMap((product) => {
+              if (!product) return of<DetailEvent>({ kind: 'not-found' });
+              const related = this.repository
+                .search(product.groupId, RELATED_PRODUCTS_QUERY, { limit: 5 })
+                .pipe(
+                  map((page): DetailEvent => ({
+                    kind: 'related',
+                    related: page.items.filter((item) => item.id !== product.id).slice(0, 4),
+                    total: page.totalCount,
+                  })),
+                  // The rail is supporting content: if it fails the product page stays usable.
+                  catchError(() => EMPTY),
+                );
+              return concat(of<DetailEvent>({ kind: 'product', product }), related);
             }),
+            catchError(() => of<DetailEvent>({ kind: 'error' })),
           ),
         ),
         takeUntilDestroyed(this.destroyRef),
       )
-      .subscribe((product) => {
-        if (product === undefined) return;
-        this.product.set(product);
-        this.status.set(product ? 'success' : 'not-found');
-        if (product) {
-          this.seo.apply({
-            title: product.name,
-            description: product.description,
-            path: `/products/${product.groupId}/${product.id}`,
-            image: product.imageUrl,
-            indexable: true,
-            type: 'product',
-            structuredData: this.seo.productStructuredData(product),
-          });
-        } else {
-          this.seo.apply({
-            title: $localize`:@@seoProductNotFoundTitle:Product not found`,
-            description: $localize`:@@seoProductNotFoundDescription:This product is not available.`,
-            path: '/products',
-            indexable: false,
-          });
+      .subscribe((event) => {
+        switch (event.kind) {
+          case 'product':
+            this.product.set(event.product);
+            this.status.set('success');
+            this.seo.apply({
+              title: event.product.name,
+              description: event.product.description,
+              path: `/products/${event.product.groupId}/${event.product.id}`,
+              image: event.product.imageUrl,
+              indexable: true,
+              type: 'product',
+              structuredData: this.seo.productStructuredData(event.product),
+            });
+            break;
+          case 'related':
+            this.related.set(event.related);
+            this.relatedTotal.set(event.total);
+            break;
+          case 'not-found':
+            this.product.set(null);
+            this.status.set('not-found');
+            this.seo.apply({
+              title: $localize`:@@seoProductNotFoundTitle:Product not found`,
+              description: $localize`:@@seoProductNotFoundDescription:This product is not available.`,
+              path: '/products',
+              indexable: false,
+            });
+            break;
+          case 'error':
+            this.status.set('error');
+            break;
         }
       });
   }
@@ -122,13 +175,10 @@ export class ProductDetailsPage {
     this.added.set(true);
   }
 
-  toggleFavorite(): void {
-    const product = this.product();
+  toggleFavorite(product: Product | null = this.product()): void {
     if (!product) return;
     if (!this.session.isAuthenticated()) {
-      void this.router.navigate(['/login'], {
-        queryParams: { returnUrl: `/products/${product.groupId}/${product.id}` },
-      });
+      void this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
       return;
     }
     this.favorites.toggle(product);

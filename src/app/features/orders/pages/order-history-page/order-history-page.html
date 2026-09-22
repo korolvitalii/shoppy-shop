@@ -1,85 +1,260 @@
 <main class="history-page">
-  <header class="page-header">
-    <p class="eyebrow" i18n="@@yourShoppyShop">Your ShoppyShop</p>
-    <h1 i18n="@@purchaseHistory">Purchase history</h1>
-    <p i18n="@@purchaseHistoryIntro">Review your orders, delivery details and payment summaries.</p>
-  </header>
+  <div class="panel">
+    <div class="panel-head">
+      <div class="head-copy">
+        <p class="eyebrow" i18n="@@yourAccount">Your account</p>
+        <h1 i18n="@@purchaseHistory">Purchase history</h1>
+        <p class="head-intro" i18n="@@purchaseHistoryIntro">
+          Orders, delivery details and payment summaries.
+        </p>
+      </div>
+      @if (status() === 'success' && entries().length > 0) {
+        <div class="head-filter">
+          <span class="label" id="history-filter-label" i18n="@@filters">Filters</span>
+          <div class="filter-tags" role="group" aria-labelledby="history-filter-label">
+            <button
+              #allFilter
+              type="button"
+              class="tag"
+              [class.is-selected]="filter() === 'all'"
+              [attr.aria-pressed]="filter() === 'all'"
+              (click)="selectFilter('all')"
+            >
+              <span i18n="@@filterAll">All</span>
+            </button>
+            <button
+              type="button"
+              class="tag"
+              [class.is-selected]="filter() === 'in-transit'"
+              [attr.aria-pressed]="filter() === 'in-transit'"
+              (click)="selectFilter('in-transit')"
+            >
+              <span i18n="@@inTransit">In transit</span>
+            </button>
+            <button
+              type="button"
+              class="tag"
+              [class.is-selected]="filter() === 'delivered'"
+              [attr.aria-pressed]="filter() === 'delivered'"
+              (click)="selectFilter('delivered')"
+            >
+              <span i18n="@@delivered">Delivered</span>
+            </button>
+            <button
+              type="button"
+              class="tag"
+              [class.is-selected]="filter() === 'returns'"
+              [attr.aria-pressed]="filter() === 'returns'"
+              (click)="selectFilter('returns')"
+            >
+              <span i18n="@@returns">Returns</span>
+            </button>
+          </div>
+        </div>
+      }
+    </div>
 
-  @switch (status()) {
-    @case ('loading') {
-      <section class="state" role="status" aria-live="polite">
-        <span class="state-loader" aria-hidden="true"></span>
-        <p i18n="@@loadingPurchases">Loading purchases…</p>
-      </section>
-    }
-    @case ('error') {
-      <section class="state state--error" role="alert">
-        <h2 i18n="@@purchasesLoadError">We could not load your purchases</h2>
-        <p i18n="@@checkConnection">Check your connection and try again.</p>
-        <button type="button" (click)="load()" i18n="@@tryAgain">Try again</button>
-      </section>
-    }
-    @case ('success') {
-      @if (orders().length === 0) {
-        <section class="state state--empty">
-          <span class="empty-icon" aria-hidden="true">⌁</span>
-          <h2 i18n="@@noPurchases">No purchases yet</h2>
-          <p i18n="@@noPurchasesDetail">When you place an order, its details will appear here.</p>
-          <a routerLink="/products" i18n="@@startShopping">Start shopping</a>
+    @switch (status()) {
+      @case ('loading') {
+        <section class="state" role="status" aria-live="polite">
+          <span class="state-loader" aria-hidden="true"></span>
+          <p i18n="@@loadingPurchases">Loading purchases…</p>
         </section>
-      } @else {
-        <ol class="order-list" aria-label="Previous purchases">
-          @for (order of orders(); track order.id) {
-            <li>
-              <article class="order-card">
-                <header class="order-header">
-                  <div>
-                    <span class="order-label" i18n="@@order">Order</span>
-                    <h2>{{ order.id }}</h2>
-                  </div>
-                  <span class="status-badge">{{ order.status }}</span>
-                  <div class="order-date">
-                    <span i18n="@@placed">Placed</span>
-                    <time [attr.datetime]="order.createdAt">{{
-                      order.createdAt | date: 'd MMMM y'
-                    }}</time>
-                  </div>
-                </header>
+      }
+      @case ('error') {
+        <section class="state state--error" role="alert">
+          <h2 i18n="@@purchasesLoadError">We could not load your purchases</h2>
+          <p i18n="@@checkConnection">Check your connection and try again.</p>
+          <button type="button" class="action action--primary" (click)="load()">
+            <span i18n="@@tryAgain">Try again</span>
+          </button>
+        </section>
+      }
+      @case ('success') {
+        @if (entries().length === 0) {
+          <section class="state state--empty">
+            <span class="empty-icon" aria-hidden="true">⌁</span>
+            <h2 i18n="@@noPurchases">No purchases yet</h2>
+            <p i18n="@@noPurchasesDetail">When you place an order, its details will appear here.</p>
+            <a class="action action--primary" routerLink="/products" i18n="@@startShopping"
+              >Start shopping</a
+            >
+          </section>
+        } @else {
+          <dl class="summary">
+            <div class="summary-cell">
+              <dt class="label" i18n="@@orders">Orders</dt>
+              <dd class="summary-value">{{ summary().orders }}</dd>
+            </div>
+            <div class="summary-cell">
+              <dt class="label" i18n="@@spentThisYear">Spent this year</dt>
+              <dd class="summary-value">{{ summary().spentThisYear | currency: 'GBP' }}</dd>
+            </div>
+            <div class="summary-cell">
+              <dt class="label" i18n="@@inTransit">In transit</dt>
+              <dd class="summary-value summary-value--accent">{{ summary().inTransit }}</dd>
+            </div>
+            <div class="summary-cell">
+              <dt class="label" i18n="@@returnsOpen">Returns open</dt>
+              <dd class="summary-value">{{ summary().returnsOpen }}</dd>
+            </div>
+          </dl>
 
-                <ul class="order-lines" aria-label="Order items">
-                  @for (line of order.lines; track line.productId) {
-                    <li>
-                      <img [src]="line.imageUrl" [alt]="line.name" />
-                      <div>
-                        <a [routerLink]="['/products', line.groupId, line.productId]">{{
-                          line.name
-                        }}</a>
-                        <span>Quantity {{ line.quantity }}</span>
+          @if (matching().length === 0) {
+            <section class="state state--empty" role="status">
+              <h2 i18n="@@noOrdersForFilter">Nothing under this filter</h2>
+              <p i18n="@@noOrdersForFilterDetail">
+                None of your orders are at this stage right now.
+              </p>
+              <button type="button" class="action action--primary" (click)="showAllOrders()">
+                <span i18n="@@showAllOrders">Show all orders</span>
+              </button>
+            </section>
+          } @else {
+            <ol
+              class="orders"
+              i18n-aria-label="@@previousPurchases"
+              aria-label="Previous purchases"
+            >
+              @for (entry of visible(); track entry.order.id) {
+                <li>
+                  <article class="order">
+                    <header class="order-head">
+                      <div class="order-facts">
+                        <div class="fact">
+                          <span class="label" i18n="@@order">Order</span>
+                          <h2 class="order-id">{{ entry.order.id }}</h2>
+                        </div>
+                        <div class="fact">
+                          <span class="label" i18n="@@placed">Placed</span>
+                          <time class="fact-value" [attr.datetime]="entry.order.createdAt">{{
+                            entry.order.createdAt | date: 'd MMMM y' : 'UTC'
+                          }}</time>
+                        </div>
+                        <div class="fact">
+                          <span class="label" i18n="@@statusLabel">Status</span>
+                          <span class="fact-value stage">
+                            @switch (entry.progress.stage) {
+                              @case ('packing') {
+                                <span class="tag tag--status" i18n="@@statusConfirmed"
+                                  >Confirmed</span
+                                >
+                              }
+                              @case ('in-transit') {
+                                <span class="tag tag--status" i18n="@@inTransit">In transit</span>
+                              }
+                              @default {
+                                <span class="tag tag--status tag--settled" i18n="@@delivered"
+                                  >Delivered</span
+                                >
+                              }
+                            }
+                            @if (entry.progress.stage === 'delivered') {
+                              @if (entry.progress.returnsClose; as closes) {
+                                <span class="stage-note" i18n="@@returnsCloseOn"
+                                  >Returns close {{ closes | date: 'd MMM' : 'UTC' }}</span
+                                >
+                              }
+                            } @else if (entry.progress.arrival; as arrival) {
+                              <span class="stage-note" i18n="@@arrivingBetween"
+                                >Arriving {{ arrival[0] | date: 'd MMM' : 'UTC' }}–{{
+                                  arrival[1] | date: 'd MMM' : 'UTC'
+                                }}</span
+                              >
+                            }
+                          </span>
+                        </div>
                       </div>
-                      <strong>{{ line.unitPrice * line.quantity | currency: 'GBP' }}</strong>
-                    </li>
-                  }
-                </ul>
+                      <a
+                        class="action"
+                        [routerLink]="['/orders', entry.order.id, 'confirmation']"
+                        i18n="@@receipt"
+                        >Receipt</a
+                      >
+                    </header>
 
-                <footer class="order-footer">
-                  <p>
-                    <span i18n="@@deliveringTo">Delivering to</span>
-                    {{ order.delivery.city }}, {{ order.delivery.postcode }}
-                  </p>
-                  <p>
-                    <span i18n="@@payment">Payment</span>
-                    {{ order.paymentToken.brand }} ending in {{ order.paymentToken.last4 }}
-                  </p>
-                  <p class="order-total">
-                    <span i18n="@@total">Total</span>
-                    <strong>{{ order.total | currency: 'GBP' }}</strong>
-                  </p>
-                </footer>
-              </article>
-            </li>
+                    <ul class="order-lines" i18n-aria-label="@@orderItems" aria-label="Order items">
+                      @for (line of entry.order.lines; track line.productId) {
+                        <li class="order-line">
+                          <img class="line-image" [src]="line.imageUrl" [alt]="line.name" />
+                          <div class="line-copy">
+                            @if (categoryOf(line.groupId); as category) {
+                              <span class="label line-category">{{ category }}</span>
+                            }
+                            <a
+                              class="line-name"
+                              [routerLink]="['/products', line.groupId, line.productId]"
+                              >{{ line.name }}</a
+                            >
+                          </div>
+                          <span class="line-quantity" i18n="@@quantityCount"
+                            >Quantity {{ line.quantity }}</span
+                          >
+                          <span class="line-total">{{
+                            line.unitPrice * line.quantity | currency: 'GBP'
+                          }}</span>
+                        </li>
+                      }
+                    </ul>
+
+                    <footer class="order-foot">
+                      <div class="foot-cell">
+                        <span class="label" i18n="@@deliveringTo">Delivering to</span>
+                        <span class="foot-value"
+                          >{{ entry.order.delivery.name }}, {{ entry.order.delivery.address }},
+                          {{ entry.order.delivery.city }} {{ entry.order.delivery.postcode }}</span
+                        >
+                      </div>
+                      <div class="foot-cell">
+                        <span class="label" i18n="@@payment">Payment</span>
+                        <span class="foot-value" i18n="@@cardEndingIn"
+                          >{{ entry.order.paymentToken.brand }} ending in
+                          {{ entry.order.paymentToken.last4 }}</span
+                        >
+                      </div>
+                      <div class="foot-cell foot-cell--total">
+                        <span class="label" i18n="@@total">Total</span>
+                        <span class="foot-total">{{ entry.order.total | currency: 'GBP' }}</span>
+                      </div>
+                    </footer>
+                  </article>
+                </li>
+              }
+            </ol>
           }
-        </ol>
+
+          <div class="panel-foot">
+            <a class="back-link" routerLink="/products"
+              ><span aria-hidden="true">←</span> <span i18n="@@backToShop">Back to shop</span></a
+            >
+            @if (matching().length > 0 || canPage()) {
+              <p class="showing">
+                @if (matching().length > 0) {
+                  <span aria-live="polite"
+                    ><ng-container i18n="@@showingOrdersPlural">{matching().length, plural,
+                      =1 {Showing {{ visible().length }} of 1 order}
+                      other {Showing {{ visible().length }} of {{ matching().length }} orders}
+                    }</ng-container></span
+                  >
+                }
+                @if (canPage()) {
+                  @if (matching().length > 0) {
+                    <span aria-hidden="true">·</span>
+                  }
+                  <button
+                    type="button"
+                    class="show-earlier"
+                    [attr.aria-disabled]="hasEarlier() ? null : 'true'"
+                    (click)="showEarlier()"
+                  >
+                    <span i18n="@@showEarlierOrders">Show earlier orders</span>
+                  </button>
+                }
+              </p>
+            }
+          </div>
+        }
       }
     }
-  }
+  </div>
 </main>

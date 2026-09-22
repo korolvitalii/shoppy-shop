@@ -1,14 +1,43 @@
-<div class="assistant-product-result">
-  <app-product-card
-    [product]="product()"
-    [favorite]="favorites.has(product().id)"
-    (favoriteToggle)="toggleFavorite()"
-  />
-  <button type="button" class="add-to-basket" [disabled]="added()" (click)="addToBasket()">
-    @if (added()) {
-      <span i18n="@@assistantProductAdded">Added to basket</span>
-    } @else {
-      <span i18n="@@assistantAddToBasket">Add to basket</span>
-    }
-  </button>
-</div>
+<article class="assistant-product-result">
+  <a class="image" [routerLink]="['/products', product().groupId, product().id]">
+    <img [src]="product().imageUrl" [alt]="product().name" loading="lazy" />
+  </a>
+  <div class="details">
+    <a [routerLink]="['/products', product().groupId, product().id]">
+      <h3>{{ product().name }}</h3>
+    </a>
+    <p class="price">
+      <strong>{{ effectivePrice() | currency: 'GBP' }}</strong>
+      @if (product().salePrice) {
+        <del>{{ product().price | currency: 'GBP' }}</del>
+      }
+    </p>
+  </div>
+  <div class="actions">
+    <button
+      type="button"
+      class="favorite-button"
+      [class.active]="favorites.has(product().id)"
+      [attr.aria-pressed]="favorites.has(product().id)"
+      [attr.aria-label]="
+        favorites.has(product().id)
+          ? 'Remove ' + product().name + ' from favourites'
+          : 'Add ' + product().name + ' to favourites'
+      "
+      (click)="toggleFavorite()"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          d="M20.8 4.8a5.5 5.5 0 0 0-7.8 0L12 5.9l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.4a5.5 5.5 0 0 0 0-7.8Z"
+        />
+      </svg>
+    </button>
+    <button type="button" class="add-to-basket" [disabled]="added()" (click)="addToBasket()">
+      @if (added()) {
+        <span i18n="@@assistantProductAdded">Added</span>
+      } @else {
+        <span i18n="@@assistantAddToBasket">Add</span>
+      }
+    </button>
+  </div>
+</article>

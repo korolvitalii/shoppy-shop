@@ -1,0 +1,96 @@
+<aside class="catalogue-filters" aria-label="Product filters" i18n-aria-label="@@productFilters">
+  <div class="filter-group">
+    <h2 i18n="@@categories">Categories</h2>
+    <a
+      routerLink="/products/search"
+      queryParamsHandling="preserve"
+      [class.active]="activeGroupId() === 'all'"
+    >
+      <span i18n="@@allCategories">All categories</span>
+    </a>
+    @for (category of categories(); track category.id) {
+      <a
+        [routerLink]="['/products', category.id]"
+        queryParamsHandling="preserve"
+        [class.active]="activeGroupId() === category.id"
+      >
+        <span>{{ category.name }}</span>
+        <span class="count">{{ category.itemCount }}</span>
+      </a>
+    }
+  </div>
+
+  <div class="filter-group">
+    <h2 i18n="@@price">Price</h2>
+    <div class="segmented" role="radiogroup" aria-label="Price" i18n-aria-label="@@price">
+      <label class="segmented-option" [class.active]="query().price === 'all'">
+        <input
+          type="radio"
+          name="price"
+          [checked]="query().price === 'all'"
+          (change)="priceChange.emit('all')"
+        />
+        <span i18n="@@allPrices">All</span>
+      </label>
+      <label class="segmented-option" [class.active]="query().price === '0-50'">
+        <input
+          type="radio"
+          name="price"
+          [checked]="query().price === '0-50'"
+          (change)="priceChange.emit('0-50')"
+        />
+        <span i18n="@@under50">Under £50</span>
+      </label>
+      <label class="segmented-option" [class.active]="query().price === '50-200'">
+        <input
+          type="radio"
+          name="price"
+          [checked]="query().price === '50-200'"
+          (change)="priceChange.emit('50-200')"
+        />
+        <span>£50–£200</span>
+      </label>
+      <label class="segmented-option" [class.active]="query().price === '200+'">
+        <input
+          type="radio"
+          name="price"
+          [checked]="query().price === '200+'"
+          (change)="priceChange.emit('200+')"
+        />
+        <span i18n="@@over200">£200+</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="filter-group">
+    <h2 i18n="@@availability">Availability</h2>
+    <label class="checkbox">
+      <input
+        type="checkbox"
+        [checked]="query().inStock"
+        (change)="inStockChange.emit(!query().inStock)"
+      />
+      <span i18n="@@inStockOnly">In stock only</span>
+    </label>
+    <label class="checkbox">
+      <input
+        type="checkbox"
+        [checked]="query().isNew"
+        (change)="isNewChange.emit(!query().isNew)"
+      />
+      <span i18n="@@newThisSeason">New this season</span>
+    </label>
+    <label class="checkbox">
+      <input
+        type="checkbox"
+        [checked]="query().giftWrappable"
+        (change)="giftWrappableChange.emit(!query().giftWrappable)"
+      />
+      <span i18n="@@giftWrappableLabel">Gift-wrappable</span>
+    </label>
+  </div>
+
+  <button type="button" class="reset-filters" (click)="filtersReset.emit()" i18n="@@resetFilters">
+    Reset filters
+  </button>
+</aside>

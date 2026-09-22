@@ -1,103 +1,176 @@
 <main class="checkout">
-  <app-checkout-stepper
-    [currentStep]="2"
-    [deliveryComplete]="facade.delivery() !== null"
-    [paymentComplete]="facade.paymentToken() !== null"
-  />
-  <h1 i18n="@@payment">Payment</h1>
-  <p class="page-intro" i18n="@@paymentIntro">
-    Secure mock checkout—no real charge is made and card details are never stored.
-  </p>
-  @if (!editingPayment() && facade.paymentToken(); as payment) {
-    <section class="saved-payment" aria-label="Selected payment method">
-      <p>
-        <span i18n="@@savedCard"
-          ><strong>{{ payment.brand }}</strong> ending in {{ payment.last4 }}</span
-        >
-      </p>
-      <button type="button" class="text-button" (click)="changePayment()" i18n="@@changePayment">
-        Change payment
-      </button>
-    </section>
-    <div class="checkout-actions">
-      <button type="button" (click)="continue()" i18n="@@continueReview">Continue to review</button>
-    </div>
-  } @else {
-    <form [formGroup]="form" (submit)="continue($event)" novalidate>
-      <div class="form-heading">
-        <span aria-hidden="true">✓</span>
-        <div>
-          <h2 i18n="@@cardDetails">Card details</h2>
-          <p i18n="@@mockPaymentDetail">Protected mock payment for portfolio demonstration.</p>
+  <div class="panel">
+    <app-checkout-summary-bar [itemCount]="facade.itemCount()" [total]="facade.total()" />
+    <app-checkout-stepper
+      [currentStep]="2"
+      [deliveryComplete]="facade.delivery() !== null"
+      [paymentComplete]="facade.paymentToken() !== null"
+    />
+    <div class="layout">
+      <div class="checkout-main">
+        <div class="page-head">
+          <h1 i18n="@@payment">Payment</h1>
+          <p class="page-intro" i18n="@@cardDetailsNeverStored">Card details are never stored.</p>
         </div>
+        <div class="notice-band">
+          <span class="notice-band-label" i18n="@@demonstration">Demonstration</span>
+          <p class="notice-band-text" i18n="@@mockCheckoutNotice">
+            Mock checkout — no real charge is made.
+          </p>
+        </div>
+        @if (!editingPayment() && facade.paymentToken(); as payment) {
+          <div class="saved-payment">
+            <p>
+              <span i18n="@@savedCard"
+                ><strong>{{ payment.brand }}</strong> ending in {{ payment.last4 }}</span
+              >
+            </p>
+            <button
+              type="button"
+              class="text-button"
+              (click)="changePayment()"
+              i18n="@@changePayment"
+            >
+              Change payment
+            </button>
+          </div>
+          <div class="checkout-actions">
+            <button type="button" class="primary-action" (click)="continue()">
+              <span i18n="@@continueReview">Continue to review</span> →
+            </button>
+          </div>
+        } @else {
+          <form class="checkout-form" [formGroup]="form" (submit)="continue($event)" novalidate>
+            @if (submitted() && form.invalid) {
+              <p class="form-error" role="alert" i18n="@@paymentDetailsError">
+                Check the highlighted payment details and try again.
+              </p>
+            }
+            <div class="form-section">
+              <div class="section-heading">
+                <span class="section-number" aria-hidden="true">01</span>
+                <h2 class="section-title" i18n="@@paymentMethod">Payment method</h2>
+              </div>
+              <div>
+                <span class="tag tag--filled" i18n="@@card">Card</span>
+              </div>
+            </div>
+            <div class="form-section">
+              <div class="section-heading">
+                <span class="section-number" aria-hidden="true">02</span>
+                <h2 class="section-title" i18n="@@cardDetails">Card details</h2>
+              </div>
+              <div class="field-grid field-grid--two">
+                <div class="field">
+                  <label for="cardholder-name" i18n="@@cardholderName">Cardholder name</label>
+                  <input
+                    id="cardholder-name"
+                    autocomplete="cc-name"
+                    formControlName="name"
+                    [attr.aria-invalid]="form.controls.name.touched && form.controls.name.invalid"
+                  />
+                  @if (form.controls.name.touched && form.controls.name.invalid) {
+                    <p class="field-error" i18n="@@cardholderNameError">
+                      Enter the name shown on the card
+                    </p>
+                  }
+                </div>
+                <div class="field">
+                  <label for="card-number" i18n="@@cardNumber">Card number</label>
+                  <input
+                    id="card-number"
+                    inputmode="numeric"
+                    autocomplete="cc-number"
+                    formControlName="card"
+                    maxlength="19"
+                    placeholder="4444 4444 4444 4444"
+                    [attr.aria-invalid]="form.controls.card.touched && form.controls.card.invalid"
+                    (input)="formatCard($event)"
+                  />
+                  @if (form.controls.card.touched && form.controls.card.invalid) {
+                    <p class="field-error" i18n="@@cardNumberError">Enter a 16-digit card number</p>
+                  }
+                </div>
+              </div>
+              <div class="field-grid field-grid--two">
+                <div class="field">
+                  <label for="card-expiry" i18n="@@expiry">Expiry</label>
+                  <input
+                    id="card-expiry"
+                    inputmode="numeric"
+                    autocomplete="cc-exp"
+                    formControlName="expiry"
+                    maxlength="5"
+                    placeholder="MM/YY"
+                    [attr.aria-invalid]="
+                      form.controls.expiry.touched && form.controls.expiry.invalid
+                    "
+                    (input)="formatExpiry($event)"
+                  />
+                  @if (form.controls.expiry.touched && form.controls.expiry.invalid) {
+                    <p class="field-error" i18n="@@expiryError">Enter expiry as MM/YY</p>
+                  }
+                </div>
+                <div class="field">
+                  <label for="card-cvv" i18n="@@cvv">CVV</label>
+                  <input
+                    id="card-cvv"
+                    type="password"
+                    inputmode="numeric"
+                    autocomplete="cc-csc"
+                    formControlName="cvv"
+                    maxlength="4"
+                    [attr.aria-invalid]="form.controls.cvv.touched && form.controls.cvv.invalid"
+                  />
+                  @if (form.controls.cvv.touched && form.controls.cvv.invalid) {
+                    <p class="field-error" i18n="@@cvvError">
+                      Enter the 3 or 4-digit security code
+                    </p>
+                  }
+                </div>
+              </div>
+              <p class="rail-note" i18n="@@billingAddressMatchesDelivery">
+                Billing address matches the delivery address.
+              </p>
+            </div>
+            <div class="checkout-actions">
+              <button type="submit" class="primary-action">
+                <span i18n="@@continueReview">Continue to review</span> →
+              </button>
+            </div>
+          </form>
+        }
+        <a class="back-link" routerLink="/checkout/delivery"
+          >← <span i18n="@@backToDelivery">Back to delivery</span></a
+        >
       </div>
-      @if (submitted() && form.invalid) {
-        <p class="form-error" role="alert" i18n="@@paymentDetailsError">
-          Check the highlighted payment details and try again.
-        </p>
-      }
-      <label for="cardholder-name">
-        <span i18n="@@cardholderName">Cardholder name</span>
-        <input
-          id="cardholder-name"
-          autocomplete="cc-name"
-          formControlName="name"
-          [attr.aria-invalid]="form.controls.name.touched && form.controls.name.invalid"
-        />
-        @if (form.controls.name.touched && form.controls.name.invalid) {
-          <span i18n="@@cardholderNameError">Enter the name shown on the card</span>
+      <aside class="order-rail" aria-labelledby="rail-title-delivery">
+        <h2 id="rail-title-delivery" class="rail-title" i18n="@@deliveringTo">Delivering to</h2>
+        @if (facade.delivery(); as delivery) {
+          <address class="rail-address">
+            <strong>{{ delivery.name }}</strong
+            ><br />
+            {{ delivery.address }}<br />
+            {{ delivery.city }} {{ delivery.postcode }}<br />
+            {{ delivery.country }}
+          </address>
+          <a
+            class="back-link"
+            routerLink="/checkout/delivery"
+            i18n-aria-label="@@editDeliveryAddressLabel"
+            aria-label="Edit delivery address"
+            i18n="@@edit"
+            >Edit</a
+          >
         }
-      </label>
-      <label for="card-number">
-        <span i18n="@@cardNumber">Card number</span>
-        <input
-          id="card-number"
-          inputmode="numeric"
-          autocomplete="cc-number"
-          formControlName="card"
-          maxlength="19"
-          placeholder="4444 4444 4444 4444"
-          [attr.aria-invalid]="form.controls.card.touched && form.controls.card.invalid"
-          (input)="formatCard($event)"
-        />
-        @if (form.controls.card.touched && form.controls.card.invalid) {
-          <span i18n="@@cardNumberError">Enter a 16-digit card number</span>
-        }
-      </label>
-      <label for="card-expiry">
-        <span i18n="@@expiry">Expiry</span>
-        <input
-          id="card-expiry"
-          inputmode="numeric"
-          autocomplete="cc-exp"
-          formControlName="expiry"
-          maxlength="5"
-          placeholder="MM/YY"
-          [attr.aria-invalid]="form.controls.expiry.touched && form.controls.expiry.invalid"
-          (input)="formatExpiry($event)"
-        />
-        @if (form.controls.expiry.touched && form.controls.expiry.invalid) {
-          <span i18n="@@expiryError">Enter expiry as MM/YY</span>
-        }
-      </label>
-      <label for="card-cvv">
-        <span i18n="@@cvv">CVV</span>
-        <input
-          id="card-cvv"
-          type="password"
-          inputmode="numeric"
-          autocomplete="cc-csc"
-          formControlName="cvv"
-          maxlength="4"
-          [attr.aria-invalid]="form.controls.cvv.touched && form.controls.cvv.invalid"
-        />
-        @if (form.controls.cvv.touched && form.controls.cvv.invalid) {
-          <span i18n="@@cvvError">Enter the 3 or 4-digit security code</span>
-        }
-      </label>
-      <div class="checkout-actions">
-        <button type="submit" i18n="@@continueReview">Continue to review</button>
-      </div>
-    </form>
-  }
+        <div class="rail-group">
+          <app-checkout-totals
+            [subtotal]="facade.subtotal()"
+            [deliveryCharge]="facade.deliveryCharge()"
+            [total]="facade.total()"
+          />
+        </div>
+      </aside>
+    </div>
+  </div>
 </main>

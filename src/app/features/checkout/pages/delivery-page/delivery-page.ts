@@ -1,14 +1,24 @@
+import { CurrencyPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import { CheckoutStepper } from '../../components/checkout-stepper/checkout-stepper';
+import { CheckoutSummaryBar } from '../../components/checkout-summary-bar/checkout-summary-bar';
+import { CheckoutTotals } from '../../components/checkout-totals/checkout-totals';
 import { CheckoutFacade } from '../../data-access/checkout.facade';
 @Component({
   selector: 'app-delivery-page',
-  imports: [CheckoutStepper, ReactiveFormsModule],
+  imports: [
+    CheckoutStepper,
+    CheckoutSummaryBar,
+    CheckoutTotals,
+    ReactiveFormsModule,
+    CurrencyPipe,
+    RouterLink,
+  ],
   templateUrl: './delivery-page.html',
-  styleUrl: '../checkout.scss',
+  styleUrls: ['../checkout.scss', './delivery-page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeliveryPage {

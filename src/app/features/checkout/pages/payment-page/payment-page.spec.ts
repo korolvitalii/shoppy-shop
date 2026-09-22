@@ -16,6 +16,11 @@ describe('PaymentPage', () => {
       country: 'United Kingdom',
     }),
     paymentToken: signal<CheckoutPaymentToken | null>(null),
+    items: () => [],
+    itemCount: () => 3,
+    subtotal: () => 116.33,
+    deliveryCharge: () => 4.99,
+    total: () => 121.32,
     setPaymentToken: vi.fn(),
     clearPaymentToken: vi.fn(),
   };
@@ -71,5 +76,15 @@ describe('PaymentPage', () => {
 
     expect(fixture.nativeElement.textContent).toContain('Visa ending in 4242');
     expect(fixture.nativeElement.querySelector('a[href="/checkout/delivery"]')).toBeTruthy();
+  });
+
+  it('displays delivery information in the sidebar', () => {
+    const fixture = TestBed.createComponent(PaymentPage);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('Alex Morgan');
+    expect(fixture.nativeElement.textContent).toContain('4 Market Street');
+    expect(fixture.nativeElement.textContent).toContain('London SW1A 1AA');
+    expect(fixture.nativeElement.textContent).toContain('United Kingdom');
   });
 });

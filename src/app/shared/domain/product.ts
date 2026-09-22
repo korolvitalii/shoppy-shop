@@ -8,4 +8,6 @@ export interface Product {
   price: number;
   salePrice: number | null;
   inStock: boolean;
+  isNew: boolean;
+  giftWrappable: boolean;
 }

@@ -1,84 +1,92 @@
 :host {
   display: block;
-  margin-bottom: 2rem;
-}
-
-nav {
-  position: relative;
+  border-bottom: 2px solid var(--color-ink);
 }
 
 ol {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  padding: 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   margin: 0;
+  padding: 0;
   list-style: none;
 }
 
-li {
-  position: relative;
-}
-
-li:not(:last-child)::after {
-  content: '';
-  position: absolute;
-  top: 1rem;
-  right: calc(-50% + 1.25rem);
-  left: calc(50% + 1.25rem);
-  height: 2px;
-  background: rgba(22, 33, 62, 0.15);
-}
-
-li.complete:not(:last-child)::after {
-  background: var(--color-primary);
-}
-
-.step-link,
-.disabled {
-  display: grid;
-  justify-items: center;
-  gap: 0.45rem;
+.step {
+  border-top: 6px solid color-mix(in srgb, var(--color-ink) 20%, transparent);
   color: var(--color-muted);
-  font-size: 0.72rem;
-  font-weight: 800;
-  text-decoration: none;
 }
 
-.step-link:hover,
-.current .step-link {
+.step + .step {
+  border-left: 1px solid var(--color-border);
+}
+
+.step.reached {
+  border-top-color: var(--color-primary);
   color: var(--color-ink);
 }
 
+.step-link {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+.step-link.disabled {
+  cursor: not-allowed;
+}
+
 .step-marker {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  width: 2rem;
-  height: 2rem;
-  place-items: center;
-  border: 2px solid rgba(22, 33, 62, 0.2);
-  border-radius: 50%;
-  background: var(--color-surface);
+  font-weight: 800;
+  font-size: 1.75rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.step.reached .step-marker {
+  color: var(--color-primary);
 }
 
 .step-label {
-  white-space: nowrap;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
-.complete .step-marker,
-.current .step-marker {
-  border-color: var(--color-primary);
-  color: #fff;
-  background: var(--color-primary);
+.step-state {
+  color: var(--color-muted);
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
-.disabled {
-  opacity: 0.55;
+a.step-link:hover .step-label {
+  color: var(--color-primary);
 }
 
-@media (max-width: 35rem) {
-  .step-link,
-  .disabled {
-    font-size: 0.65rem;
+a:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--color-primary) 25%, transparent);
+  outline-offset: -3px;
+}
+
+@media (max-width: 40rem) {
+  .step-link {
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .step-marker {
+    font-size: 1.25rem;
+  }
+
+  .step-label,
+  .step-state {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
   }
 }

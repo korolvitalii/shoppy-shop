@@ -1,81 +1,159 @@
 <main class="listing-page">
-  <nav class="breadcrumbs" aria-label="Breadcrumb">
-    <a routerLink="/products" i18n="@@products">Products</a><span>/</span
-    ><span>{{ groupId() === 'all' ? 'Search' : groupId() }}</span>
-  </nav>
-  <section class="toolbar" aria-label="Product filters">
-    <label
-      ><span i18n="@@searchAction">Search</span>
-      <input
-        type="search"
-        [formControl]="searchControl"
-        placeholder="Search products"
-        i18n-placeholder="@@searchProducts"
-    /></label>
-    <label
-      ><span i18n="@@price">Price</span>
-      <select [value]="query().price" (change)="updateFilter('price', $event)">
-        <option value="all" i18n="@@allPrices">All prices</option>
-        <option value="0-50" i18n="@@under50">Under £50</option>
-        <option value="50-200">£50–£200</option>
-        <option value="200+" i18n="@@over200">£200 and over</option>
-      </select></label
-    >
-    <label
-      ><span i18n="@@sort">Sort</span>
-      <select [value]="query().sort" (change)="updateFilter('sort', $event)">
-        <option value="featured" i18n="@@featured">Featured</option>
-        <option value="price-asc" i18n="@@priceLowHigh">Price: low to high</option>
-        <option value="price-desc" i18n="@@priceHighLow">Price: high to low</option>
-        <option value="name" i18n="@@name">Name</option>
-      </select></label
-    >
-  </section>
-  @switch (status()) {
-    @case ('loading') {
-      <section class="state" role="status" i18n="@@loadingProducts">Loading products…</section>
-    }
-    @case ('error') {
-      <section class="state" role="alert">
-        <h2 i18n="@@productsUnavailable">Products are unavailable</h2>
-        <button type="button" (click)="retry()" i18n="@@tryAgain">Try again</button>
-      </section>
-    }
-    @case ('success') {
-      @if (products().length === 0) {
-        <section class="state">
-          <h2 i18n="@@noMatchingProducts">No products match your filters</h2>
-          <button type="button" (click)="clearFilters()" i18n="@@clearFilters">
-            Clear filters
+  <div class="layout">
+    <app-catalogue-filters
+      class="sidebar"
+      [categories]="categories()"
+      [activeGroupId]="groupId()"
+      [query]="query()"
+      (priceChange)="setPrice($event)"
+      (inStockChange)="setInStock($event)"
+      (isNewChange)="setIsNew($event)"
+      (giftWrappableChange)="setGiftWrappable($event)"
+      (filtersReset)="resetSidebarFilters()"
+    />
+
+    <div class="content">
+      <div class="search-row">
+        <label class="search-field">
+          <span i18n="@@searchAction">Search</span>
+          <input
+            type="search"
+            [formControl]="searchControl"
+            placeholder="Search products"
+            i18n-placeholder="@@searchProducts"
+          />
+        </label>
+        <div class="sort-chips" role="group" aria-label="Sort" i18n-aria-label="@@sort">
+          <span aria-hidden="true" i18n="@@sort">Sort</span>
+          <button
+            type="button"
+            class="tag"
+            [class.active]="query().sort === 'featured'"
+            [attr.aria-pressed]="query().sort === 'featured'"
+            (click)="setSort('featured')"
+            i18n="@@featured"
+          >
+            Featured
           </button>
-        </section>
-      } @else {
-        <section class="product-grid" aria-label="Products">
-          @for (product of products(); track product.id) {
-            <app-product-card
-              [product]="product"
-              [favorite]="favorites.has(product.id)"
-              (favoriteToggle)="toggleFavorite(product)"
-            />
-          }
-        </section>
-        @if (nextCursor()) {
-          <section class="load-more">
-            @if (loadMoreFailed()) {
-              <p class="load-more__error" role="alert" i18n="@@loadMoreFailed">
-                Could not load more products.
-              </p>
+          <button
+            type="button"
+            class="tag"
+            [class.active]="query().sort === 'price-asc'"
+            [attr.aria-pressed]="query().sort === 'price-asc'"
+            (click)="setSort('price-asc')"
+            i18n="@@priceLowHigh"
+          >
+            Price ↑
+          </button>
+          <button
+            type="button"
+            class="tag"
+            [class.active]="query().sort === 'price-desc'"
+            [attr.aria-pressed]="query().sort === 'price-desc'"
+            (click)="setSort('price-desc')"
+            i18n="@@priceHighLow"
+          >
+            Price ↓
+          </button>
+          <button
+            type="button"
+            class="tag"
+            [class.active]="query().sort === 'name'"
+            [attr.aria-pressed]="query().sort === 'name'"
+            (click)="setSort('name')"
+            i18n="@@name"
+          >
+            Name
+          </button>
+        </div>
+      </div>
+
+      @if (activeFilterChips().length > 0 || totalCount() !== null) {
+        <div class="applied-filters">
+          <div class="chips">
+            @if (activeFilterChips().length > 0) {
+              <span class="chips-label" i18n="@@filters">Filters</span>
             }
-            <button type="button" (click)="loadMore()" [disabled]="loadingMore()">
-              @if (loadingMore()) {
-                <span i18n="@@loadingMoreProducts">Loading more products…</span>
-              } @else {
-                <span i18n="@@loadMore">Load more</span>
-              }
-            </button>
+            @for (chip of activeFilterChips(); track chip.key) {
+              <button type="button" class="tag tag-removable" (click)="removeFilterChip(chip.key)">
+                {{ chip.label }} <span aria-hidden="true">✕</span>
+              </button>
+            }
+          </div>
+          @if (totalCount() !== null) {
+            <span class="result-count" i18n="@@showingCount">
+              Showing {{ products().length }} of {{ totalCount() }}
+            </span>
+          }
+        </div>
+      }
+
+      @switch (status()) {
+        @case ('loading') {
+          <section class="state" role="status" i18n="@@loadingProducts">Loading products…</section>
+        }
+        @case ('error') {
+          <section class="state" role="alert">
+            <h2 i18n="@@productsUnavailable">Products are unavailable</h2>
+            <button type="button" (click)="retry()" i18n="@@tryAgain">Try again</button>
           </section>
         }
+        @case ('success') {
+          @if (products().length === 0) {
+            <section class="state">
+              <h2 i18n="@@noMatchingProducts">No products match your filters</h2>
+              <button type="button" (click)="clearFilters()" i18n="@@clearFilters">
+                Clear filters
+              </button>
+            </section>
+          } @else {
+            <section class="product-grid" aria-label="Products">
+              @for (product of products(); track product.id) {
+                <app-product-card
+                  [product]="product"
+                  [favorite]="favorites.has(product.id)"
+                  [categoryLabel]="categoryName(product.groupId)"
+                  (favoriteToggle)="toggleFavorite(product)"
+                />
+              }
+            </section>
+
+            @if (groupId() === 'all') {
+              <a class="promo-band" routerLink="/products/gifts">
+                <span class="copy">
+                  <span class="eyebrow" i18n="@@giftGuide">Gift guide</span>
+                  <span class="headline" i18n="@@giftGuideHeadline"
+                    >Thoughtful finds for celebrations and spontaneous surprises.</span
+                  >
+                </span>
+                <span class="cta" i18n="@@browseGifts">Browse gifts →</span>
+              </a>
+            }
+
+            @if (nextCursor()) {
+              <section class="load-more">
+                @if (loadMoreFailed()) {
+                  <p class="load-more__error" role="alert" i18n="@@loadMoreFailed">
+                    Could not load more products.
+                  </p>
+                }
+                @if (totalCount() !== null) {
+                  <span class="load-more__count" i18n="@@showingCount">
+                    Showing {{ products().length }} of {{ totalCount() }}
+                  </span>
+                }
+                <button type="button" (click)="loadMore()" [disabled]="loadingMore()">
+                  @if (loadingMore()) {
+                    <span i18n="@@loadingMoreProducts">Loading more products…</span>
+                  } @else {
+                    <span i18n="@@loadMore">Load more</span>
+                  }
+                </button>
+              </section>
+            }
+          }
+        }
       }
-    }
-  }
+    </div>
+  </div>
 </main>

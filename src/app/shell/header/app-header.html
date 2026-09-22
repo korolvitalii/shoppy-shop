@@ -110,25 +110,6 @@
     </div>
   </div>
 
-  <div class="navigation-bar">
-    <nav class="desktop-navigation" aria-label="Primary navigation">
-      <a
-        class="all-categories"
-        routerLink="/products"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }"
-      >
-        <span class="grid-icon" aria-hidden="true">⌘</span>
-        <span i18n="@@allCategories">All categories</span>
-      </a>
-      @for (category of categories; track category.id) {
-        <a [routerLink]="['/products', category.id]" routerLinkActive="active">{{
-          category.label
-        }}</a>
-      }
-    </nav>
-  </div>
-
   @if (menuOpen()) {
     <nav id="mobile-navigation" class="mobile-navigation" aria-label="Mobile navigation">
       <app-language-selector [wide]="true" />

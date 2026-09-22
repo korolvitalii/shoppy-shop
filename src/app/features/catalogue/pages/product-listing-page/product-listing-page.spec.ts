@@ -1,13 +1,15 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { convertToParamMap, provideRouter } from '@angular/router';
+import { convertToParamMap, provideRouter, Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, of, Subject } from 'rxjs';
 
 import { type Product } from '../../../../shared/domain/product';
+import { ProductGroupsRepository } from '../../data-access/product-groups.repository';
 import { ProductsRepository } from '../../data-access/products.repository';
 import { type ProductPage } from '../../models/product';
+import { type ProductGroup } from '../../models/product-group';
 import { ProductListingPage } from './product-listing-page';
 
 const product = (id: string, name: string): Product => ({
@@ -20,18 +22,43 @@ const product = (id: string, name: string): Product => ({
   price: 249,
   salePrice: 199,
   inStock: true,
+  isNew: false,
+  giftWrappable: false,
 });
+
+const baseQuery = {
+  search: '',
+  sort: 'featured' as const,
+  price: 'all' as const,
+  inStock: false,
+  isNew: false,
+  giftWrappable: false,
+};
+
+const categories: readonly ProductGroup[] = [
+  {
+    id: 'electronics',
+    name: 'Electronics',
+    description: 'd',
+    imageUrl: '/g.jpg',
+    itemCount: 26,
+    badge: null,
+  },
+];
 
 describe('ProductListingPage', () => {
   const params = new BehaviorSubject(convertToParamMap({ groupId: 'electronics' }));
   const queryParams = new BehaviorSubject(convertToParamMap({}));
   const repository = { search: vi.fn() };
+  const groupsRepository = { getAll: vi.fn() };
   let response: Subject<ProductPage>;
 
   beforeEach(async () => {
     response = new Subject<ProductPage>();
     repository.search.mockReset();
     repository.search.mockReturnValue(response);
+    groupsRepository.getAll.mockReset();
+    groupsRepository.getAll.mockReturnValue(of(categories));
     params.next(convertToParamMap({ groupId: 'electronics' }));
     queryParams.next(convertToParamMap({}));
 
@@ -42,6 +69,7 @@ describe('ProductListingPage', () => {
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: ProductsRepository, useValue: repository },
+        { provide: ProductGroupsRepository, useValue: groupsRepository },
         {
           provide: ActivatedRoute,
           useValue: { paramMap: params, queryParamMap: queryParams },
@@ -56,6 +84,7 @@ describe('ProductListingPage', () => {
     fixture.detectChanges();
 
     expect(repository.search).toHaveBeenCalledWith('electronics', {
+      ...baseQuery,
       search: 'audio',
       sort: 'price-asc',
       price: '50-200',
@@ -71,17 +100,38 @@ describe('ProductListingPage', () => {
     const fixture = TestBed.createComponent(ProductListingPage);
     fixture.detectChanges();
 
-    expect(repository.search).toHaveBeenCalledWith('all', {
-      search: 'gift',
-      sort: 'featured',
-      price: 'all',
+    expect(repository.search).toHaveBeenCalledWith('all', { ...baseQuery, search: 'gift' });
+  });
+
+  it('parses the in-stock, new, and gift-wrappable query params into booleans', () => {
+    queryParams.next(convertToParamMap({ inStock: 'true', isNew: 'true', giftWrappable: 'true' }));
+    const fixture = TestBed.createComponent(ProductListingPage);
+    fixture.detectChanges();
+
+    expect(repository.search).toHaveBeenCalledWith('electronics', {
+      ...baseQuery,
+      inStock: true,
+      isNew: true,
+      giftWrappable: true,
     });
+  });
+
+  it('fetches categories once for the filter sidebar', () => {
+    const fixture = TestBed.createComponent(ProductListingPage);
+    fixture.detectChanges();
+
+    expect(groupsRepository.getAll).toHaveBeenCalledTimes(1);
+    expect(fixture.componentInstance.categories()).toEqual(categories);
   });
 
   it('renders products returned by the repository', () => {
     const fixture = TestBed.createComponent(ProductListingPage);
     fixture.detectChanges();
-    response.next({ items: [product('headphones', 'Studio headphones')], nextCursor: null });
+    response.next({
+      items: [product('headphones', 'Studio headphones')],
+      nextCursor: null,
+      totalCount: 1,
+    });
     response.complete();
     fixture.detectChanges();
 
@@ -91,10 +141,24 @@ describe('ProductListingPage', () => {
     ).toBeTruthy();
   });
 
+  it('shows the total count once the first page resolves', () => {
+    const fixture = TestBed.createComponent(ProductListingPage);
+    fixture.detectChanges();
+    response.next({
+      items: [product('headphones', 'Studio headphones')],
+      nextCursor: null,
+      totalCount: 26,
+    });
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.totalCount()).toBe(26);
+    expect((fixture.nativeElement as HTMLElement).textContent).toContain('Showing 1 of 26');
+  });
+
   it('shows an empty result and an API error state', () => {
     const fixture = TestBed.createComponent(ProductListingPage);
     fixture.detectChanges();
-    response.next({ items: [], nextCursor: null });
+    response.next({ items: [], nextCursor: null, totalCount: 0 });
     response.complete();
     fixture.detectChanges();
     expect((fixture.nativeElement as HTMLElement).textContent).toContain('No products match');
@@ -103,7 +167,11 @@ describe('ProductListingPage', () => {
   it('hides the load-more control once a page comes back without a cursor', () => {
     const fixture = TestBed.createComponent(ProductListingPage);
     fixture.detectChanges();
-    response.next({ items: [product('headphones', 'Studio headphones')], nextCursor: null });
+    response.next({
+      items: [product('headphones', 'Studio headphones')],
+      nextCursor: null,
+      totalCount: 1,
+    });
     fixture.detectChanges();
 
     expect((fixture.nativeElement as HTMLElement).textContent).not.toContain('Load more');
@@ -112,7 +180,11 @@ describe('ProductListingPage', () => {
   it('appends the next page to the products already on screen', () => {
     const fixture = TestBed.createComponent(ProductListingPage);
     fixture.detectChanges();
-    response.next({ items: [product('headphones', 'Studio headphones')], nextCursor: 'cursor-1' });
+    response.next({
+      items: [product('headphones', 'Studio headphones')],
+      nextCursor: 'cursor-1',
+      totalCount: 2,
+    });
     fixture.detectChanges();
 
     const element = fixture.nativeElement as HTMLElement;
@@ -122,13 +194,15 @@ describe('ProductListingPage', () => {
     repository.search.mockReturnValue(nextPage);
     element.querySelector<HTMLButtonElement>('.load-more button')!.click();
 
-    expect(repository.search).toHaveBeenLastCalledWith(
-      'electronics',
-      { search: '', sort: 'featured', price: 'all' },
-      { cursor: 'cursor-1' },
-    );
+    expect(repository.search).toHaveBeenLastCalledWith('electronics', baseQuery, {
+      cursor: 'cursor-1',
+    });
 
-    nextPage.next({ items: [product('speaker', 'Desk speaker')], nextCursor: null });
+    nextPage.next({
+      items: [product('speaker', 'Desk speaker')],
+      nextCursor: null,
+      totalCount: null,
+    });
     fixture.detectChanges();
 
     // The first page must still be on screen — this is append, not replace.
@@ -142,7 +216,11 @@ describe('ProductListingPage', () => {
    * request so a test can decide how it eventually settles.
    */
   const loadMoreThenChangeFilters = (fixture: ComponentFixture<ProductListingPage>) => {
-    response.next({ items: [product('headphones', 'Studio headphones')], nextCursor: 'cursor-1' });
+    response.next({
+      items: [product('headphones', 'Studio headphones')],
+      nextCursor: 'cursor-1',
+      totalCount: 2,
+    });
     fixture.detectChanges();
 
     const abandoned = new Subject<ProductPage>();
@@ -155,7 +233,11 @@ describe('ProductListingPage', () => {
     repository.search.mockReturnValue(replacement);
     queryParams.next(convertToParamMap({ sort: 'name' }));
     fixture.detectChanges();
-    replacement.next({ items: [product('lamp', 'Desk lamp')], nextCursor: 'cursor-2' });
+    replacement.next({
+      items: [product('lamp', 'Desk lamp')],
+      nextCursor: 'cursor-2',
+      totalCount: 1,
+    });
     fixture.detectChanges();
 
     return { abandoned };
@@ -167,7 +249,11 @@ describe('ProductListingPage', () => {
     const { abandoned } = loadMoreThenChangeFilters(fixture);
 
     // Those rows belong to the previous listing; appending them would interleave two result sets.
-    abandoned.next({ items: [product('speaker', 'Desk speaker')], nextCursor: null });
+    abandoned.next({
+      items: [product('speaker', 'Desk speaker')],
+      nextCursor: null,
+      totalCount: null,
+    });
     fixture.detectChanges();
 
     const element = fixture.nativeElement as HTMLElement;
@@ -194,11 +280,15 @@ describe('ProductListingPage', () => {
 
     expect(repository.search).toHaveBeenLastCalledWith(
       'electronics',
-      { search: '', sort: 'name', price: 'all' },
+      { ...baseQuery, sort: 'name' },
       { cursor: 'cursor-2' },
     );
 
-    nextPage.next({ items: [product('speaker', 'Desk speaker')], nextCursor: null });
+    nextPage.next({
+      items: [product('speaker', 'Desk speaker')],
+      nextCursor: null,
+      totalCount: null,
+    });
     fixture.detectChanges();
     expect(element.textContent).toContain('Desk speaker');
   });
@@ -215,5 +305,21 @@ describe('ProductListingPage', () => {
     expect((fixture.nativeElement as HTMLElement).textContent).not.toContain(
       'Could not load more products',
     );
+  });
+
+  it('navigates with the in-stock filter merged into the current query params', () => {
+    const fixture = TestBed.createComponent(ProductListingPage);
+    fixture.detectChanges();
+    response.next({ items: [], nextCursor: null, totalCount: 0 });
+    fixture.detectChanges();
+
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    fixture.componentInstance.setInStock(true);
+
+    expect(navigate).toHaveBeenCalledWith([], {
+      relativeTo: expect.anything(),
+      queryParams: { inStock: 'true' },
+      queryParamsHandling: 'merge',
+    });
   });
 });
