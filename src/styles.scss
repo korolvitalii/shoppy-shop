@@ -53,6 +53,7 @@ html {
   --shadow-sm: 0 1px 2px var(--shadow-color);
   --shadow-md: 0 4px 12px var(--shadow-color);
   --shadow-lg: 0 12px 32px var(--shadow-color);
+  --focus-ring: 3px solid var(--color-primary);
   color-scheme: light;
   scrollbar-gutter: stable;
   font-family:
