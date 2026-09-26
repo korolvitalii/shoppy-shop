@@ -51,7 +51,11 @@ const productHtml = await readFile(
   'utf8',
 );
 assert(productHtml.includes('"@type":"Product"'), 'Product JSON-LD is missing');
-assert(productHtml.includes('Refined Ceramic Table'), 'Prerendered product content is missing');
+const prerenderedProduct = catalogue.products.find((product) => product.id === 'beauty-1');
+assert(
+  productHtml.includes(prerenderedProduct.name.replaceAll('&', '&amp;')),
+  'Prerendered product content is missing',
+);
 const sitemap = await readFile(resolve(output, 'sitemap.xml'), 'utf8');
 const expectedCount = paths.length * locales.length;
 assert(

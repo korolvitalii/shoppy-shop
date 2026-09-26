@@ -109,7 +109,7 @@ describe('StaticProductsRepository', () => {
       .subscribe((result) => (productName = result?.name ?? ''));
 
     expect(products).toBe(9);
-    expect(productName).toBe('Refined Ceramic Table');
+    expect(productName).toBe('Vetiver & Cedar Eau de Parfum');
   });
 
   it('reports the total count only on the first page of a listing', () => {
