@@ -108,7 +108,7 @@ describe('StaticProductsRepository', () => {
       .getById('beauty', 'beauty-1')
       .subscribe((result) => (productName = result?.name ?? ''));
 
-    expect(products).toBe(9);
+    expect(products).toBe(15);
     expect(productName).toBe('Vetiver & Cedar Eau de Parfum');
   });
 
@@ -122,7 +122,7 @@ describe('StaticProductsRepository', () => {
       .search('beauty', baseQuery, { cursor: firstPage.nextCursor, limit: 4 })
       .subscribe((page) => (secondPage = page));
 
-    expect(firstPage.totalCount).toBe(9);
+    expect(firstPage.totalCount).toBe(15);
     expect(secondPage.totalCount).toBeNull();
   });
 
@@ -142,11 +142,11 @@ describe('StaticProductsRepository', () => {
       .search('beauty', { ...baseQuery, giftWrappable: true })
       .subscribe((page) => (giftWrappableCount = page.items.length));
 
-    expect(inStockCount).toBeLessThanOrEqual(9);
+    expect(inStockCount).toBeLessThanOrEqual(15);
     expect(newCount).toBeGreaterThan(0);
-    expect(newCount).toBeLessThan(9);
+    expect(newCount).toBeLessThan(15);
     expect(giftWrappableCount).toBeGreaterThan(0);
-    expect(giftWrappableCount).toBeLessThan(9);
+    expect(giftWrappableCount).toBeLessThan(15);
   });
 
   it('walks its offset cursor to the end of a category without repeating a product', () => {
@@ -163,7 +163,7 @@ describe('StaticProductsRepository', () => {
       cursor = page.nextCursor;
     } while (cursor);
 
-    expect(ids.length).toBe(9);
-    expect(new Set(ids).size).toBe(9);
+    expect(ids.length).toBe(15);
+    expect(new Set(ids).size).toBe(15);
   });
 });

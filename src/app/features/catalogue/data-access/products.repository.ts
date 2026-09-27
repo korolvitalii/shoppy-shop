@@ -86,7 +86,7 @@ export class StaticProductsRepository implements ProductsRepository {
       return 0;
     });
 
-    // This is the prerender-time source, backed by a bundled 54-product catalogue rather than the
+    // This is the prerender-time source, backed by a bundled 90-product catalogue rather than the
     // database, so its cursor is just an offset into the sorted array. It is deliberately not
     // interchangeable with the API's keyset cursor — nothing carries one across, because a page
     // switching from this repository to the API one starts a fresh query.
