@@ -16,6 +16,12 @@ export class ProductCard {
   readonly favorite = input(false);
   readonly categoryLabel = input<string | null>(null);
   readonly favoriteToggle = output<void>();
+  readonly favoriteButtonLabel = computed(() => {
+    const name = this.product().name;
+    return this.favorite()
+      ? $localize`:@@removeProductFromFavourites:Remove ${name}:productName: from favourites`
+      : $localize`:@@addProductToFavourites:Add ${name}:productName: to favourites`;
+  });
   readonly effectivePrice = computed(() => this.product().salePrice ?? this.product().price);
   readonly discount = computed(() => {
     const product = this.product();

@@ -77,6 +77,12 @@ export class ProductDetailsPage {
     return product?.salePrice ? product.price - product.salePrice : 0;
   });
   readonly isAuthenticated = this.session.isAuthenticated;
+  readonly favoriteButtonLabel = computed(() => {
+    const product = this.product();
+    return product && this.favorites.has(product.id)
+      ? $localize`:@@removeFromFavourites:Remove from favourites`
+      : $localize`:@@addToFavourites:Add to favourites`;
+  });
   readonly addButtonLabel = computed(() => {
     if (!this.isAuthenticated()) return $localize`:@@signInToAdd:Sign in to add`;
     return this.added()
