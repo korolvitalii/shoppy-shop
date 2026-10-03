@@ -8,13 +8,14 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, type ParamMap, Router, RouterLink } from '@angular/router';
 import {
   BehaviorSubject,
   catchError,
   combineLatest,
   debounceTime,
   distinctUntilChanged,
+  EMPTY,
   exhaustMap,
   finalize,
   map,
@@ -37,12 +38,33 @@ import { ProductsRepository } from '../../data-access/products.repository';
 import {
   DEFAULT_PRODUCT_SEARCH_QUERY,
   type PriceRange,
+  type ProductPage,
   type ProductSearchQuery,
   type ProductSort,
 } from '../../models/product';
 import { type ProductGroup } from '../../models/product-group';
 
 type RequestStatus = 'loading' | 'success' | 'error';
+
+interface Listing {
+  groupId: string;
+  query: ProductSearchQuery;
+}
+
+/** The URL is the listing's source of truth: the category from the path, filters from the query. */
+function listingFromRoute(params: ParamMap, queryParams: ParamMap): Listing {
+  return {
+    groupId: params.get('groupId') ?? 'all',
+    query: {
+      search: queryParams.get('search') ?? '',
+      sort: (queryParams.get('sort') ?? 'featured') as ProductSort,
+      price: (queryParams.get('price') ?? 'all') as PriceRange,
+      inStock: queryParams.get('inStock') === 'true',
+      isNew: queryParams.get('isNew') === 'true',
+      giftWrappable: queryParams.get('giftWrappable') === 'true',
+    },
+  };
+}
 
 function priceRangeLabel(price: PriceRange): string {
   switch (price) {
@@ -112,90 +134,10 @@ export class ProductListingPage {
   });
 
   constructor() {
-    this.groupsRepository
-      .getAll()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((groups) => this.categories.set(groups));
-
-    combineLatest([this.route.paramMap, this.route.queryParamMap, this.refresh])
-      .pipe(
-        map(([params, queryParams]) => ({
-          groupId: params.get('groupId') ?? 'all',
-          query: {
-            search: queryParams.get('search') ?? '',
-            sort: (queryParams.get('sort') ?? 'featured') as ProductSort,
-            price: (queryParams.get('price') ?? 'all') as PriceRange,
-            inStock: queryParams.get('inStock') === 'true',
-            isNew: queryParams.get('isNew') === 'true',
-            giftWrappable: queryParams.get('giftWrappable') === 'true',
-          },
-        })),
-        tap(({ groupId, query }) => {
-          this.groupId.set(groupId);
-          this.query.set(query);
-          this.searchControl.setValue(query.search, { emitEvent: false });
-          this.status.set('loading');
-          // A cursor is only valid for the query it was issued under, so a new listing always
-          // restarts from the first page and abandons any page still loading for the old one.
-          this.listingChanges.next();
-          this.nextCursor.set(null);
-          this.loadMoreFailed.set(false);
-          this.updateSeo(groupId, query.search);
-        }),
-        switchMap(({ groupId, query }) =>
-          this.repository.search(groupId, query).pipe(
-            catchError(() => {
-              this.status.set('error');
-              return of(null);
-            }),
-          ),
-        ),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe((page) => {
-        if (page) {
-          this.products.set(page.items);
-          this.nextCursor.set(page.nextCursor);
-          this.totalCount.set(page.totalCount);
-          this.status.set('success');
-        }
-      });
-
-    this.loadMoreRequests
-      .pipe(
-        // exhaustMap, not switchMap: a second click while a page is loading should be ignored
-        // rather than cancel and restart it, which would append the same rows twice.
-        exhaustMap(() => {
-          const cursor = this.nextCursor();
-          if (!cursor) return of(null);
-
-          this.loadingMore.set(true);
-          this.loadMoreFailed.set(false);
-          return this.repository.search(this.groupId(), this.query(), { cursor }).pipe(
-            // Abandon this page the moment the filters change. Without it the request outlives the
-            // listing it belongs to: its rows are for a query nobody is looking at any more, it
-            // keeps `loadingMore` set so the new listing's button stays disabled, it holds
-            // exhaustMap open so the new listing cannot fetch anything further, and on failure it
-            // reports an error against a listing that never made the request.
-            takeUntil(this.listingChanges),
-            catchError(() => {
-              this.loadMoreFailed.set(true);
-              return of(null);
-            }),
-            finalize(() => this.loadingMore.set(false)),
-          );
-        }),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe((page) => {
-        if (!page) return;
-        this.products.update((current) => [...current, ...page.items]);
-        this.nextCursor.set(page.nextCursor);
-      });
-
-    this.searchControl.valueChanges
-      .pipe(debounceTime(300), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
-      .subscribe((search) => this.updateQuery({ search: search || null }));
+    this.loadCategories();
+    this.watchListing();
+    this.watchLoadMore();
+    this.watchSearchInput();
   }
 
   loadMore(): void {
@@ -251,6 +193,97 @@ export class ProductListingPage {
     if (key === 'inStock') this.setInStock(false);
     if (key === 'isNew') this.setIsNew(false);
     if (key === 'giftWrappable') this.setGiftWrappable(false);
+  }
+
+  /** Category names label the filters and cards; the listing stays usable without them. */
+  private loadCategories(): void {
+    this.groupsRepository
+      .getAll({ silent: true })
+      .pipe(
+        catchError(() => EMPTY),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((groups) => this.categories.set(groups));
+  }
+
+  private watchListing(): void {
+    combineLatest([this.route.paramMap, this.route.queryParamMap, this.refresh])
+      .pipe(
+        map(([params, queryParams]) => listingFromRoute(params, queryParams)),
+        tap((listing) => this.resetForListing(listing)),
+        switchMap(({ groupId, query }) =>
+          this.repository.search(groupId, query).pipe(
+            catchError(() => {
+              this.status.set('error');
+              return of(null);
+            }),
+          ),
+        ),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((page) => {
+        if (page) this.showFirstPage(page);
+      });
+  }
+
+  private resetForListing({ groupId, query }: Listing): void {
+    this.groupId.set(groupId);
+    this.query.set(query);
+    this.searchControl.setValue(query.search, { emitEvent: false });
+    this.status.set('loading');
+    // A cursor is only valid for the query it was issued under, so a new listing always
+    // restarts from the first page and abandons any page still loading for the old one.
+    this.listingChanges.next();
+    this.nextCursor.set(null);
+    this.loadMoreFailed.set(false);
+    this.updateSeo(groupId, query.search);
+  }
+
+  private showFirstPage(page: ProductPage): void {
+    this.products.set(page.items);
+    this.nextCursor.set(page.nextCursor);
+    this.totalCount.set(page.totalCount);
+    this.status.set('success');
+  }
+
+  private watchLoadMore(): void {
+    this.loadMoreRequests
+      .pipe(
+        // exhaustMap, not switchMap: a second click while a page is loading should be ignored
+        // rather than cancel and restart it, which would append the same rows twice.
+        exhaustMap(() => {
+          const cursor = this.nextCursor();
+          if (!cursor) return of(null);
+
+          this.loadingMore.set(true);
+          this.loadMoreFailed.set(false);
+          return this.repository.search(this.groupId(), this.query(), { cursor }).pipe(
+            // Abandon this page the moment the filters change. Without it the request outlives the
+            // listing it belongs to: its rows are for a query nobody is looking at any more, it
+            // keeps `loadingMore` set so the new listing's button stays disabled, it holds
+            // exhaustMap open so the new listing cannot fetch anything further, and on failure it
+            // reports an error against a listing that never made the request.
+            takeUntil(this.listingChanges),
+            catchError(() => {
+              this.loadMoreFailed.set(true);
+              return of(null);
+            }),
+            finalize(() => this.loadingMore.set(false)),
+          );
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((page) => {
+        if (!page) return;
+        this.products.update((current) => [...current, ...page.items]);
+        this.nextCursor.set(page.nextCursor);
+      });
+  }
+
+  private watchSearchInput(): void {
+    this.searchControl.valueChanges
+      .pipe(debounceTime(300), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
+      .subscribe((search) => this.updateQuery({ search: search || null }));
   }
 
   private updateQuery(queryParams: Record<string, string | null>): void {
