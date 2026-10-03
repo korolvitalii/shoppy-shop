@@ -5,10 +5,61 @@ import { TestBed } from '@angular/core/testing';
 
 import { apiErrorInterceptor } from './api-error.interceptor';
 import { APP_ERROR_CODES, AppError } from './app-error';
-import { SKIP_ERROR_NOTIFICATION } from './error-context';
+import { SKIP_ERROR_NOTIFICATION, SKIP_ERROR_NOTIFICATION_STATUSES } from './error-context';
 import { ErrorNotificationService } from './error-notification.service';
 
 describe('apiErrorInterceptor', () => {
+  it.each([404, 503])('only suppresses the configured notification statuses: %s', (status) => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideHttpClient(withInterceptors([apiErrorInterceptor])),
+        provideHttpClientTesting(),
+      ],
+    });
+    const http = TestBed.inject(HttpClient);
+    const controller = TestBed.inject(HttpTestingController);
+    const notifications = TestBed.inject(ErrorNotificationService);
+    const failed = vi.fn();
+
+    http
+      .get('/api/example', {
+        context: new HttpContext().set(SKIP_ERROR_NOTIFICATION_STATUSES, [404]),
+      })
+      .subscribe({ error: failed });
+    controller.expectOne('/api/example').flush(null, { status, statusText: 'Request failed' });
+
+    expect(failed).toHaveBeenCalledWith(expect.any(AppError));
+    expect(failed.mock.calls[0][0].status).toBe(status);
+    if (status === 404) {
+      expect(notifications.current()).toBeNull();
+    } else {
+      expect(notifications.current()?.status).toBe(status);
+    }
+    controller.verify();
+  });
+
+  it('clears a previous error when the same request returns a status handled locally', () => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideHttpClient(withInterceptors([apiErrorInterceptor])),
+        provideHttpClientTesting(),
+      ],
+    });
+    const http = TestBed.inject(HttpClient);
+    const controller = TestBed.inject(HttpTestingController);
+    const notifications = TestBed.inject(ErrorNotificationService);
+    const options = { context: new HttpContext().set(SKIP_ERROR_NOTIFICATION_STATUSES, [404]) };
+
+    http.get('/api/example', options).subscribe({ error: () => undefined });
+    controller.expectOne('/api/example').flush(null, { status: 503, statusText: 'Unavailable' });
+    expect(notifications.current()?.status).toBe(503);
+
+    http.get('/api/example', options).subscribe({ error: () => undefined });
+    controller.expectOne('/api/example').flush(null, { status: 404, statusText: 'Not Found' });
+    expect(notifications.current()).toBeNull();
+    controller.verify();
+  });
+
   it('normalizes API failures and publishes a safe global message', () => {
     TestBed.configureTestingModule({
       providers: [
