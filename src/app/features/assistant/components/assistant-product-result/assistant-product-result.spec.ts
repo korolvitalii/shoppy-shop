@@ -1,10 +1,7 @@
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
 import { type Product } from '../../../../shared/domain/product';
-import { BasketService } from '../../../basket/public-api';
 import { AssistantProductResult } from './assistant-product-result';
 
 const product: Product = {
@@ -25,24 +22,64 @@ describe('AssistantProductResult', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AssistantProductResult],
-      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])],
+      providers: [provideRouter([])],
     }).compileComponents();
   });
 
-  it('adds the product to the basket when "Add to basket" is clicked', () => {
+  function render(inputs: { favorite?: boolean; added?: boolean } = {}) {
     const fixture = TestBed.createComponent(AssistantProductResult);
     fixture.componentRef.setInput('product', product);
+    if (inputs.favorite !== undefined) fixture.componentRef.setInput('favorite', inputs.favorite);
+    if (inputs.added !== undefined) fixture.componentRef.setInput('added', inputs.added);
     fixture.detectChanges();
-    const basket = TestBed.inject(BasketService);
+    const element = fixture.nativeElement as HTMLElement;
+    return {
+      fixture,
+      favoriteButton: element.querySelector('.favorite-button') as HTMLButtonElement,
+      addButton: element.querySelector('.add-to-basket') as HTMLButtonElement,
+    };
+  }
 
-    (fixture.nativeElement.querySelector('.add-to-basket') as HTMLButtonElement).click();
+  it('reports the basket intent without changing anything itself', () => {
+    const { fixture, addButton } = render();
+    const basketAdd = vi.fn();
+    fixture.componentInstance.basketAdd.subscribe(basketAdd);
+
+    addButton.click();
+
+    expect(basketAdd).toHaveBeenCalledTimes(1);
+    expect(addButton.disabled).toBe(false);
+  });
+
+  it('shows the confirmation the container reports', () => {
+    const { addButton } = render({ added: true });
+
+    expect(addButton.disabled).toBe(true);
+    expect(addButton.textContent).toContain('Added');
+  });
+
+  it('reports the favorite intent', () => {
+    const { fixture, favoriteButton } = render();
+    const favoriteToggle = vi.fn();
+    fixture.componentInstance.favoriteToggle.subscribe(favoriteToggle);
+
+    favoriteButton.click();
+
+    expect(favoriteToggle).toHaveBeenCalledTimes(1);
+  });
+
+  it('labels the favorite button with the product and its saved state', () => {
+    const { fixture, favoriteButton } = render();
+
+    expect(favoriteButton.getAttribute('aria-label')).toBe('Add Rainguard Jacket to favourites');
+    expect(favoriteButton.getAttribute('aria-pressed')).toBe('false');
+
+    fixture.componentRef.setInput('favorite', true);
     fixture.detectChanges();
 
-    expect(basket.items()).toEqual([
-      expect.objectContaining({ productId: 'jacket-1', quantity: 1 }),
-    ]);
-    expect(
-      (fixture.nativeElement.querySelector('.add-to-basket') as HTMLButtonElement).disabled,
-    ).toBe(true);
+    expect(favoriteButton.getAttribute('aria-label')).toBe(
+      'Remove Rainguard Jacket from favourites',
+    );
+    expect(favoriteButton.getAttribute('aria-pressed')).toBe('true');
   });
 });

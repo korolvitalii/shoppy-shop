@@ -1,9 +1,13 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 
 import { type Product } from '../../../../shared/domain/product';
+import { AuthenticationSessionService } from '../../../auth/public-api';
+import { BasketService } from '../../../basket/public-api';
+import { FavoritesService } from '../../../favorites/public-api';
 import { AssistantChatService } from '../../data-access/assistant-chat.service';
 import { AssistantWidget } from './assistant-widget';
 
@@ -22,10 +26,25 @@ const product: Product = {
 };
 
 describe('AssistantWidget', () => {
+  const authenticated = signal(true);
+  const basket = { add: vi.fn() };
+  const favorites = { has: vi.fn(() => false), toggle: vi.fn() };
+
   beforeEach(async () => {
+    authenticated.set(true);
+    basket.add.mockReset();
+    favorites.toggle.mockReset();
+
     await TestBed.configureTestingModule({
       imports: [AssistantWidget],
-      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideRouter([]),
+        { provide: AuthenticationSessionService, useValue: { isAuthenticated: authenticated } },
+        { provide: BasketService, useValue: basket },
+        { provide: FavoritesService, useValue: favorites },
+      ],
     }).compileComponents();
   });
 
@@ -96,5 +115,60 @@ describe('AssistantWidget', () => {
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelectorAll('app-assistant-product-result')).toHaveLength(1);
+  });
+
+  function renderRecommendations(...replies: (readonly Product[])[]) {
+    const fixture = TestBed.createComponent(AssistantWidget);
+    const http = TestBed.inject(HttpTestingController);
+    const assistant = TestBed.inject(AssistantChatService);
+    assistant.open();
+    for (const products of replies) {
+      assistant.send('show me jackets');
+      http.expectOne('/api/assistant/chat').flush({ reply: 'Here!', products });
+    }
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+    return {
+      fixture,
+      addButtons: () => [...element.querySelectorAll<HTMLButtonElement>('.add-to-basket')],
+      favoriteButton: () => element.querySelector('.favorite-button') as HTMLButtonElement,
+    };
+  }
+
+  it('sends signed-out customers to login instead of changing the basket or favourites', () => {
+    authenticated.set(false);
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    const { fixture, addButtons, favoriteButton } = renderRecommendations([product]);
+
+    addButtons()[0].click();
+    favoriteButton().click();
+    fixture.detectChanges();
+
+    expect(basket.add).not.toHaveBeenCalled();
+    expect(favorites.toggle).not.toHaveBeenCalled();
+    expect(addButtons()[0].disabled).toBe(false);
+    expect(navigate).toHaveBeenCalledTimes(2);
+    expect(navigate).toHaveBeenCalledWith(['/login'], { queryParams: { returnUrl: '/' } });
+  });
+
+  it('adds a recommendation to the basket and confirms only that result', () => {
+    const { fixture, addButtons } = renderRecommendations([product], [product]);
+
+    addButtons()[0].click();
+    fixture.detectChanges();
+
+    expect(basket.add).toHaveBeenCalledWith(product);
+    expect(addButtons()[0].disabled).toBe(true);
+    expect(addButtons()[0].textContent).toContain('Added');
+    expect(addButtons()[1].disabled).toBe(false);
+  });
+
+  it('toggles a favourite for signed-in customers', () => {
+    const { fixture, favoriteButton } = renderRecommendations([product]);
+
+    favoriteButton().click();
+    fixture.detectChanges();
+
+    expect(favorites.toggle).toHaveBeenCalledWith(product);
   });
 });

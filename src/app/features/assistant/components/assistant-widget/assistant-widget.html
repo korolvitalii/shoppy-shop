@@ -37,7 +37,13 @@
           @if (message.products.length > 0) {
             <div class="assistant-results">
               @for (product of message.products; track product.id) {
-                <app-assistant-product-result [product]="product" />
+                <app-assistant-product-result
+                  [product]="product"
+                  [favorite]="favorites.has(product.id)"
+                  [added]="isAdded(message.id, product)"
+                  (favoriteToggle)="toggleFavorite(product)"
+                  (basketAdd)="addToBasket(message.id, product)"
+                />
               }
             </div>
           }

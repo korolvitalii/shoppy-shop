@@ -1,11 +1,8 @@
 import { CurrencyPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 import { type Product } from '../../../../shared/domain/product';
-import { AuthenticationSessionService } from '../../../auth/public-api';
-import { BasketService } from '../../../basket/public-api';
-import { FavoritesService } from '../../../favorites/public-api';
 
 @Component({
   selector: 'app-assistant-product-result',
@@ -15,26 +12,18 @@ import { FavoritesService } from '../../../favorites/public-api';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AssistantProductResult {
-  private readonly basket = inject(BasketService);
-  protected readonly favorites = inject(FavoritesService);
-  private readonly router = inject(Router);
-  private readonly session = inject(AuthenticationSessionService);
   readonly product = input.required<Product>();
-  protected readonly added = signal(false);
+  readonly favorite = input(false);
+  readonly added = input(false);
+  readonly favoriteToggle = output<void>();
+  readonly basketAdd = output<void>();
+  protected readonly favoriteButtonLabel = computed(() => {
+    const name = this.product().name;
+    return this.favorite()
+      ? $localize`:@@removeProductFromFavourites:Remove ${name}:productName: from favourites`
+      : $localize`:@@addProductToFavourites:Add ${name}:productName: to favourites`;
+  });
   protected readonly effectivePrice = computed(
     () => this.product().salePrice ?? this.product().price,
   );
-
-  protected addToBasket(): void {
-    this.basket.add(this.product());
-    this.added.set(true);
-  }
-
-  protected toggleFavorite(): void {
-    if (!this.session.isAuthenticated()) {
-      void this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
-      return;
-    }
-    this.favorites.toggle(this.product());
-  }
 }
