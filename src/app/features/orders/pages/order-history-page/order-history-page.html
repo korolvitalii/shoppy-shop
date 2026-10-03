@@ -227,7 +227,7 @@
             <a class="back-link" routerLink="/products"
               ><span aria-hidden="true">←</span> <span i18n="@@backToShop">Back to shop</span></a
             >
-            @if (matching().length > 0 || canPage()) {
+            @if (matching().length > 0 || pagerShown()) {
               <p class="showing">
                 @if (matching().length > 0) {
                   <span aria-live="polite"
@@ -237,17 +237,21 @@
                     }</ng-container></span
                   >
                 }
-                @if (canPage()) {
+                @if (pagerShown()) {
                   @if (matching().length > 0) {
                     <span aria-hidden="true">·</span>
                   }
                   <button
                     type="button"
                     class="show-earlier"
-                    [attr.aria-disabled]="hasEarlier() ? null : 'true'"
+                    [attr.aria-disabled]="hasEarlier() && !loadingMore() ? null : 'true'"
                     (click)="showEarlier()"
                   >
-                    <span i18n="@@showEarlierOrders">Show earlier orders</span>
+                    @if (loadingMore()) {
+                      <span i18n="@@loadingEarlierOrders">Loading earlier orders…</span>
+                    } @else {
+                      <span i18n="@@showEarlierOrders">Show earlier orders</span>
+                    }
                   </button>
                 }
               </p>

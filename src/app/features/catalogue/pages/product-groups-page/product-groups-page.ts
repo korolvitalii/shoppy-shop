@@ -38,21 +38,25 @@ export class ProductGroupsPage {
         next: (groups) => {
           this.groups.set(groups);
           this.status.set('success');
-          const description = $localize`:@@seoProductsDescription:Explore thoughtfully selected products for everyday life and memorable journeys.`;
-          this.seo.apply({
-            title: $localize`:@@seoProductsTitle:Shop products`,
-            description,
-            path: '/products',
-            indexable: true,
-            structuredData: {
-              '@context': 'https://schema.org',
-              '@type': 'CollectionPage',
-              name: $localize`:@@seoProductsCollectionName:ShoppyShop products`,
-              description,
-            },
-          });
+          this.applySeo();
         },
         error: () => this.status.set('error'),
       });
+  }
+
+  private applySeo(): void {
+    const description = $localize`:@@seoProductsDescription:Explore thoughtfully selected products for everyday life and memorable journeys.`;
+    this.seo.apply({
+      title: $localize`:@@seoProductsTitle:Shop products`,
+      description,
+      path: '/products',
+      indexable: true,
+      structuredData: {
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        name: $localize`:@@seoProductsCollectionName:ShoppyShop products`,
+        description,
+      },
+    });
   }
 }

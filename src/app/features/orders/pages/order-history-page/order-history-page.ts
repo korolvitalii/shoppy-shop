@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
-import { catchError, of, take } from 'rxjs';
+import { catchError, EMPTY, finalize, of, take } from 'rxjs';
 
 import { ProductGroupsRepository } from '../../../catalogue/public-api';
 import { OrdersRepository } from '../../data-access/orders.repository';
@@ -70,8 +70,6 @@ export class OrderHistoryPage {
     () => this.matching().length > this.visibleCount() || !this.historyExhausted(),
   );
 
-  readonly canPage = computed(() => this.pagerShown());
-
   readonly summary = computed<HistorySummary>(() => {
     const entries = this.entries();
     const year = this.now().getUTCFullYear();
@@ -87,14 +85,15 @@ export class OrderHistoryPage {
     };
   });
 
+  readonly pagerShown = signal(false);
+  readonly loadingMore = signal(false);
+
   private readonly allFilter = viewChild<ElementRef<HTMLButtonElement>>('allFilter');
   private readonly orders = signal<readonly Order[]>([]);
   private readonly categories = signal<ReadonlyMap<string, string>>(new Map());
   private readonly visibleCount = signal(ORDERS_PER_PAGE);
   private readonly now = signal(new Date());
   private readonly historyExhausted = signal(false);
-  private readonly pagerShown = signal(false);
-  private loadingMore = false;
   private readonly repository = inject(OrdersRepository);
   private readonly groupsRepository = inject(ProductGroupsRepository);
   private readonly destroyRef = inject(DestroyRef);
@@ -147,24 +146,26 @@ export class OrderHistoryPage {
   }
 
   private loadMore(): void {
-    if (this.loadingMore) return;
+    if (this.loadingMore()) return;
 
     const last = this.orders().at(-1);
     if (!last) return;
 
-    this.loadingMore = true;
+    this.loadingMore.set(true);
     this.repository
       .getOrders({ before: last.createdAt, beforeId: last.id })
-      .pipe(take(1), takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (page) => {
-          this.loadingMore = false;
-          this.orders.update((existing) => [...existing, ...page]);
-          this.historyExhausted.set(page.length < SERVER_HISTORY_PAGE_SIZE);
-          this.visibleCount.update((count) => count + ORDERS_PER_PAGE);
-          this.refreshPagerShown();
-        },
-        error: () => (this.loadingMore = false),
+      .pipe(
+        take(1),
+        // The global banner reports a failure; the control becomes usable again to retry.
+        catchError(() => EMPTY),
+        finalize(() => this.loadingMore.set(false)),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((page) => {
+        this.orders.update((existing) => [...existing, ...page]);
+        this.historyExhausted.set(page.length < SERVER_HISTORY_PAGE_SIZE);
+        this.visibleCount.update((count) => count + ORDERS_PER_PAGE);
+        this.refreshPagerShown();
       });
   }
 

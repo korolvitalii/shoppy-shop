@@ -311,6 +311,7 @@
     "quantityCount": "Quantity {$INTERPOLATION}",
     "cardEndingIn": "{$INTERPOLATION} ending in {$INTERPOLATION_1}",
     "showingOrdersPlural": "{VAR_PLURAL, plural, =1 {Showing {INTERPOLATION} of 1 order} other {Showing {INTERPOLATION} of {INTERPOLATION_1} orders}}",
+    "loadingEarlierOrders": "Loading earlier orders…",
     "showEarlierOrders": "Show earlier orders",
     "outOfStock": "Out of stock",
     "savePercent": "Save {$INTERPOLATION}%",

@@ -311,6 +311,7 @@
     "quantityCount": "Ilość {$INTERPOLATION}",
     "cardEndingIn": "{$INTERPOLATION} kończąca się na {$INTERPOLATION_1}",
     "showingOrdersPlural": "{VAR_PLURAL, plural, one {Pokazano {INTERPOLATION} z 1 zamówienia} few {Pokazano {INTERPOLATION} z {INTERPOLATION_1} zamówień} many {Pokazano {INTERPOLATION} z {INTERPOLATION_1} zamówień} other {Pokazano {INTERPOLATION} z {INTERPOLATION_1} zamówienia}}",
+    "loadingEarlierOrders": "Wczytywanie wcześniejszych zamówień…",
     "showEarlierOrders": "Pokaż wcześniejsze zamówienia",
     "outOfStock": "Brak w magazynie",
     "savePercent": "Oszczędzasz {$INTERPOLATION}%",
