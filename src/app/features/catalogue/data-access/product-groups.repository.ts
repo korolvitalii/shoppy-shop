@@ -1,18 +1,17 @@
-import { HttpClient, HttpContext } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { type Observable, of } from 'rxjs';
 
-import { SKIP_ERROR_NOTIFICATION } from '../../../core/errors/error-context';
-import { SKIP_GLOBAL_LOADING } from '../../../core/loading/loading-context';
+import { PrerenderSnapshot } from '../../../core/prerender/prerender-snapshot';
 import catalogue from '../data/catalogue.json';
 import { type ProductGroup } from '../models/product-group';
+import { requestContext } from './request-context';
 
 export interface CatalogueRequestOptions {
   readonly silent?: boolean;
 }
 
-const silentContext = () =>
-  new HttpContext().set(SKIP_ERROR_NOTIFICATION, true).set(SKIP_GLOBAL_LOADING, true);
+const SNAPSHOT_KEY = 'product-groups';
 
 @Injectable()
 export abstract class ProductGroupsRepository {
@@ -22,17 +21,23 @@ export abstract class ProductGroupsRepository {
 @Injectable()
 export class ApiProductGroupsRepository implements ProductGroupsRepository {
   private readonly http = inject(HttpClient);
+  private readonly snapshot = inject(PrerenderSnapshot);
 
   getAll(options?: CatalogueRequestOptions): Observable<readonly ProductGroup[]> {
-    return this.http.get<readonly ProductGroup[]>('/api/product-groups', {
-      context: options?.silent ? silentContext() : new HttpContext(),
-    });
+    return this.snapshot.revalidate(SNAPSHOT_KEY, (revalidating) =>
+      this.http.get<readonly ProductGroup[]>('/api/product-groups', {
+        context: requestContext(options?.silent || revalidating),
+      }),
+    );
   }
 }
 
 @Injectable()
 export class StaticProductGroupsRepository implements ProductGroupsRepository {
+  private readonly snapshot = inject(PrerenderSnapshot);
+
   getAll(): Observable<readonly ProductGroup[]> {
+    this.snapshot.record(SNAPSHOT_KEY, catalogue.groups);
     return of(catalogue.groups);
   }
 }

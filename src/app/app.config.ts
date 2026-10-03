@@ -8,7 +8,11 @@ import {
   provideAppInitializer,
   provideBrowserGlobalErrorListeners,
 } from '@angular/core';
-import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import {
+  provideClientHydration,
+  withEventReplay,
+  withI18nSupport,
+} from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { catchError, of, tap } from 'rxjs';
 
@@ -32,7 +36,7 @@ import {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideClientHydration(withEventReplay()),
+    provideClientHydration(withEventReplay(), withI18nSupport()),
     provideHttpClient(
       withFetch(),
       withInterceptors([loadingInterceptor, apiErrorInterceptor, authInterceptor]),

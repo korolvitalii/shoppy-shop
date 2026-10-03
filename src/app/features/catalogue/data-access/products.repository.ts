@@ -1,7 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { type Observable, of } from 'rxjs';
+import { catchError, type Observable, of, throwError } from 'rxjs';
 
+import { normalizeError } from '../../../core/errors/app-error';
+import { SKIP_ERROR_NOTIFICATION_STATUSES } from '../../../core/errors/error-context';
+import { PrerenderSnapshot } from '../../../core/prerender/prerender-snapshot';
 import { type Product } from '../../../shared/domain/product';
 import catalogue from '../data/catalogue.json';
 import {
@@ -9,8 +12,25 @@ import {
   type ProductPageRequest,
   type ProductSearchQuery,
 } from '../models/product';
+import { requestContext } from './request-context';
 
 const DEFAULT_PAGE_SIZE = 24;
+
+// Built field by field rather than with JSON.stringify(query), so the server and the browser derive
+// the same key however each one happened to construct the query object.
+const searchSnapshotKey = (groupId: string, query: ProductSearchQuery, limit?: number) =>
+  `products:${groupId}:${JSON.stringify([
+    query.search,
+    query.sort,
+    query.price,
+    query.inStock,
+    query.isNew,
+    query.giftWrappable,
+    limit ?? null,
+  ])}`;
+
+const productSnapshotKey = (groupId: string, productId: string) =>
+  `product:${groupId}:${productId}`;
 
 @Injectable()
 export abstract class ProductsRepository {
@@ -25,11 +45,41 @@ export abstract class ProductsRepository {
 @Injectable()
 export class ApiProductsRepository implements ProductsRepository {
   private readonly http = inject(HttpClient);
+  private readonly snapshot = inject(PrerenderSnapshot);
 
   search(
     groupId: string,
     query: ProductSearchQuery,
     page?: ProductPageRequest,
+  ): Observable<ProductPage> {
+    const request = (silent: boolean) => this.request(groupId, query, page, silent);
+    // Only a first page can have been prerendered; a later one follows a cursor only the API issues.
+    return page?.cursor
+      ? request(false)
+      : this.snapshot.revalidate(searchSnapshotKey(groupId, query, page?.limit), request);
+  }
+
+  getById(groupId: string, productId: string): Observable<Product | null> {
+    return this.snapshot.revalidate(productSnapshotKey(groupId, productId), (silent) =>
+      this.http
+        .get<Product | null>(`/api/product-groups/${groupId}/products/${productId}`, {
+          context: requestContext(silent).set(SKIP_ERROR_NOTIFICATION_STATUSES, [404]),
+        })
+        .pipe(
+          // A missing product is a domain result, including when a live answer replaces a
+          // prerendered product. Convert it before revalidation falls back on request errors.
+          catchError((error: unknown) =>
+            normalizeError(error).status === 404 ? of(null) : throwError(() => error),
+          ),
+        ),
+    );
+  }
+
+  private request(
+    groupId: string,
+    query: ProductSearchQuery,
+    page: ProductPageRequest | undefined,
+    silent: boolean,
   ): Observable<ProductPage> {
     let params = new HttpParams()
       .set('search', query.search)
@@ -46,16 +96,14 @@ export class ApiProductsRepository implements ProductsRepository {
     }
     const endpoint =
       groupId === 'all' ? '/api/products' : `/api/product-groups/${groupId}/products`;
-    return this.http.get<ProductPage>(endpoint, { params });
-  }
-
-  getById(groupId: string, productId: string): Observable<Product | null> {
-    return this.http.get<Product | null>(`/api/product-groups/${groupId}/products/${productId}`);
+    return this.http.get<ProductPage>(endpoint, { params, context: requestContext(silent) });
   }
 }
 
 @Injectable()
 export class StaticProductsRepository implements ProductsRepository {
+  private readonly snapshot = inject(PrerenderSnapshot);
+
   search(
     groupId: string,
     query: ProductSearchQuery,
@@ -83,7 +131,10 @@ export class StaticProductsRepository implements ProductsRepository {
       if (query.sort === 'price-asc') return effectivePrice(left) - effectivePrice(right);
       if (query.sort === 'price-desc') return effectivePrice(right) - effectivePrice(left);
       if (query.sort === 'name') return left.name.localeCompare(right.name);
-      return 0;
+      // The API's featured order: group, then id compared as a string, so beauty-10 comes before
+      // beauty-2. A prerendered listing in any other order visibly reshuffles once the browser
+      // revalidates it against the API.
+      return compareOrdinal(left.groupId, right.groupId) || compareOrdinal(left.id, right.id);
     });
 
     // This is the prerender-time source, backed by a bundled 90-product catalogue rather than the
@@ -94,24 +145,38 @@ export class StaticProductsRepository implements ProductsRepository {
     const limit = page?.limit ?? DEFAULT_PAGE_SIZE;
     const items = sorted.slice(start, start + limit);
     const nextOffset = start + items.length;
-
-    return of({
+    const result: ProductPage = {
       items,
       nextCursor: nextOffset < sorted.length ? String(nextOffset) : null,
       totalCount: page?.cursor ? null : sorted.length,
-    });
+    };
+
+    if (!page?.cursor) {
+      // The snapshot goes without its cursor: an offset means nothing to the API, so the browser
+      // offers "Load more" once the live first page brings the API's own cursor.
+      this.snapshot.record(searchSnapshotKey(groupId, query, page?.limit), {
+        ...result,
+        nextCursor: null,
+      });
+    }
+    return of(result);
   }
 
   getById(groupId: string, productId: string): Observable<Product | null> {
-    return of(
+    const product =
       catalogue.products.find(
-        (product) => product.groupId === groupId && product.id === productId,
-      ) ?? null,
-    );
+        (candidate) => candidate.groupId === groupId && candidate.id === productId,
+      ) ?? null;
+    this.snapshot.record(productSnapshotKey(groupId, productId), product);
+    return of(product);
   }
 }
 
 function decodeOffset(cursor: string | null | undefined): number {
   const offset = Number(cursor);
   return cursor && Number.isInteger(offset) && offset > 0 ? offset : 0;
+}
+
+function compareOrdinal(left: string, right: string): number {
+  return left < right ? -1 : left > right ? 1 : 0;
 }

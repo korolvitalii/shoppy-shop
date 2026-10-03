@@ -21,7 +21,6 @@ import {
   of,
   Subject,
   switchMap,
-  take,
   takeUntil,
   tap,
 } from 'rxjs';
@@ -117,7 +116,7 @@ export class ProductListingPage {
   constructor() {
     this.groupsRepository
       .getAll()
-      .pipe(take(1), takeUntilDestroyed(this.destroyRef))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((groups) => this.categories.set(groups));
 
     combineLatest([this.route.paramMap, this.route.queryParamMap, this.refresh])

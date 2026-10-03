@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { take } from 'rxjs';
 
 import { SeoService } from '../../../../core/seo/seo.service';
 import { ProductGroupCard } from '../../components/product-group-card/product-group-card';
@@ -30,9 +29,11 @@ export class ProductGroupsPage {
 
   load(): void {
     this.status.set('loading');
+    // On a hydrating page this emits twice: the groups the page was prerendered with, then the live
+    // ones. Both go straight to 'success', so the prerendered grid is never swapped for a spinner.
     this.repository
       .getAll()
-      .pipe(take(1), takeUntilDestroyed(this.destroyRef))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (groups) => {
           this.groups.set(groups);
