@@ -162,6 +162,7 @@ describe('AppHeader', () => {
         giftWrappable: false,
       },
       { limit: 6 },
+      { silent: true },
     );
     expect(input.getAttribute('role')).toBe('combobox');
     expect(input.getAttribute('aria-expanded')).toBe('true');

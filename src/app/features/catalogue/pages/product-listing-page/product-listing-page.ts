@@ -34,7 +34,12 @@ import { CatalogueFilters } from '../../components/catalogue-filters/catalogue-f
 import catalogue from '../../data/catalogue.json';
 import { ProductGroupsRepository } from '../../data-access/product-groups.repository';
 import { ProductsRepository } from '../../data-access/products.repository';
-import { type PriceRange, type ProductSearchQuery, type ProductSort } from '../../models/product';
+import {
+  DEFAULT_PRODUCT_SEARCH_QUERY,
+  type PriceRange,
+  type ProductSearchQuery,
+  type ProductSort,
+} from '../../models/product';
 import { type ProductGroup } from '../../models/product-group';
 
 type RequestStatus = 'loading' | 'success' | 'error';
@@ -80,14 +85,7 @@ export class ProductListingPage {
   readonly products = signal<readonly Product[]>([]);
   readonly status = signal<RequestStatus>('loading');
   readonly groupId = signal('');
-  readonly query = signal<ProductSearchQuery>({
-    search: '',
-    sort: 'featured',
-    price: 'all',
-    inStock: false,
-    isNew: false,
-    giftWrappable: false,
-  });
+  readonly query = signal<ProductSearchQuery>(DEFAULT_PRODUCT_SEARCH_QUERY);
   readonly searchControl = new FormControl('', { nonNullable: true });
   readonly nextCursor = signal<string | null>(null);
   readonly totalCount = signal<number | null>(null);

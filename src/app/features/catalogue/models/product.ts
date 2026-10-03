@@ -12,6 +12,16 @@ export interface ProductSearchQuery {
   giftWrappable: boolean;
 }
 
+/** The unfiltered catalogue in its featured order. */
+export const DEFAULT_PRODUCT_SEARCH_QUERY: Readonly<ProductSearchQuery> = {
+  search: '',
+  sort: 'featured',
+  price: 'all',
+  inStock: false,
+  isNew: false,
+  giftWrappable: false,
+};
+
 /**
  * One page of a listing. `nextCursor` is the only end-of-list signal — the API pages by keyset
  * rather than by page number, so it never reports a total count on every page. `totalCount` is the

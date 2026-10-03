@@ -5,11 +5,7 @@ import { type Observable, of } from 'rxjs';
 import { PrerenderSnapshot } from '../../../core/prerender/prerender-snapshot';
 import catalogue from '../data/catalogue.json';
 import { type ProductGroup } from '../models/product-group';
-import { requestContext } from './request-context';
-
-export interface CatalogueRequestOptions {
-  readonly silent?: boolean;
-}
+import { type CatalogueRequestOptions, requestContext } from './request-context';
 
 const SNAPSHOT_KEY = 'product-groups';
 

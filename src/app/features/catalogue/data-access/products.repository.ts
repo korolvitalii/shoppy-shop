@@ -12,7 +12,7 @@ import {
   type ProductPageRequest,
   type ProductSearchQuery,
 } from '../models/product';
-import { requestContext } from './request-context';
+import { type CatalogueRequestOptions, requestContext } from './request-context';
 
 const DEFAULT_PAGE_SIZE = 24;
 
@@ -38,6 +38,7 @@ export abstract class ProductsRepository {
     groupId: string,
     query: ProductSearchQuery,
     page?: ProductPageRequest,
+    options?: CatalogueRequestOptions,
   ): Observable<ProductPage>;
   abstract getById(groupId: string, productId: string): Observable<Product | null>;
 }
@@ -51,8 +52,10 @@ export class ApiProductsRepository implements ProductsRepository {
     groupId: string,
     query: ProductSearchQuery,
     page?: ProductPageRequest,
+    options?: CatalogueRequestOptions,
   ): Observable<ProductPage> {
-    const request = (silent: boolean) => this.request(groupId, query, page, silent);
+    const request = (revalidating: boolean) =>
+      this.request(groupId, query, page, options?.silent || revalidating);
     // Only a first page can have been prerendered; a later one follows a cursor only the API issues.
     return page?.cursor
       ? request(false)

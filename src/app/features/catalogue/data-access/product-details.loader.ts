@@ -13,7 +13,7 @@ import {
 } from 'rxjs';
 
 import { type Product } from '../../../shared/domain/product';
-import { type ProductSearchQuery } from '../models/product';
+import { DEFAULT_PRODUCT_SEARCH_QUERY } from '../models/product';
 import { ProductsRepository } from './products.repository';
 
 export type ProductDetailsEvent =
@@ -21,15 +21,6 @@ export type ProductDetailsEvent =
   | { kind: 'related'; related: readonly Product[]; total: number | null }
   | { kind: 'not-found' }
   | { kind: 'error' };
-
-const RELATED_PRODUCTS_QUERY: ProductSearchQuery = {
-  search: '',
-  sort: 'featured',
-  price: 'all',
-  inStock: false,
-  isNew: false,
-  giftWrappable: false,
-};
 
 @Injectable()
 export class ProductDetailsLoader {
@@ -58,7 +49,7 @@ export class ProductDetailsLoader {
   }
 
   private relatedProducts(product: Product): Observable<ProductDetailsEvent> {
-    return this.repository.search(product.groupId, RELATED_PRODUCTS_QUERY, { limit: 5 }).pipe(
+    return this.repository.search(product.groupId, DEFAULT_PRODUCT_SEARCH_QUERY, { limit: 5 }).pipe(
       map((page): ProductDetailsEvent => ({
         kind: 'related',
         related: page.items.filter((item) => item.id !== product.id).slice(0, 4),
