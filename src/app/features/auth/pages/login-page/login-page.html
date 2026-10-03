@@ -4,7 +4,7 @@
       class="theme-toggle"
       type="button"
       (click)="theme.toggle()"
-      [attr.aria-label]="theme.isDark() ? 'Switch to light theme' : 'Switch to dark theme'"
+      [attr.aria-label]="themeToggleLabel()"
     >
       <span aria-hidden="true">{{ theme.isDark() ? '☀' : '☾' }}</span>
       @if (theme.isDark()) {
@@ -87,7 +87,7 @@
               class="password-toggle"
               (click)="showPassword.set(!showPassword())"
               [attr.aria-pressed]="showPassword()"
-              [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"
+              [attr.aria-label]="passwordToggleLabel()"
             >
               @if (showPassword()) {
                 <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -124,7 +124,11 @@
         </button>
       </form>
 
-      <aside class="demo-account" aria-label="Create an account">
+      <aside
+        class="demo-account"
+        aria-label="Create an account"
+        i18n-aria-label="@@createAccountLink"
+      >
         <p i18n="@@noAccountYet">New to ShoppyShop?</p>
         <a routerLink="/register" i18n="@@createAccountLink">Create an account</a>
       </aside>

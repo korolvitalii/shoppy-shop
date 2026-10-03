@@ -1,5 +1,5 @@
 <main class="favorites-page">
-  <nav class="breadcrumbs" aria-label="Breadcrumb">
+  <nav class="breadcrumbs" aria-label="Breadcrumb" i18n-aria-label="@@breadcrumbLabel">
     <a routerLink="/products" i18n="@@products">Products</a><span>/</span
     ><span i18n="@@favourites">Favourites</span>
   </nav>
@@ -16,7 +16,11 @@
   </header>
 
   @if (favorites.count() > 0) {
-    <section class="product-grid" aria-label="Favourite products">
+    <section
+      class="product-grid"
+      aria-label="Favourite products"
+      i18n-aria-label="@@favouriteProductsLabel"
+    >
       @for (product of favorites.products(); track product.id) {
         <app-product-card
           [product]="product"

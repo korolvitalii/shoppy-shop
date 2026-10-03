@@ -2,7 +2,12 @@
   <a class="skip-link" href="#main-content" i18n="@@skipToContent">Skip to content</a>
   <div class="header-main">
     <div class="header-inner">
-      <a class="brand" routerLink="/products" aria-label="ShoppyShop home">
+      <a
+        class="brand"
+        routerLink="/products"
+        aria-label="ShoppyShop home"
+        i18n-aria-label="@@shoppyShopHome"
+      >
         <svg viewBox="0 0 40 40" aria-hidden="true">
           <path class="brand-bag" d="M9 13.5h22l-1.8 20H10.8L9 13.5Z" />
           <path class="brand-handle" d="M14.5 14v-2.5a5.5 5.5 0 0 1 11 0V14" />
@@ -23,8 +28,8 @@
           class="account-button theme-button"
           type="button"
           (click)="theme.toggle()"
-          [attr.aria-label]="theme.isDark() ? 'Switch to light theme' : 'Switch to dark theme'"
-          [attr.title]="theme.isDark() ? 'Use light theme' : 'Use dark theme'"
+          [attr.aria-label]="themeToggleLabel()"
+          [attr.title]="themeToggleTitle()"
         >
           @if (theme.isDark()) {
             <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -46,6 +51,7 @@
           routerLink="/favorites"
           routerLinkActive="active"
           aria-label="Open favourites"
+          i18n-aria-label="@@openFavourites"
         >
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path
@@ -54,27 +60,41 @@
           </svg>
           <span i18n="@@favourites">Favourites</span>
           @if (favorites.count() > 0) {
-            <span class="badge" aria-label="Favourite products">{{
-              favorites.count() > 99 ? '99+' : favorites.count()
-            }}</span>
+            <span
+              class="badge"
+              aria-label="Favourite products"
+              i18n-aria-label="@@favouriteProductsLabel"
+              >{{ favorites.count() > 99 ? '99+' : favorites.count() }}</span
+            >
           }
         </a>
         @if (session.isAuthenticated()) {
-          <a class="action-link" routerLink="/orders" routerLinkActive="active" aria-label="Orders">
+          <a
+            class="action-link"
+            routerLink="/orders"
+            routerLinkActive="active"
+            aria-label="Orders"
+            i18n-aria-label="@@orders"
+          >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z" />
               <path d="M9 8h6M9 12h6" />
             </svg>
             <span i18n="@@orders">Orders</span>
           </a>
-          <a class="action-link" routerLink="/basket" aria-label="Open basket">
+          <a
+            class="action-link"
+            routerLink="/basket"
+            aria-label="Open basket"
+            i18n-aria-label="@@openBasket"
+          >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M5 8h14l-1 12H6L5 8Z" />
               <path d="M9 9V7a3 3 0 0 1 6 0v2" />
             </svg>
             <span i18n="@@basket">Basket</span>
             @if (basket.itemCount() > 0) {
-              <span class="badge" aria-label="Basket items">{{
+              <span class="badge" aria-label="Basket items" i18n-aria-label="@@basketItemsLabel">{{
                 basket.itemCount() > 99 ? '99+' : basket.itemCount()
               }}</span>
             }
@@ -87,7 +107,12 @@
             <span i18n="@@logOut">Log out</span>
           </button>
         } @else {
-          <a class="action-link" routerLink="/login" aria-label="Sign in">
+          <a
+            class="action-link"
+            routerLink="/login"
+            aria-label="Sign in"
+            i18n-aria-label="@@signIn"
+          >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <circle cx="12" cy="8" r="3.5" />
               <path d="M5.5 20c.6-4 2.8-6 6.5-6s5.9 2 6.5 6" />
@@ -101,6 +126,7 @@
         class="menu-button"
         type="button"
         aria-label="Toggle navigation"
+        i18n-aria-label="@@toggleNavigation"
         aria-controls="mobile-navigation"
         [attr.aria-expanded]="menuOpen()"
         (click)="toggleMenu()"
@@ -111,7 +137,12 @@
   </div>
 
   @if (menuOpen()) {
-    <nav id="mobile-navigation" class="mobile-navigation" aria-label="Mobile navigation">
+    <nav
+      id="mobile-navigation"
+      class="mobile-navigation"
+      aria-label="Mobile navigation"
+      i18n-aria-label="@@mobileNavigationLabel"
+    >
       <app-language-selector [wide]="true" />
       <button class="mobile-theme" type="button" (click)="theme.toggle()">
         @if (theme.isDark()) {

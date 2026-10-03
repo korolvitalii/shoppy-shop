@@ -17,6 +17,22 @@ export class BasketPage {
   protected readonly basket = inject(BasketService);
   private readonly confirmation = inject(ConfirmationService);
 
+  protected removeLabel(item: BasketItem): string {
+    return $localize`:@@removeProductLabel:Remove ${item.name}:productName:`;
+  }
+
+  protected decreaseLabel(item: BasketItem): string {
+    return $localize`:@@decreaseProductQuantity:Decrease ${item.name}:productName: quantity`;
+  }
+
+  protected increaseLabel(item: BasketItem): string {
+    return $localize`:@@increaseProductQuantity:Increase ${item.name}:productName: quantity`;
+  }
+
+  protected quantityLabel(item: BasketItem): string {
+    return $localize`:@@productQuantityLabel:${item.name}:productName: quantity`;
+  }
+
   protected async decrease(item: BasketItem): Promise<void> {
     if (item.quantity > 1) {
       this.basket.updateQuantity(item.productId, item.quantity - 1);

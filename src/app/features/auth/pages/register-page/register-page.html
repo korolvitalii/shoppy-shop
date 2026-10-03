@@ -4,7 +4,7 @@
       class="theme-toggle"
       type="button"
       (click)="theme.toggle()"
-      [attr.aria-label]="theme.isDark() ? 'Switch to light theme' : 'Switch to dark theme'"
+      [attr.aria-label]="themeToggleLabel()"
     >
       <span aria-hidden="true">{{ theme.isDark() ? '☀' : '☾' }}</span>
       @if (theme.isDark()) {
@@ -99,7 +99,7 @@
               class="password-toggle"
               (click)="showPassword.set(!showPassword())"
               [attr.aria-pressed]="showPassword()"
-              [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"
+              [attr.aria-label]="passwordToggleLabel()"
             >
               @if (showPassword()) {
                 <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -158,7 +158,7 @@
         </button>
       </form>
 
-      <aside class="demo-account" aria-label="Sign in">
+      <aside class="demo-account" aria-label="Sign in" i18n-aria-label="@@signIn">
         <p i18n="@@alreadyHaveAccount">Already have an account?</p>
         <a routerLink="/login" i18n="@@signInLink">Sign in</a>
       </aside>

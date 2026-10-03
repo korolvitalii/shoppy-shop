@@ -28,7 +28,11 @@
       </header>
 
       <div class="layout">
-        <section class="items-section" aria-label="Basket items">
+        <section
+          class="items-section"
+          aria-label="Basket items"
+          i18n-aria-label="@@basketItemsLabel"
+        >
           <div class="items-header" aria-hidden="true">
             <span i18n="@@item">Item</span>
             <span></span>
@@ -52,7 +56,7 @@
                 <button
                   class="remove-link"
                   type="button"
-                  [attr.aria-label]="'Remove ' + item.name"
+                  [attr.aria-label]="removeLabel(item)"
                   (click)="removeItem(item)"
                   i18n="@@remove"
                 >
@@ -62,15 +66,15 @@
               <div class="quantity-control">
                 <button
                   type="button"
-                  [attr.aria-label]="'Decrease ' + item.name + ' quantity'"
+                  [attr.aria-label]="decreaseLabel(item)"
                   (click)="decrease(item)"
                 >
                   −
                 </button>
-                <output [attr.aria-label]="item.name + ' quantity'">{{ item.quantity }}</output>
+                <output [attr.aria-label]="quantityLabel(item)">{{ item.quantity }}</output>
                 <button
                   type="button"
-                  [attr.aria-label]="'Increase ' + item.name + ' quantity'"
+                  [attr.aria-label]="increaseLabel(item)"
                   (click)="basket.updateQuantity(item.productId, item.quantity + 1)"
                 >
                   +

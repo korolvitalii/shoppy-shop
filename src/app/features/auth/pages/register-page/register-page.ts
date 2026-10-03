@@ -53,6 +53,16 @@ export class RegisterPage {
   readonly isSubmitting = signal(false);
   readonly registrationError = signal<string | null>(null);
   readonly showPassword = signal(false);
+  readonly passwordToggleLabel = computed(() =>
+    this.showPassword()
+      ? $localize`:@@hidePassword:Hide password`
+      : $localize`:@@showPassword:Show password`,
+  );
+  readonly themeToggleLabel = computed(() =>
+    this.theme.isDark()
+      ? $localize`:@@switchToLightTheme:Switch to light theme`
+      : $localize`:@@switchToDarkTheme:Switch to dark theme`,
+  );
 
   private readonly passwordValue = toSignal(this.form.controls.password.valueChanges, {
     initialValue: this.form.controls.password.value,

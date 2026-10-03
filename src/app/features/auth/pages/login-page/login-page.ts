@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { finalize, take } from 'rxjs';
@@ -43,6 +43,16 @@ export class LoginPage {
   readonly isSubmitting = signal(false);
   readonly authenticationError = signal<string | null>(null);
   readonly showPassword = signal(false);
+  readonly passwordToggleLabel = computed(() =>
+    this.showPassword()
+      ? $localize`:@@hidePassword:Hide password`
+      : $localize`:@@showPassword:Show password`,
+  );
+  readonly themeToggleLabel = computed(() =>
+    this.theme.isDark()
+      ? $localize`:@@switchToLightTheme:Switch to light theme`
+      : $localize`:@@switchToDarkTheme:Switch to dark theme`,
+  );
 
   submit(): void {
     this.authenticationError.set(null);
