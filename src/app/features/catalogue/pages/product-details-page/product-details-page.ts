@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { catchError, concat, EMPTY, map, of, switchMap, tap } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs';
 
 import { SeoService } from '../../../../core/seo/seo.service';
 import { type Product } from '../../../../shared/domain/product';
@@ -18,25 +18,17 @@ import { AuthenticationSessionService } from '../../../auth/public-api';
 import { BasketService } from '../../../basket/public-api';
 import { FavoritesService } from '../../../favorites/public-api';
 import { ProductInformation } from '../../components/product-information/product-information';
-import { ProductsRepository } from '../../data-access/products.repository';
-import { type ProductSearchQuery } from '../../models/product';
+import {
+  type ProductDetailsEvent,
+  ProductDetailsLoader,
+} from '../../data-access/product-details.loader';
 
 type DetailStatus = 'loading' | 'success' | 'not-found' | 'error';
 
-type DetailEvent =
-  | { kind: 'product'; product: Product }
-  | { kind: 'related'; related: readonly Product[]; total: number | null }
-  | { kind: 'not-found' }
-  | { kind: 'error' };
-
-const RELATED_PRODUCTS_QUERY: ProductSearchQuery = {
-  search: '',
-  sort: 'featured',
-  price: 'all',
-  inStock: false,
-  isNew: false,
-  giftWrappable: false,
-};
+interface ProductSelection {
+  groupId: string;
+  productId: string;
+}
 
 @Component({
   selector: 'app-product-details-page',
@@ -48,12 +40,13 @@ const RELATED_PRODUCTS_QUERY: ProductSearchQuery = {
     ProductInformation,
     RouterLink,
   ],
+  providers: [ProductDetailsLoader],
   templateUrl: './product-details-page.html',
   styleUrl: './product-details-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductDetailsPage {
-  private readonly repository = inject(ProductsRepository);
+  private readonly loader = inject(ProductDetailsLoader);
   private readonly basket = inject(BasketService);
   private readonly destroyRef = inject(DestroyRef);
   readonly favorites = inject(FavoritesService);
@@ -61,6 +54,7 @@ export class ProductDetailsPage {
   private readonly router = inject(Router);
   private readonly session = inject(AuthenticationSessionService);
   private readonly seo = inject(SeoService);
+  private selectedProduct: ProductSelection | null = null;
 
   readonly product = signal<Product | null>(null);
   readonly related = signal<readonly Product[]>([]);
@@ -97,67 +91,11 @@ export class ProductDetailsPage {
           groupId: params.get('groupId') ?? '',
           productId: params.get('productId') ?? '',
         })),
-        tap(() => {
-          this.status.set('loading');
-          this.related.set([]);
-          this.relatedTotal.set(null);
-        }),
-        switchMap(({ groupId, productId }) =>
-          this.repository.getById(groupId, productId).pipe(
-            switchMap((product) => {
-              if (!product) return of<DetailEvent>({ kind: 'not-found' });
-              const related = this.repository
-                .search(product.groupId, RELATED_PRODUCTS_QUERY, { limit: 5 })
-                .pipe(
-                  map((page): DetailEvent => ({
-                    kind: 'related',
-                    related: page.items.filter((item) => item.id !== product.id).slice(0, 4),
-                    total: page.totalCount,
-                  })),
-                  // The rail is supporting content: if it fails the product page stays usable.
-                  catchError(() => EMPTY),
-                );
-              return concat(of<DetailEvent>({ kind: 'product', product }), related);
-            }),
-            catchError(() => of<DetailEvent>({ kind: 'error' })),
-          ),
-        ),
+        tap((selection) => this.resetForProduct(selection)),
+        switchMap(({ groupId, productId }) => this.loader.load(groupId, productId)),
         takeUntilDestroyed(this.destroyRef),
       )
-      .subscribe((event) => {
-        switch (event.kind) {
-          case 'product':
-            this.product.set(event.product);
-            this.status.set('success');
-            this.seo.apply({
-              title: event.product.name,
-              description: event.product.description,
-              path: `/products/${event.product.groupId}/${event.product.id}`,
-              image: event.product.imageUrl,
-              indexable: true,
-              type: 'product',
-              structuredData: this.seo.productStructuredData(event.product),
-            });
-            break;
-          case 'related':
-            this.related.set(event.related);
-            this.relatedTotal.set(event.total);
-            break;
-          case 'not-found':
-            this.product.set(null);
-            this.status.set('not-found');
-            this.seo.apply({
-              title: $localize`:@@seoProductNotFoundTitle:Product not found`,
-              description: $localize`:@@seoProductNotFoundDescription:This product is not available.`,
-              path: '/products',
-              indexable: false,
-            });
-            break;
-          case 'error':
-            this.status.set('error');
-            break;
-        }
-      });
+      .subscribe((event) => this.applyDetailEvent(event));
   }
 
   increment(): void {
@@ -188,5 +126,63 @@ export class ProductDetailsPage {
       return;
     }
     this.favorites.toggle(product);
+  }
+
+  private resetForProduct(selection: ProductSelection): void {
+    this.status.set('loading');
+    this.related.set([]);
+    this.relatedTotal.set(null);
+
+    if (
+      this.selectedProduct?.groupId !== selection.groupId ||
+      this.selectedProduct?.productId !== selection.productId
+    ) {
+      this.quantity.set(1);
+      this.added.set(false);
+    }
+    this.selectedProduct = selection;
+  }
+
+  private applyDetailEvent(event: ProductDetailsEvent): void {
+    switch (event.kind) {
+      case 'product':
+        this.product.set(event.product);
+        this.status.set('success');
+        this.applyProductSeo(event.product);
+        break;
+      case 'related':
+        this.related.set(event.related);
+        this.relatedTotal.set(event.total);
+        break;
+      case 'not-found':
+        this.product.set(null);
+        this.status.set('not-found');
+        this.applyNotFoundSeo();
+        break;
+      case 'error':
+        this.status.set('error');
+        break;
+    }
+  }
+
+  private applyProductSeo(product: Product): void {
+    this.seo.apply({
+      title: product.name,
+      description: product.description,
+      path: `/products/${product.groupId}/${product.id}`,
+      image: product.imageUrl,
+      indexable: true,
+      type: 'product',
+      structuredData: this.seo.productStructuredData(product),
+    });
+  }
+
+  private applyNotFoundSeo(): void {
+    this.seo.apply({
+      title: $localize`:@@seoProductNotFoundTitle:Product not found`,
+      description: $localize`:@@seoProductNotFoundDescription:This product is not available.`,
+      path: '/products',
+      indexable: false,
+    });
   }
 }
