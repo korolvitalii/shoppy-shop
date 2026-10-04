@@ -51,34 +51,6 @@ interface Listing {
   query: ProductSearchQuery;
 }
 
-/** The URL is the listing's source of truth: the category from the path, filters from the query. */
-function listingFromRoute(params: ParamMap, queryParams: ParamMap): Listing {
-  return {
-    groupId: params.get('groupId') ?? 'all',
-    query: {
-      search: queryParams.get('search') ?? '',
-      sort: (queryParams.get('sort') ?? 'featured') as ProductSort,
-      price: (queryParams.get('price') ?? 'all') as PriceRange,
-      inStock: queryParams.get('inStock') === 'true',
-      isNew: queryParams.get('isNew') === 'true',
-      giftWrappable: queryParams.get('giftWrappable') === 'true',
-    },
-  };
-}
-
-function priceRangeLabel(price: PriceRange): string {
-  switch (price) {
-    case '0-50':
-      return $localize`:@@priceFilterChipUnder50:Under £50`;
-    case '50-200':
-      return $localize`:@@priceFilterChip50To200:£50–£200`;
-    case '200+':
-      return $localize`:@@priceFilterChipOver200:£200 and over`;
-    default:
-      return '';
-  }
-}
-
 @Component({
   selector: 'app-product-listing-page',
   imports: [CatalogueFilters, ProductCard, ReactiveFormsModule, RouterLink],
@@ -327,5 +299,33 @@ export class ProductListingPage {
           }
         : undefined,
     });
+  }
+}
+
+/** The URL is the listing's source of truth: the category from the path, filters from the query. */
+function listingFromRoute(params: ParamMap, queryParams: ParamMap): Listing {
+  return {
+    groupId: params.get('groupId') ?? 'all',
+    query: {
+      search: queryParams.get('search') ?? '',
+      sort: (queryParams.get('sort') ?? 'featured') as ProductSort,
+      price: (queryParams.get('price') ?? 'all') as PriceRange,
+      inStock: queryParams.get('inStock') === 'true',
+      isNew: queryParams.get('isNew') === 'true',
+      giftWrappable: queryParams.get('giftWrappable') === 'true',
+    },
+  };
+}
+
+function priceRangeLabel(price: PriceRange): string {
+  switch (price) {
+    case '0-50':
+      return $localize`:@@priceFilterChipUnder50:Under £50`;
+    case '50-200':
+      return $localize`:@@priceFilterChip50To200:£50–£200`;
+    case '200+':
+      return $localize`:@@priceFilterChipOver200:£200 and over`;
+    default:
+      return '';
   }
 }

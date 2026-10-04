@@ -10,8 +10,6 @@ export interface FeatureConfig {
 
 const DEFAULT_CONFIG: FeatureConfig = { assistantEnabled: true };
 
-const silentContext = () => new HttpContext().set(SKIP_ERROR_NOTIFICATION, true);
-
 @Injectable({ providedIn: 'root' })
 export class ConfigService {
   private readonly http = inject(HttpClient);
@@ -26,4 +24,8 @@ export class ConfigService {
       catchError(() => of(DEFAULT_CONFIG)),
     );
   }
+}
+
+function silentContext(): HttpContext {
+  return new HttpContext().set(SKIP_ERROR_NOTIFICATION, true);
 }

@@ -5,12 +5,6 @@ import { getLocaleDefinition, type SupportedLocale, supportedLocales } from './l
 
 export type { SupportedLocale } from './locale.config';
 
-export function localizedPath(pathname: string, locale: SupportedLocale): string {
-  const segments = pathname.split('/').filter(Boolean);
-  if (supportedLocales.some((candidate) => candidate.path === segments[0])) segments.shift();
-  return `/${getLocaleDefinition(locale).path}/${segments.join('/')}`.replace(/\/$/, '');
-}
-
 @Injectable({ providedIn: 'root' })
 export class LocaleService {
   private readonly document = inject(DOCUMENT);
@@ -24,4 +18,10 @@ export class LocaleService {
     const localePath = getLocaleDefinition(locale).path;
     view.location.assign(`${path || `/${localePath}`}${view.location.search}${view.location.hash}`);
   }
+}
+
+export function localizedPath(pathname: string, locale: SupportedLocale): string {
+  const segments = pathname.split('/').filter(Boolean);
+  if (supportedLocales.some((candidate) => candidate.path === segments[0])) segments.shift();
+  return `/${getLocaleDefinition(locale).path}/${segments.join('/')}`.replace(/\/$/, '');
 }

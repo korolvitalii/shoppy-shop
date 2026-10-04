@@ -10,8 +10,6 @@ import {
   type UserDto,
 } from '../models/auth.models';
 
-const silentContext = () => new HttpContext().set(SKIP_ERROR_NOTIFICATION, true);
-
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
   private readonly http = inject(HttpClient);
@@ -51,4 +49,8 @@ export class AuthenticationService {
       );
     return this.refreshInFlight;
   }
+}
+
+function silentContext(): HttpContext {
+  return new HttpContext().set(SKIP_ERROR_NOTIFICATION, true);
 }
