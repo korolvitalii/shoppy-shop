@@ -1,7 +1,7 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 
 import { type Product } from '../../../../shared/domain/product';
@@ -50,6 +50,7 @@ describe('AssistantWidget', () => {
 
   afterEach(() => {
     TestBed.inject(HttpTestingController).verify();
+    vi.restoreAllMocks();
   });
 
   it('renders the launcher when closed and shows no panel', () => {
@@ -170,5 +171,73 @@ describe('AssistantWidget', () => {
     fixture.detectChanges();
 
     expect(favorites.toggle).toHaveBeenCalledWith(product);
+  });
+
+  /** Lays the log out as a browser would: 300px high, with messages stacked `height` px apart. */
+  function stackMessages(height: number): void {
+    const messagesIn = (element: Element | null) => [
+      ...(element?.querySelectorAll('.assistant-message') ?? []),
+    ];
+    vi.spyOn(Element.prototype, 'clientHeight', 'get').mockReturnValue(300);
+    vi.spyOn(Element.prototype, 'scrollHeight', 'get').mockImplementation(function (this: Element) {
+      return messagesIn(this).length * height;
+    });
+    vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (
+      this: Element,
+    ) {
+      return { top: messagesIn(this.parentElement).indexOf(this) * height } as DOMRect;
+    });
+  }
+
+  function sendAndReply(fixture: ComponentFixture<AssistantWidget>, reply: string): void {
+    TestBed.inject(AssistantChatService).send('show me jackets');
+    fixture.detectChanges();
+    TestBed.inject(HttpTestingController)
+      .expectOne('/api/assistant/chat')
+      .flush({ reply, products: [] });
+    fixture.detectChanges();
+  }
+
+  const messageLog = (fixture: ComponentFixture<AssistantWidget>) =>
+    fixture.nativeElement.querySelector('[role="log"]') as HTMLElement;
+
+  it('scrolls to the end of the conversation when a reply arrives', () => {
+    stackMessages(100);
+    const fixture = TestBed.createComponent(AssistantWidget);
+    TestBed.inject(AssistantChatService).open();
+    fixture.detectChanges();
+
+    sendAndReply(fixture, 'First');
+    sendAndReply(fixture, 'Second');
+
+    expect(messageLog(fixture).scrollTop).toBe(100);
+  });
+
+  it('shows a reply taller than the log from its first line', () => {
+    stackMessages(500);
+    const fixture = TestBed.createComponent(AssistantWidget);
+    TestBed.inject(AssistantChatService).open();
+    fixture.detectChanges();
+
+    sendAndReply(fixture, 'A long answer');
+
+    expect(messageLog(fixture).scrollTop).toBe(500);
+  });
+
+  it('shows the latest message when the panel reopens', () => {
+    stackMessages(100);
+    const fixture = TestBed.createComponent(AssistantWidget);
+    const assistant = TestBed.inject(AssistantChatService);
+    assistant.open();
+    fixture.detectChanges();
+    sendAndReply(fixture, 'First');
+    sendAndReply(fixture, 'Second');
+
+    assistant.close();
+    fixture.detectChanges();
+    assistant.open();
+    fixture.detectChanges();
+
+    expect(messageLog(fixture).scrollTop).toBe(100);
   });
 });

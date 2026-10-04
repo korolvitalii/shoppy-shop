@@ -1,4 +1,5 @@
 import {
+  afterRenderEffect,
   ChangeDetectionStrategy,
   Component,
   effect,
@@ -6,6 +7,7 @@ import {
   inject,
   signal,
   viewChild,
+  viewChildren,
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -35,6 +37,8 @@ export class AssistantWidget {
   protected readonly messageControl = new FormControl('', { nonNullable: true });
   protected readonly icons = { message: MessageCircle, close: X };
   private readonly messageInput = viewChild<ElementRef<HTMLInputElement>>('messageInput');
+  private readonly messageLog = viewChild<ElementRef<HTMLElement>>('messageLog');
+  private readonly messageItems = viewChildren<ElementRef<HTMLElement>>('messageItem');
 
   /**
    * Recommendations added to the basket, keyed by message and product so each result confirms on
@@ -51,6 +55,10 @@ export class AssistantWidget {
   constructor() {
     effect(() => {
       if (this.assistant.isOpen()) this.messageInput()?.nativeElement.focus();
+    });
+    afterRenderEffect(() => {
+      const log = this.messageLog()?.nativeElement;
+      if (log) scrollToLatest(log, this.messageItems());
     });
   }
 
@@ -103,4 +111,13 @@ export class AssistantWidget {
 
 function resultKey(messageId: string, product: Product): string {
   return `${messageId}:${product.id}`;
+}
+
+function scrollToLatest(log: HTMLElement, messages: readonly ElementRef<HTMLElement>[]): void {
+  const end = log.scrollHeight - log.clientHeight;
+  const first = messages.at(0)?.nativeElement;
+  const latest = messages.at(-1)?.nativeElement;
+  const latestStart =
+    first && latest ? latest.getBoundingClientRect().top - first.getBoundingClientRect().top : end;
+  log.scrollTop = Math.min(end, latestStart);
 }
