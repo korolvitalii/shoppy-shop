@@ -16,22 +16,6 @@ import { type CatalogueRequestOptions, requestContext } from './request-context'
 
 const DEFAULT_PAGE_SIZE = 24;
 
-// Built field by field rather than with JSON.stringify(query), so the server and the browser derive
-// the same key however each one happened to construct the query object.
-const searchSnapshotKey = (groupId: string, query: ProductSearchQuery, limit?: number) =>
-  `products:${groupId}:${JSON.stringify([
-    query.search,
-    query.sort,
-    query.price,
-    query.inStock,
-    query.isNew,
-    query.giftWrappable,
-    limit ?? null,
-  ])}`;
-
-const productSnapshotKey = (groupId: string, productId: string) =>
-  `product:${groupId}:${productId}`;
-
 @Injectable()
 export abstract class ProductsRepository {
   abstract search(
@@ -173,6 +157,24 @@ export class StaticProductsRepository implements ProductsRepository {
     this.snapshot.record(productSnapshotKey(groupId, productId), product);
     return of(product);
   }
+}
+
+// Built field by field rather than with JSON.stringify(query), so the server and the browser derive
+// the same key however each one happened to construct the query object.
+function searchSnapshotKey(groupId: string, query: ProductSearchQuery, limit?: number): string {
+  return `products:${groupId}:${JSON.stringify([
+    query.search,
+    query.sort,
+    query.price,
+    query.inStock,
+    query.isNew,
+    query.giftWrappable,
+    limit ?? null,
+  ])}`;
+}
+
+function productSnapshotKey(groupId: string, productId: string): string {
+  return `product:${groupId}:${productId}`;
 }
 
 function decodeOffset(cursor: string | null | undefined): number {
