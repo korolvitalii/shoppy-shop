@@ -16,6 +16,7 @@ import { LanguageSelector } from '../../../../core/locale/language-selector/lang
 import { ThemeService } from '../../../../core/theme/theme.service';
 import { AuthenticationService } from '../../data-access/authentication.service';
 import { AuthenticationSessionService } from '../../data-access/authentication-session.service';
+import { meetsPasswordPolicy, passwordPolicyChecks } from '../../domain/password-policy';
 import { type RegisterRequest } from '../../models/auth.models';
 
 interface RegisterForm {
@@ -52,22 +53,23 @@ export class RegisterPage {
   readonly isSubmitting = signal(false);
   readonly registrationError = signal<string | null>(null);
   readonly showPassword = signal(false);
+  readonly passwordToggleLabel = computed(() =>
+    this.showPassword()
+      ? $localize`:@@hidePassword:Hide password`
+      : $localize`:@@showPassword:Show password`,
+  );
+  readonly themeToggleLabel = computed(() =>
+    this.theme.isDark()
+      ? $localize`:@@switchToLightTheme:Switch to light theme`
+      : $localize`:@@switchToDarkTheme:Switch to dark theme`,
+  );
 
   private readonly passwordValue = toSignal(this.form.controls.password.valueChanges, {
     initialValue: this.form.controls.password.value,
   });
 
-  /** Mirrors passwordPolicyValidator's regex checks so the live checklist stays in sync with it. */
-  readonly passwordChecks = computed(() => {
-    const value = this.passwordValue();
-    return {
-      length: value.length >= 10,
-      lowercase: /[a-z]/.test(value),
-      uppercase: /[A-Z]/.test(value),
-      digit: /\d/.test(value),
-      symbol: /[^a-zA-Z0-9]/.test(value),
-    };
-  });
+  /** The live checklist and passwordPolicyValidator read the same policy checks. */
+  readonly passwordChecks = computed(() => passwordPolicyChecks(this.passwordValue()));
 
   submit(): void {
     this.registrationError.set(null);
@@ -95,16 +97,10 @@ export class RegisterPage {
   }
 }
 
-/** Mirrors the API's ASP.NET Identity password policy so failures surface before submission. */
+/** Surfaces the API's password policy before submission; an empty value is left to `required`. */
 function passwordPolicyValidator(control: AbstractControl<string>): ValidationErrors | null {
-  const value = control.value;
-  if (!value) return null;
+  if (!control.value) return null;
 
-  const errors: ValidationErrors = {};
-  if (value.length < 10) errors['tooShort'] = true;
-  if (!/[a-z]/.test(value)) errors['missingLowercase'] = true;
-  if (!/[A-Z]/.test(value)) errors['missingUppercase'] = true;
-  if (!/\d/.test(value)) errors['missingDigit'] = true;
-  if (!/[^a-zA-Z0-9]/.test(value)) errors['missingSymbol'] = true;
-  return Object.keys(errors).length > 0 ? errors : null;
+  const checks = passwordPolicyChecks(control.value);
+  return meetsPasswordPolicy(checks) ? null : { passwordPolicy: checks };
 }

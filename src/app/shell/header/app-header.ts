@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { filter } from 'rxjs';
@@ -22,6 +22,16 @@ export class AppHeader {
   protected readonly menuOpen = signal(false);
   protected readonly session = this.facade.session;
   protected readonly theme = this.facade.theme;
+  protected readonly themeToggleLabel = computed(() =>
+    this.theme.isDark()
+      ? $localize`:@@switchToLightTheme:Switch to light theme`
+      : $localize`:@@switchToDarkTheme:Switch to dark theme`,
+  );
+  protected readonly themeToggleTitle = computed(() =>
+    this.theme.isDark()
+      ? $localize`:@@useLightTheme:Use light theme`
+      : $localize`:@@useDarkTheme:Use dark theme`,
+  );
 
   constructor() {
     inject(Router)

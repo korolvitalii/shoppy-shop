@@ -20,7 +20,11 @@
           <p i18n="@@newCollectionsSoon">New collections will appear here soon.</p>
         </section>
       } @else {
-        <section class="groups-grid" aria-label="Product categories">
+        <section
+          class="groups-grid"
+          aria-label="Product categories"
+          i18n-aria-label="@@productCategoriesLabel"
+        >
           @for (group of groups(); track group.id) {
             <app-product-group-card [group]="group" />
           }

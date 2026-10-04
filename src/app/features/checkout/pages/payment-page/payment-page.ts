@@ -13,6 +13,8 @@ import { CheckoutStepper } from '../../components/checkout-stepper/checkout-step
 import { CheckoutSummaryBar } from '../../components/checkout-summary-bar/checkout-summary-bar';
 import { CheckoutTotals } from '../../components/checkout-totals/checkout-totals';
 import { CheckoutFacade } from '../../data-access/checkout.facade';
+import { createDemoPaymentToken } from '../../domain/payment-token';
+
 @Component({
   selector: 'app-payment-page',
   imports: [CheckoutStepper, CheckoutSummaryBar, CheckoutTotals, ReactiveFormsModule, RouterLink],
@@ -76,12 +78,7 @@ export class PaymentPage {
       this.form.markAllAsTouched();
       return;
     }
-    const card = this.form.controls.card.value.replace(/\s/g, '');
-    this.facade.setPaymentToken({
-      tokenId: `tok_${Date.now()}`,
-      brand: card.startsWith('4') ? 'Visa' : 'Card',
-      last4: card.slice(-4),
-    });
+    this.facade.setPaymentToken(createDemoPaymentToken(this.form.controls.card.value));
     void this.router.navigateByUrl('/checkout/review');
   }
 }

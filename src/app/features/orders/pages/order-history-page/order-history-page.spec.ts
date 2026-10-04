@@ -232,6 +232,45 @@ describe('OrderHistoryPage', () => {
     expect(revealAfter?.getAttribute('aria-disabled')).toBe('true');
   });
 
+  it('shows progress on the reveal control while an earlier page loads, and lets it retry', () => {
+    const fixture = TestBed.createComponent(OrderHistoryPage);
+    fixture.detectChanges();
+    response.next(
+      Array.from({ length: 50 }, (_, index) =>
+        createOrder({ id: `ORD-${String(index).padStart(5, '0')}`, createdAt: today() }),
+      ),
+    );
+    response.complete();
+    fixture.detectChanges();
+
+    const element = fixture.nativeElement as HTMLElement;
+    const reveal = () => element.querySelector<HTMLButtonElement>('.show-earlier')!;
+    for (let shown = 5; shown < 50; shown += 5) {
+      reveal().click();
+      fixture.detectChanges();
+    }
+
+    const failedPage = new Subject<readonly Order[]>();
+    repository.getOrders.mockReturnValueOnce(failedPage);
+    reveal().click();
+    fixture.detectChanges();
+
+    expect(reveal().textContent).toContain('Loading earlier orders');
+    expect(reveal().getAttribute('aria-disabled')).toBe('true');
+    reveal().click();
+    expect(repository.getOrders).toHaveBeenCalledTimes(2);
+
+    // The failure itself is reported by the global banner; the control just becomes usable again.
+    failedPage.error(new Error('Unavailable'));
+    fixture.detectChanges();
+
+    expect(reveal().textContent).toContain('Show earlier orders');
+    expect(reveal().getAttribute('aria-disabled')).toBeNull();
+    repository.getOrders.mockReturnValueOnce(new Subject<readonly Order[]>());
+    reveal().click();
+    expect(repository.getOrders).toHaveBeenCalledTimes(3);
+  });
+
   it('leaves the reveal control out when one page holds every order', () => {
     const fixture = TestBed.createComponent(OrderHistoryPage);
     fixture.detectChanges();

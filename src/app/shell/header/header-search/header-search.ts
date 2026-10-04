@@ -16,15 +16,24 @@ import {
   debounceTime,
   distinctUntilChanged,
   map,
+  type Observable,
   of,
   startWith,
   switchMap,
 } from 'rxjs';
 
-import { ProductsRepository } from '../../../features/catalogue/public-api';
+import {
+  DEFAULT_PRODUCT_SEARCH_QUERY,
+  ProductsRepository,
+} from '../../../features/catalogue/public-api';
 import { type Product } from '../../../shared/domain/product';
 import { HEADER_CATEGORIES } from '../header-categories';
 import { SearchSuggestions } from '../search-suggestions/search-suggestions';
+
+const MIN_QUERY_LENGTH = 2;
+// The suggestion cap is a page size, so the API returns six rows rather than the whole matching
+// catalogue for the dropdown to throw most of away.
+const SUGGESTION_LIMIT = 6;
 
 @Component({
   selector: 'app-header-search',
@@ -66,38 +75,10 @@ export class HeaderSearch {
           (previous, current) =>
             previous.query === current.query && previous.category === current.category,
         ),
-        switchMap(({ query, category }) =>
-          query.length < 2
-            ? of([])
-            : this.products
-                // The six-suggestion cap is a page size now, so the API returns six rows rather
-                // than the whole matching catalogue for the dropdown to throw most of away.
-                .search(
-                  category,
-                  {
-                    search: query,
-                    sort: 'featured',
-                    price: 'all',
-                    inStock: false,
-                    isNew: false,
-                    giftWrappable: false,
-                  },
-                  { limit: 6 },
-                )
-                .pipe(
-                  map((page) => page.items),
-                  catchError(() => of([])),
-                ),
-        ),
+        switchMap(({ query, category }) => this.loadSuggestions(query, category)),
         takeUntilDestroyed(),
       )
-      .subscribe((suggestions) => {
-        this.suggestions.set(suggestions);
-        this.activeSuggestionIndex.set(-1);
-        this.suggestionsOpen.set(
-          this.searchForm.controls.query.value.trim().length >= 2 && suggestions.length > 0,
-        );
-      });
+      .subscribe((suggestions) => this.showSuggestionResults(suggestions));
   }
 
   @HostListener('document:click', ['$event.target'])
@@ -154,6 +135,35 @@ export class HeaderSearch {
 
   protected suggestionId(index: number): string {
     return `search-suggestion-${index}`;
+  }
+
+  /**
+   * Suggestions support whatever page the customer is on, so a lookup stays silent: it never raises
+   * the global loading bar while typing, and a failure just leaves the dropdown closed.
+   */
+  private loadSuggestions(query: string, category: string): Observable<readonly Product[]> {
+    if (query.length < MIN_QUERY_LENGTH) return of([]);
+
+    return this.products
+      .search(
+        category,
+        { ...DEFAULT_PRODUCT_SEARCH_QUERY, search: query },
+        { limit: SUGGESTION_LIMIT },
+        { silent: true },
+      )
+      .pipe(
+        map((page) => page.items),
+        catchError(() => of([])),
+      );
+  }
+
+  private showSuggestionResults(suggestions: readonly Product[]): void {
+    this.suggestions.set(suggestions);
+    this.activeSuggestionIndex.set(-1);
+    this.suggestionsOpen.set(
+      this.searchForm.controls.query.value.trim().length >= MIN_QUERY_LENGTH &&
+        suggestions.length > 0,
+    );
   }
 
   private closeSuggestions(): void {

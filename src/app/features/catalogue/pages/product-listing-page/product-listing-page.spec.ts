@@ -1,12 +1,18 @@
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { convertToParamMap, provideRouter, Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, of, Subject } from 'rxjs';
 
+import { apiErrorInterceptor } from '../../../../core/errors/api-error.interceptor';
+import { ErrorNotificationService } from '../../../../core/errors/error-notification.service';
+import { loadingInterceptor } from '../../../../core/loading/loading.interceptor';
 import { type Product } from '../../../../shared/domain/product';
-import { ProductGroupsRepository } from '../../data-access/product-groups.repository';
+import {
+  ApiProductGroupsRepository,
+  ProductGroupsRepository,
+} from '../../data-access/product-groups.repository';
 import { ProductsRepository } from '../../data-access/products.repository';
 import { type ProductPage } from '../../models/product';
 import { type ProductGroup } from '../../models/product-group';
@@ -321,5 +327,50 @@ describe('ProductListingPage', () => {
       queryParams: { inStock: 'true' },
       queryParamsHandling: 'merge',
     });
+  });
+});
+
+describe('ProductListingPage category names', () => {
+  const repository = { search: vi.fn() };
+
+  beforeEach(async () => {
+    repository.search.mockReset();
+    repository.search.mockReturnValue(
+      of({ items: [product('headphones', 'Studio headphones')], nextCursor: null, totalCount: 1 }),
+    );
+
+    await TestBed.configureTestingModule({
+      imports: [ProductListingPage],
+      providers: [
+        provideRouter([]),
+        provideHttpClient(withInterceptors([loadingInterceptor, apiErrorInterceptor])),
+        provideHttpClientTesting(),
+        { provide: ProductsRepository, useValue: repository },
+        { provide: ProductGroupsRepository, useClass: ApiProductGroupsRepository },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            paramMap: of(convertToParamMap({ groupId: 'electronics' })),
+            queryParamMap: of(convertToParamMap({})),
+          },
+        },
+      ],
+    }).compileComponents();
+  });
+
+  afterEach(() => TestBed.inject(HttpTestingController).verify());
+
+  it('keeps the listing usable without the global banner when they fail to load', () => {
+    const fixture = TestBed.createComponent(ProductListingPage);
+    fixture.detectChanges();
+
+    TestBed.inject(HttpTestingController)
+      .expectOne('/api/product-groups')
+      .flush({ title: 'Server error' }, { status: 500, statusText: 'Server Error' });
+    fixture.detectChanges();
+
+    expect(TestBed.inject(ErrorNotificationService).current()).toBeNull();
+    expect(fixture.componentInstance.status()).toBe('success');
+    expect((fixture.nativeElement as HTMLElement).textContent).toContain('Studio headphones');
   });
 });

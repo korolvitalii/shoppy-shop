@@ -107,7 +107,7 @@
               </button>
             </section>
           } @else {
-            <section class="product-grid" aria-label="Products">
+            <section class="product-grid" aria-label="Products" i18n-aria-label="@@products">
               @for (product of products(); track product.id) {
                 <app-product-card
                   [product]="product"

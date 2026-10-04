@@ -2,6 +2,7 @@
   class="mobile-tabs"
   [class.mobile-tabs--authenticated]="session.isAuthenticated()"
   aria-label="Mobile primary navigation"
+  i18n-aria-label="@@mobilePrimaryNavigation"
 >
   <a routerLink="/products" routerLinkActive="active">
     <app-lucide-icon [icon]="icons.shop" />
@@ -11,9 +12,12 @@
     <app-lucide-icon [icon]="icons.favorites" />
     <span i18n="@@favourites">Favourites</span>
     @if (favorites.count() > 0) {
-      <span class="badge" aria-label="Favourite products">{{
-        favorites.count() > 99 ? '99+' : favorites.count()
-      }}</span>
+      <span
+        class="badge"
+        aria-label="Favourite products"
+        i18n-aria-label="@@favouriteProductsLabel"
+        >{{ favorites.count() > 99 ? '99+' : favorites.count() }}</span
+      >
     }
   </a>
   @if (session.isAuthenticated()) {
@@ -25,7 +29,7 @@
       <app-lucide-icon [icon]="icons.basket" />
       <span i18n="@@basket">Basket</span>
       @if (basket.itemCount() > 0) {
-        <span class="badge" aria-label="Basket items">{{
+        <span class="badge" aria-label="Basket items" i18n-aria-label="@@basketItemsLabel">{{
           basket.itemCount() > 99 ? '99+' : basket.itemCount()
         }}</span>
       }

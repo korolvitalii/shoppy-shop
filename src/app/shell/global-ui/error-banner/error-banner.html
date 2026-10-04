@@ -6,6 +6,13 @@
       <p>{{ error.userMessage }}</p>
       <small i18n="@@errorCode">Error code: {{ error.code }}</small>
     </div>
-    <button type="button" aria-label="Dismiss error message" (click)="errors.dismiss()">×</button>
+    <button
+      type="button"
+      aria-label="Dismiss error message"
+      i18n-aria-label="@@dismissErrorMessage"
+      (click)="errors.dismiss()"
+    >
+      ×
+    </button>
   </aside>
 }

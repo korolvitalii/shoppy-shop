@@ -17,14 +17,10 @@
     <button
       type="button"
       class="favorite-button"
-      [class.active]="favorites.has(product().id)"
-      [attr.aria-pressed]="favorites.has(product().id)"
-      [attr.aria-label]="
-        favorites.has(product().id)
-          ? 'Remove ' + product().name + ' from favourites'
-          : 'Add ' + product().name + ' to favourites'
-      "
-      (click)="toggleFavorite()"
+      [class.active]="favorite()"
+      [attr.aria-pressed]="favorite()"
+      [attr.aria-label]="favoriteButtonLabel()"
+      (click)="favoriteToggle.emit()"
     >
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path
@@ -32,7 +28,7 @@
         />
       </svg>
     </button>
-    <button type="button" class="add-to-basket" [disabled]="added()" (click)="addToBasket()">
+    <button type="button" class="add-to-basket" [disabled]="added()" (click)="basketAdd.emit()">
       @if (added()) {
         <span i18n="@@assistantProductAdded">Added</span>
       } @else {

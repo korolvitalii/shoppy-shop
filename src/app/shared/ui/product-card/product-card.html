@@ -4,11 +4,7 @@
     type="button"
     [class.active]="favorite()"
     [attr.aria-pressed]="favorite()"
-    [attr.aria-label]="
-      favorite()
-        ? 'Remove ' + product().name + ' from favourites'
-        : 'Add ' + product().name + ' to favourites'
-    "
+    [attr.aria-label]="favoriteButtonLabel()"
     (click)="favoriteToggle.emit()"
   >
     <svg viewBox="0 0 24 24" aria-hidden="true">

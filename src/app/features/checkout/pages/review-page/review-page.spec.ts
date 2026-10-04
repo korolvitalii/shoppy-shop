@@ -80,6 +80,6 @@ describe('ReviewPage', () => {
 
     expect(fixture.nativeElement.textContent).toContain('Alex Morgan');
     expect(fixture.nativeElement.textContent).toContain('4 Market Street');
-    expect(fixture.nativeElement.textContent).toContain('Visa ending 4242');
+    expect(fixture.nativeElement.textContent).toContain('Visa ending in 4242');
   });
 });

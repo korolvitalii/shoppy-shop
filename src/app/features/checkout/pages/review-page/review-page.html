@@ -64,7 +64,9 @@
             <span class="info-label" i18n="@@paymentMethod">Payment method</span>
             @if (facade.paymentToken(); as payment) {
               <div class="info-value">
-                <strong>{{ payment.brand }}</strong> ending {{ payment.last4 }}
+                <span i18n="@@savedCard"
+                  ><strong>{{ payment.brand }}</strong> ending in {{ payment.last4 }}</span
+                >
               </div>
               <a
                 class="back-link"
