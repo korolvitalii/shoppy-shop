@@ -147,6 +147,43 @@ describe('ProductListingPage', () => {
     ).toBeTruthy();
   });
 
+  it('keeps later and appended product images lazy while prioritizing initial content', () => {
+    const fixture = TestBed.createComponent(ProductListingPage);
+    fixture.detectChanges();
+    response.next({
+      items: Array.from({ length: 5 }, (_, index) => product(`p-${index}`, `Product ${index}`)),
+      nextCursor: 'next-page',
+      totalCount: 6,
+    });
+    response.complete();
+    fixture.detectChanges();
+    repository.search.mockReturnValue(
+      of({
+        items: [product('p-5', 'Appended product')],
+        nextCursor: null,
+        totalCount: null,
+      }),
+    );
+    (fixture.nativeElement as HTMLElement)
+      .querySelector<HTMLButtonElement>('.load-more button')!
+      .click();
+    fixture.detectChanges();
+    const images = [
+      ...(fixture.nativeElement as HTMLElement).querySelectorAll('.product-grid img'),
+    ];
+    expect(images.map((image) => image.getAttribute('loading'))).toEqual([
+      'eager',
+      'eager',
+      'eager',
+      'eager',
+      'lazy',
+      'lazy',
+    ]);
+    expect(images.filter((image) => image.getAttribute('fetchpriority') === 'high')).toHaveLength(
+      1,
+    );
+  });
+
   it('shows the total count once the first page resolves', () => {
     const fixture = TestBed.createComponent(ProductListingPage);
     fixture.detectChanges();

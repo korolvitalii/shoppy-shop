@@ -23,6 +23,8 @@ describe('BasketService', () => {
     TestBed.configureTestingModule({});
   });
 
+  afterEach(() => vi.restoreAllMocks());
+
   it('adds products, aggregates quantities, and persists non-sensitive basket data', () => {
     const service = TestBed.inject(BasketService);
 
@@ -38,15 +40,69 @@ describe('BasketService', () => {
     expect(localStorage.getItem('shoppyshop.basket.v1')).toContain('headphones');
   });
 
-  it('discards malformed or untrusted persisted data', () => {
-    localStorage.setItem(
-      'shoppyshop.basket.v1',
-      JSON.stringify([{ productId: 'injected', quantity: -20 }]),
-    );
+  const savedItem = {
+    productId: product.id,
+    groupId: product.groupId,
+    name: product.name,
+    imageUrl: product.imageUrl,
+    unitPrice: 199,
+    quantity: 2,
+  };
+
+  it('restores validated items before reporting readiness', async () => {
+    localStorage.setItem('shoppyshop.basket.v1', JSON.stringify([savedItem]));
+    const service = TestBed.inject(BasketService);
+
+    await service.restored;
+
+    expect(service.items()).toEqual([savedItem]);
+    expect(service.itemCount()).toBe(2);
+    expect(service.subtotal()).toBe(398);
+  });
+
+  it.each([
+    '{',
+    JSON.stringify([{ productId: 'injected', quantity: -20 }]),
+    JSON.stringify([{ ...savedItem, quantity: 0 }]),
+    JSON.stringify([{ ...savedItem, unitPrice: -1 }]),
+  ])('settles with an empty basket for invalid storage: %s', async (value) => {
+    localStorage.setItem('shoppyshop.basket.v1', value);
 
     const service = TestBed.inject(BasketService);
+    await service.restored;
 
     expect(service.items()).toEqual([]);
     expect(service.itemCount()).toBe(0);
   });
+
+  it('settles when storage is empty', async () => {
+    const service = TestBed.inject(BasketService);
+    await service.restored;
+    expect(service.itemCount()).toBe(0);
+  });
+
+  it('settles when browser storage is unavailable', async () => {
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new Error('Storage unavailable');
+    });
+    const service = TestBed.inject(BasketService);
+    await service.restored;
+    expect(service.items()).toEqual([]);
+  });
+
+  it.each(['add', 'remove', 'clear'] as const)(
+    'keeps a newer %s action when restoration completes',
+    async (action) => {
+      localStorage.setItem('shoppyshop.basket.v1', JSON.stringify([savedItem]));
+      const service = TestBed.inject(BasketService);
+
+      if (action === 'add') service.add(product, 3);
+      else if (action === 'remove') service.remove(product.id);
+      else service.clear();
+      await service.restored;
+
+      expect(service.itemCount()).toBe(action === 'add' ? 3 : 0);
+      expect(JSON.parse(localStorage.getItem('shoppyshop.basket.v1')!)).toEqual(service.items());
+    },
+  );
 });

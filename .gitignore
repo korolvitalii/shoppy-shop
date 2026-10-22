@@ -53,4 +53,6 @@ Thumbs.db
 /CLAUDE.md
 /AGENTS.md
 /.claude/
+/.codex/
+/.playwright-mcp/
 /docs

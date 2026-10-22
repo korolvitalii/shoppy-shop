@@ -15,6 +15,8 @@ export class ProductCard {
   readonly product = input.required<Product>();
   readonly favorite = input(false);
   readonly categoryLabel = input<string | null>(null);
+  readonly imageLoading = input<'lazy' | 'eager'>('lazy');
+  readonly imagePriority = input<'auto' | 'high'>('auto');
   readonly favoriteToggle = output<void>();
   readonly favoriteButtonLabel = computed(() => {
     const name = this.product().name;

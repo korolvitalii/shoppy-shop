@@ -108,11 +108,13 @@
             </section>
           } @else {
             <section class="product-grid" aria-label="Products" i18n-aria-label="@@products">
-              @for (product of products(); track product.id) {
+              @for (product of products(); track product.id; let index = $index) {
                 <app-product-card
                   [product]="product"
                   [favorite]="favorites.has(product.id)"
                   [categoryLabel]="categoryName(product.groupId)"
+                  [imageLoading]="index < 4 ? 'eager' : 'lazy'"
+                  [imagePriority]="index === 0 ? 'high' : 'auto'"
                   (favoriteToggle)="toggleFavorite(product)"
                 />
               }

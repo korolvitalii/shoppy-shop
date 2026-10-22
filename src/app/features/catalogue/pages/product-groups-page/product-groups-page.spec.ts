@@ -57,6 +57,37 @@ describe('ProductGroupsPage', () => {
     expect(link.querySelector('img')?.alt).toBe('Electronics');
   });
 
+  it('eagerly loads the initial row and leaves later category images lazy', () => {
+    const fixture = TestBed.createComponent(ProductGroupsPage);
+    fixture.detectChanges();
+    response.next(
+      Array.from({ length: 5 }, (_, index) => ({
+        id: `group-${index}`,
+        name: `Group ${index}`,
+        description: 'Category',
+        imageUrl: `/group-${index}.jpg`,
+        itemCount: 15,
+        badge: null,
+      })),
+    );
+    fixture.detectChanges();
+    const images = [...(fixture.nativeElement as HTMLElement).querySelectorAll('.groups-grid img')];
+    expect(images.map((image) => image.getAttribute('loading'))).toEqual([
+      'eager',
+      'eager',
+      'eager',
+      'lazy',
+      'lazy',
+    ]);
+    expect(images.map((image) => image.getAttribute('fetchpriority'))).toEqual([
+      'high',
+      'auto',
+      'auto',
+      'auto',
+      'auto',
+    ]);
+  });
+
   it('shows an empty state when no product groups are available', () => {
     const fixture = TestBed.createComponent(ProductGroupsPage);
     fixture.detectChanges();

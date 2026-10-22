@@ -12,6 +12,8 @@ import { type ProductGroup } from '../../models/product-group';
 })
 export class ProductGroupCard {
   readonly group = input.required<ProductGroup>();
+  readonly imageLoading = input<'lazy' | 'eager'>('lazy');
+  readonly imagePriority = input<'auto' | 'high'>('auto');
   readonly productCount = computed(() => {
     const count = this.group().itemCount;
     return `${count} ${count === 1 ? 'product' : 'products'}`;

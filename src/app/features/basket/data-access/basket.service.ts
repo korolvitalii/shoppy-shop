@@ -10,6 +10,7 @@ export class BasketService {
   private readonly itemsState = signal<readonly BasketItem[]>([]);
   private revision = 0;
 
+  readonly restored: Promise<void>;
   readonly items = this.itemsState.asReadonly();
   readonly itemCount = computed(() =>
     this.itemsState().reduce((total, item) => total + item.quantity, 0),
@@ -19,7 +20,7 @@ export class BasketService {
   );
 
   constructor() {
-    void this.restore();
+    this.restored = this.restore();
   }
 
   add(product: Product, quantity = 1): void {

@@ -36,4 +36,14 @@ describe('ProductGroupCard', () => {
     expect(element.textContent).toContain('1 product');
     expect(element.querySelector('img')?.getAttribute('loading')).toBe('lazy');
   });
+
+  it('accepts the containing page image-loading priority', async () => {
+    const component = await render();
+    component.setInput('imageLoading', 'eager');
+    component.setInput('imagePriority', 'high');
+    component.changeDetectorRef.detectChanges();
+    const image = (component.location.nativeElement as HTMLElement).querySelector('img')!;
+    expect(image.getAttribute('loading')).toBe('eager');
+    expect(image.getAttribute('fetchpriority')).toBe('high');
+  });
 });
