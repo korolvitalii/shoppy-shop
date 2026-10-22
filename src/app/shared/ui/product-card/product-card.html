@@ -15,7 +15,12 @@
   </button>
   <a [routerLink]="['/products', product().groupId, product().id]">
     <div class="image-frame">
-      <img [src]="product().imageUrl" [alt]="product().name" loading="lazy" />
+      <img
+        [src]="product().imageUrl"
+        [alt]="product().name"
+        [attr.loading]="imageLoading()"
+        [attr.fetchpriority]="imagePriority()"
+      />
       <div class="badge-row">
         @if (categoryLabel(); as label) {
           <span class="category-label">{{ label }}</span>

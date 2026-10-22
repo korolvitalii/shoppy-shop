@@ -1,7 +1,12 @@
 <article class="group-card">
   <a [routerLink]="['/products', group().id]">
     <div class="image-frame">
-      <img [src]="group().imageUrl" [alt]="group().name" loading="lazy" />
+      <img
+        [src]="group().imageUrl"
+        [alt]="group().name"
+        [attr.loading]="imageLoading()"
+        [attr.fetchpriority]="imagePriority()"
+      />
       <span class="image-wash" aria-hidden="true"></span>
       @if (group().badge; as badge) {
         <span class="badge">{{ badge }}</span>

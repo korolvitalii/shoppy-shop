@@ -25,8 +25,12 @@
           aria-label="Product categories"
           i18n-aria-label="@@productCategoriesLabel"
         >
-          @for (group of groups(); track group.id) {
-            <app-product-group-card [group]="group" />
+          @for (group of groups(); track group.id; let index = $index) {
+            <app-product-group-card
+              [group]="group"
+              [imageLoading]="index < 3 ? 'eager' : 'lazy'"
+              [imagePriority]="index === 0 ? 'high' : 'auto'"
+            />
           }
         </section>
       }

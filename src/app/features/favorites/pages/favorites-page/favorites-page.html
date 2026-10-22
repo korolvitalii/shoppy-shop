@@ -21,10 +21,12 @@
       aria-label="Favourite products"
       i18n-aria-label="@@favouriteProductsLabel"
     >
-      @for (product of favorites.products(); track product.id) {
+      @for (product of favorites.products(); track product.id; let index = $index) {
         <app-product-card
           [product]="product"
           [favorite]="true"
+          [imageLoading]="index < 4 ? 'eager' : 'lazy'"
+          [imagePriority]="index === 0 ? 'high' : 'auto'"
           (favoriteToggle)="favorites.toggle(product)"
         />
       }
