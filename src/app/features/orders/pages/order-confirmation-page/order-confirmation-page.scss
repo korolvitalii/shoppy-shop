@@ -54,6 +54,7 @@
 }
 
 .poster {
+  min-width: 0;
   background: var(--color-primary-fill);
   color: #fff;
   padding: clamp(2rem, 8vw, 3rem);
@@ -82,6 +83,7 @@ h1 {
 }
 
 .poster-text {
+  overflow-wrap: anywhere;
   margin: 0;
   font-size: 1.125rem;
   line-height: 1.45;
@@ -119,6 +121,7 @@ h1 {
 }
 
 .receipt {
+  min-width: 0;
   border-left: 2px solid var(--color-ink);
   padding: clamp(2rem, 8vw, 3rem);
   display: flex;
@@ -154,7 +157,13 @@ h1 {
   color: var(--color-muted);
 }
 
+.receipt-line > :first-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 .line-total {
+  flex-shrink: 0;
   font-weight: 700;
 }
 
@@ -266,7 +275,7 @@ a:focus-visible {
 
 @media (max-width: 62rem) {
   .layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .receipt {
