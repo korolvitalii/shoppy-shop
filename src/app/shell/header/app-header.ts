@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
@@ -16,6 +17,7 @@ import { HeaderSearch } from './header-search/header-search';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppHeader {
+  private readonly document = inject(DOCUMENT);
   protected readonly facade = inject(HeaderFacade);
   protected readonly basket = this.facade.basket;
   protected readonly favorites = this.facade.favorites;
@@ -44,5 +46,12 @@ export class AppHeader {
 
   protected toggleMenu(): void {
     this.menuOpen.update((open) => !open);
+  }
+
+  protected skipToContent(event: MouseEvent): void {
+    const content = this.document.getElementById('main-content');
+    if (!content) return;
+    event.preventDefault();
+    content.focus();
   }
 }
