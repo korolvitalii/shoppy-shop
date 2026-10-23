@@ -2,6 +2,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
+import { LOCALIZED_CONTENT } from '../../../core/locale/locale-context';
 import { type Product } from '../../../shared/domain/product';
 import { AssistantChatService } from './assistant-chat.service';
 import {
@@ -47,6 +48,7 @@ describe('AssistantChatService', () => {
 
     const request = http.expectOne('/api/assistant/chat');
     expect(request.request.method).toBe('POST');
+    expect(request.request.context.get(LOCALIZED_CONTENT)).toBe(true);
     expect(request.request.body).toEqual({
       message: 'show me waterproof jackets under $50',
       history: [],

@@ -13,11 +13,8 @@ import { type Product } from '../../../../shared/domain/product';
 import { AuthenticationSessionService } from '../../../auth/public-api';
 import { BasketService } from '../../../basket/public-api';
 import { FavoritesService } from '../../../favorites/public-api';
-import {
-  ApiProductsRepository,
-  ProductsRepository,
-  StaticProductsRepository,
-} from '../../data-access/products.repository';
+import { ApiProductsRepository, ProductsRepository } from '../../data-access/products.repository';
+import { StaticProductsRepository } from '../../data-access/static-products.repository';
 import { type ProductPage } from '../../models/product';
 import { ProductDetailsPage } from './product-details-page';
 

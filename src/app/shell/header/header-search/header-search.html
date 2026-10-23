@@ -23,7 +23,7 @@
   <select id="search-category" formControlName="category">
     <option value="all" i18n="@@allCategories">All categories</option>
     @for (category of categories; track category.id) {
-      <option [value]="category.id">{{ category.label }}</option>
+      <option [value]="category.id">{{ category.name }}</option>
     }
   </select>
   <button class="search-button" type="submit">
@@ -38,6 +38,7 @@
       id="search-suggestions"
       role="listbox"
       [products]="suggestions()"
+      [categoryNames]="categoryNames"
       [activeIndex]="activeSuggestionIndex()"
       [query]="searchForm.controls.query.value.trim()"
       (activeIndexChange)="activeSuggestionIndex.set($event)"

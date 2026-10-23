@@ -1,0 +1,679 @@
+{
+  "sourceLocale": "en",
+  "groups": [
+    {
+      "id": "beauty",
+      "name": {
+        "en": "Beauty & fragrance",
+        "pl": "Uroda i zapachy"
+      }
+    },
+    {
+      "id": "electronics",
+      "name": {
+        "en": "Electronics",
+        "pl": "Elektronika"
+      }
+    },
+    {
+      "id": "fashion",
+      "name": {
+        "en": "Fashion",
+        "pl": "Moda"
+      }
+    },
+    {
+      "id": "home",
+      "name": {
+        "en": "Home & living",
+        "pl": "Dom i wnętrze"
+      }
+    },
+    {
+      "id": "accessories",
+      "name": {
+        "en": "Accessories",
+        "pl": "Akcesoria"
+      }
+    },
+    {
+      "id": "gifts",
+      "name": {
+        "en": "Gifts",
+        "pl": "Prezenty"
+      }
+    }
+  ],
+  "products": [
+    {
+      "id": "beauty-1",
+      "name": {
+        "en": "Vetiver & Cedar Eau de Parfum",
+        "pl": "Woda perfumowana z wetiwerią i cedrem"
+      }
+    },
+    {
+      "id": "beauty-2",
+      "name": {
+        "en": "Professional Brush Collection, 12 Piece",
+        "pl": "Profesjonalny zestaw 12 pędzli do makijażu"
+      }
+    },
+    {
+      "id": "beauty-3",
+      "name": {
+        "en": "Satin Lipstick in Bare Rose",
+        "pl": "Satynowa pomadka w odcieniu Bare Rose"
+      }
+    },
+    {
+      "id": "beauty-4",
+      "name": {
+        "en": "Orange Blossom Eau de Parfum",
+        "pl": "Woda perfumowana z kwiatem pomarańczy"
+      }
+    },
+    {
+      "id": "beauty-5",
+      "name": {
+        "en": "Rose Quartz Facial Ritual Set",
+        "pl": "Zestaw do pielęgnacji twarzy z kwarcem różowym"
+      }
+    },
+    {
+      "id": "beauty-6",
+      "name": {
+        "en": "Overnight Renewal Gel Cream",
+        "pl": "Regenerujący krem żelowy na noc"
+      }
+    },
+    {
+      "id": "beauty-7",
+      "name": {
+        "en": "Botanical Facial Oil",
+        "pl": "Roślinny olejek do twarzy"
+      }
+    },
+    {
+      "id": "beauty-8",
+      "name": {
+        "en": "Ionic Pro Hair Dryer",
+        "pl": "Profesjonalna suszarka do włosów z jonizacją"
+      }
+    },
+    {
+      "id": "beauty-9",
+      "name": {
+        "en": "Muted Nudes Nail Lacquer Set",
+        "pl": "Zestaw lakierów do paznokci w stonowanych odcieniach"
+      }
+    },
+    {
+      "id": "beauty-10",
+      "name": {
+        "en": "Vitamin C Brightening Serum",
+        "pl": "Rozświetlające serum z witaminą C"
+      }
+    },
+    {
+      "id": "beauty-11",
+      "name": {
+        "en": "Kaolin Clay Purifying Mask",
+        "pl": "Oczyszczająca maseczka z glinką kaolinową"
+      }
+    },
+    {
+      "id": "beauty-12",
+      "name": {
+        "en": "Warm Nudes Eyeshadow Palette",
+        "pl": "Paleta cieni w ciepłych odcieniach nude"
+      }
+    },
+    {
+      "id": "beauty-13",
+      "name": {
+        "en": "Whipped Rose Body Butter",
+        "pl": "Puszyste różane masło do ciała"
+      }
+    },
+    {
+      "id": "beauty-14",
+      "name": {
+        "en": "Handmade Botanical Soap Bars, Set of 4",
+        "pl": "Zestaw 4 ręcznie robionych mydeł roślinnych"
+      }
+    },
+    {
+      "id": "beauty-15",
+      "name": {
+        "en": "Rose Petal Mineral Bath Soak",
+        "pl": "Mineralna sól do kąpieli z płatkami róży"
+      }
+    },
+    {
+      "id": "electronics-1",
+      "name": {
+        "en": "Noise-Cancelling Wireless Headphones",
+        "pl": "Bezprzewodowe słuchawki z redukcją hałasu"
+      }
+    },
+    {
+      "id": "electronics-2",
+      "name": {
+        "en": "Compact Bluetooth Speaker",
+        "pl": "Kompaktowy głośnik Bluetooth"
+      }
+    },
+    {
+      "id": "electronics-3",
+      "name": {
+        "en": "Belt-Drive Turntable",
+        "pl": "Gramofon z napędem paskowym"
+      }
+    },
+    {
+      "id": "electronics-4",
+      "name": {
+        "en": "Retro Compact Camera",
+        "pl": "Kompaktowy aparat w stylu retro"
+      }
+    },
+    {
+      "id": "electronics-5",
+      "name": {
+        "en": "Wireless Mechanical Keyboard",
+        "pl": "Bezprzewodowa klawiatura mechaniczna"
+      }
+    },
+    {
+      "id": "electronics-6",
+      "name": {
+        "en": "Glare-Free E-Reader",
+        "pl": "Czytnik e-booków z ekranem bez odblasków"
+      }
+    },
+    {
+      "id": "electronics-7",
+      "name": {
+        "en": "True Wireless Earbuds",
+        "pl": "Całkowicie bezprzewodowe słuchawki douszne"
+      }
+    },
+    {
+      "id": "electronics-8",
+      "name": {
+        "en": "Minimalist Smartwatch",
+        "pl": "Minimalistyczny zegarek inteligentny"
+      }
+    },
+    {
+      "id": "electronics-9",
+      "name": {
+        "en": "Multi-Room Wi-Fi Speaker",
+        "pl": "Głośnik Wi-Fi do systemu wielopokojowego"
+      }
+    },
+    {
+      "id": "electronics-10",
+      "name": {
+        "en": "Broadcast Microphone with Boom Arm",
+        "pl": "Mikrofon do nagrań z ramieniem biurkowym"
+      }
+    },
+    {
+      "id": "electronics-11",
+      "name": {
+        "en": "Silent Wireless Mouse",
+        "pl": "Cicha mysz bezprzewodowa"
+      }
+    },
+    {
+      "id": "electronics-12",
+      "name": {
+        "en": "Full HD Home Projector",
+        "pl": "Domowy projektor Full HD"
+      }
+    },
+    {
+      "id": "electronics-13",
+      "name": {
+        "en": "Retro Portable Radio",
+        "pl": "Przenośne radio w stylu retro"
+      }
+    },
+    {
+      "id": "electronics-14",
+      "name": {
+        "en": "Wireless Charging Pad",
+        "pl": "Podkładka do ładowania bezprzewodowego"
+      }
+    },
+    {
+      "id": "electronics-15",
+      "name": {
+        "en": "Flip Desk Clock",
+        "pl": "Biurkowy zegar klapkowy"
+      }
+    },
+    {
+      "id": "fashion-1",
+      "name": {
+        "en": "Leather Biker Jacket",
+        "pl": "Skórzana kurtka motocyklowa"
+      }
+    },
+    {
+      "id": "fashion-2",
+      "name": {
+        "en": "Brushed Cotton Crewneck Sweatshirt",
+        "pl": "Bluza z drapanej bawełny z okrągłym dekoltem"
+      }
+    },
+    {
+      "id": "fashion-3",
+      "name": {
+        "en": "Dotted Chambray Shirt",
+        "pl": "Koszula z tkaniny chambray w kropki"
+      }
+    },
+    {
+      "id": "fashion-4",
+      "name": {
+        "en": "Camel Wool Wrap Coat",
+        "pl": "Wiązany wełniany płaszcz w kolorze camel"
+      }
+    },
+    {
+      "id": "fashion-5",
+      "name": {
+        "en": "Heritage Leather Work Boots",
+        "pl": "Klasyczne skórzane buty robocze"
+      }
+    },
+    {
+      "id": "fashion-6",
+      "name": {
+        "en": "Check Wool-Blend Blazer",
+        "pl": "Marynarka w kratę z mieszanki wełny"
+      }
+    },
+    {
+      "id": "fashion-7",
+      "name": {
+        "en": "Cotton Field Jacket",
+        "pl": "Bawełniana kurtka terenowa"
+      }
+    },
+    {
+      "id": "fashion-8",
+      "name": {
+        "en": "Leather Derby Shoes",
+        "pl": "Skórzane półbuty derby"
+      }
+    },
+    {
+      "id": "fashion-9",
+      "name": {
+        "en": "Floral Belted Midi Dress",
+        "pl": "Kwiecista sukienka midi z paskiem"
+      }
+    },
+    {
+      "id": "fashion-10",
+      "name": {
+        "en": "Hand-Knit Leaf Stitch Jumper",
+        "pl": "Ręcznie dziergany sweter we wzór liści"
+      }
+    },
+    {
+      "id": "fashion-11",
+      "name": {
+        "en": "Straight-Leg Selvedge Jeans",
+        "pl": "Proste dżinsy z denimu selvedge"
+      }
+    },
+    {
+      "id": "fashion-12",
+      "name": {
+        "en": "Relaxed Linen Shirt",
+        "pl": "Luźna lniana koszula"
+      }
+    },
+    {
+      "id": "fashion-13",
+      "name": {
+        "en": "Belted Cotton Trench Coat",
+        "pl": "Bawełniany trencz z paskiem"
+      }
+    },
+    {
+      "id": "fashion-14",
+      "name": {
+        "en": "Leather Chelsea Boots",
+        "pl": "Skórzane sztyblety"
+      }
+    },
+    {
+      "id": "fashion-15",
+      "name": {
+        "en": "Organic Cotton Crew T-Shirt",
+        "pl": "Koszulka z bawełny organicznej"
+      }
+    },
+    {
+      "id": "home-1",
+      "name": {
+        "en": "Velvet Three-Seater Sofa",
+        "pl": "Trzyosobowa sofa welurowa"
+      }
+    },
+    {
+      "id": "home-2",
+      "name": {
+        "en": "Linen Swivel Lounge Chair",
+        "pl": "Lniany fotel obrotowy"
+      }
+    },
+    {
+      "id": "home-3",
+      "name": {
+        "en": "Industrial Floor Lamp",
+        "pl": "Industrialna lampa podłogowa"
+      }
+    },
+    {
+      "id": "home-4",
+      "name": {
+        "en": "Brushed Brass Dome Pendant",
+        "pl": "Lampa wisząca z kopułą ze szczotkowanego mosiądzu"
+      }
+    },
+    {
+      "id": "home-5",
+      "name": {
+        "en": "Moulded Dining Chairs, Set of 2",
+        "pl": "Zestaw 2 profilowanych krzeseł do jadalni"
+      }
+    },
+    {
+      "id": "home-6",
+      "name": {
+        "en": "Vintage-Wash Area Rug",
+        "pl": "Dywan z efektem postarzenia"
+      }
+    },
+    {
+      "id": "home-7",
+      "name": {
+        "en": "Reclaimed Wood Bedside Table",
+        "pl": "Stolik nocny z drewna z odzysku"
+      }
+    },
+    {
+      "id": "home-8",
+      "name": {
+        "en": "Speckled Stoneware Cups, Set of 4",
+        "pl": "Zestaw 4 nakrapianych kubków kamionkowych"
+      }
+    },
+    {
+      "id": "home-9",
+      "name": {
+        "en": "Stoneware Bud Vases, Set of 3",
+        "pl": "Zestaw 3 małych wazonów kamionkowych"
+      }
+    },
+    {
+      "id": "home-10",
+      "name": {
+        "en": "Chunky Knit Throw",
+        "pl": "Koc o grubym splocie"
+      }
+    },
+    {
+      "id": "home-11",
+      "name": {
+        "en": "Stonewashed Linen Bedding Set",
+        "pl": "Zestaw pościeli z pranego lnu"
+      }
+    },
+    {
+      "id": "home-12",
+      "name": {
+        "en": "Round Oak Wall Mirror",
+        "pl": "Okrągłe lustro ścienne w dębowej ramie"
+      }
+    },
+    {
+      "id": "home-13",
+      "name": {
+        "en": "Stoneware Table Lamp",
+        "pl": "Kamionkowa lampa stołowa"
+      }
+    },
+    {
+      "id": "home-14",
+      "name": {
+        "en": "Terracotta Planter",
+        "pl": "Doniczka z terakoty"
+      }
+    },
+    {
+      "id": "home-15",
+      "name": {
+        "en": "Nesting Palm-Leaf Baskets",
+        "pl": "Zestaw koszy z liści palmowych"
+      }
+    },
+    {
+      "id": "accessories-1",
+      "name": {
+        "en": "Round Metal Sunglasses",
+        "pl": "Okrągłe metalowe okulary przeciwsłoneczne"
+      }
+    },
+    {
+      "id": "accessories-2",
+      "name": {
+        "en": "Leather Messenger Bag",
+        "pl": "Skórzana torba listonoszka"
+      }
+    },
+    {
+      "id": "accessories-3",
+      "name": {
+        "en": "Minimalist Leather-Strap Watch",
+        "pl": "Minimalistyczny zegarek na skórzanym pasku"
+      }
+    },
+    {
+      "id": "accessories-4",
+      "name": {
+        "en": "Leather Crossbody Bag",
+        "pl": "Skórzana torebka na ramię"
+      }
+    },
+    {
+      "id": "accessories-5",
+      "name": {
+        "en": "Leather Backpack",
+        "pl": "Skórzany plecak"
+      }
+    },
+    {
+      "id": "accessories-6",
+      "name": {
+        "en": "Chunky Chain Bracelet",
+        "pl": "Masywna bransoletka łańcuchowa"
+      }
+    },
+    {
+      "id": "accessories-7",
+      "name": {
+        "en": "Freshwater Pearl Necklace",
+        "pl": "Naszyjnik z pereł słodkowodnych"
+      }
+    },
+    {
+      "id": "accessories-8",
+      "name": {
+        "en": "Leather Bifold Wallet",
+        "pl": "Skórzany portfel składany"
+      }
+    },
+    {
+      "id": "accessories-9",
+      "name": {
+        "en": "Halo Cocktail Ring",
+        "pl": "Pierścionek koktajlowy z topazem"
+      }
+    },
+    {
+      "id": "accessories-10",
+      "name": {
+        "en": "Browline Optical Frames",
+        "pl": "Oprawki korekcyjne z podkreśloną górną linią"
+      }
+    },
+    {
+      "id": "accessories-11",
+      "name": {
+        "en": "Gold Huggie Hoop Earrings",
+        "pl": "Złocone kolczyki małe kółka"
+      }
+    },
+    {
+      "id": "accessories-12",
+      "name": {
+        "en": "Braided Leather Belt",
+        "pl": "Pleciony pasek skórzany"
+      }
+    },
+    {
+      "id": "accessories-13",
+      "name": {
+        "en": "Straw Fedora",
+        "pl": "Słomkowy kapelusz fedora"
+      }
+    },
+    {
+      "id": "accessories-14",
+      "name": {
+        "en": "Striped Fringed Scarf",
+        "pl": "Pasiasty szal z frędzlami"
+      }
+    },
+    {
+      "id": "accessories-15",
+      "name": {
+        "en": "Woven Market Tote",
+        "pl": "Pleciona torba na zakupy"
+      }
+    },
+    {
+      "id": "gifts-1",
+      "name": {
+        "en": "Artisan Chocolate Selection",
+        "pl": "Wybór rzemieślniczych czekoladek"
+      }
+    },
+    {
+      "id": "gifts-2",
+      "name": {
+        "en": "Wooden Chess Set",
+        "pl": "Drewniany zestaw szachowy"
+      }
+    },
+    {
+      "id": "gifts-3",
+      "name": {
+        "en": "Antique-Style Desk Globe",
+        "pl": "Globus biurkowy w stylu antycznym"
+      }
+    },
+    {
+      "id": "gifts-4",
+      "name": {
+        "en": "Porcelain Tea Set for One",
+        "pl": "Porcelanowy zestaw do herbaty dla jednej osoby"
+      }
+    },
+    {
+      "id": "gifts-5",
+      "name": {
+        "en": "Amber & Oud Scented Candle",
+        "pl": "Świeca zapachowa z bursztynem i oudem"
+      }
+    },
+    {
+      "id": "gifts-6",
+      "name": {
+        "en": "Juniper Bonsai Tree",
+        "pl": "Drzewko bonsai z jałowca"
+      }
+    },
+    {
+      "id": "gifts-7",
+      "name": {
+        "en": "Picnic Hamper for Two",
+        "pl": "Kosz piknikowy dla dwojga"
+      }
+    },
+    {
+      "id": "gifts-8",
+      "name": {
+        "en": "Fountain Pen & Notebook Set",
+        "pl": "Zestaw pióra wiecznego i notesu"
+      }
+    },
+    {
+      "id": "gifts-9",
+      "name": {
+        "en": "Heirloom Aviator Teddy Bear",
+        "pl": "Pamiątkowy miś lotnik"
+      }
+    },
+    {
+      "id": "gifts-10",
+      "name": {
+        "en": "Glass Succulent Terrarium",
+        "pl": "Szklane terrarium z sukulentami"
+      }
+    },
+    {
+      "id": "gifts-11",
+      "name": {
+        "en": "Dried Flower Bouquet",
+        "pl": "Bukiet suszonych kwiatów"
+      }
+    },
+    {
+      "id": "gifts-12",
+      "name": {
+        "en": "Old Town Jigsaw Puzzle, 1000 Pieces",
+        "pl": "Puzzle Stare Miasto, 1000 elementów"
+      }
+    },
+    {
+      "id": "gifts-13",
+      "name": {
+        "en": "Wildflower Honey",
+        "pl": "Miód wielokwiatowy"
+      }
+    },
+    {
+      "id": "gifts-14",
+      "name": {
+        "en": "Single-Origin Coffee Beans",
+        "pl": "Kawa ziarnista z jednej plantacji"
+      }
+    },
+    {
+      "id": "gifts-15",
+      "name": {
+        "en": "Oak Hourglass Sand Timer",
+        "pl": "Klepsydra w dębowej oprawie"
+      }
+    }
+  ]
+}

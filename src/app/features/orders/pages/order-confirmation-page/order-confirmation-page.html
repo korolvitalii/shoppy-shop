@@ -40,7 +40,8 @@
           @for (line of value.lines; track line.productId) {
             <div class="receipt-line">
               <span
-                >{{ line.name }} <span class="line-qty">× {{ line.quantity }}</span></span
+                >{{ line.displayName ?? line.name }}
+                <span class="line-qty">× {{ line.quantity }}</span></span
               >
               <span class="line-total">{{ line.unitPrice * line.quantity | currency: 'GBP' }}</span>
             </div>

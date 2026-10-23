@@ -21,6 +21,7 @@ import { ConfigService } from './core/config/config.service';
 import { apiErrorInterceptor } from './core/errors/api-error.interceptor';
 import { GlobalErrorHandler } from './core/errors/global-error.handler';
 import { loadingInterceptor } from './core/loading/loading.interceptor';
+import { apiLocaleInterceptor } from './core/locale/api-locale.interceptor';
 import {
   AuthenticationService,
   AuthenticationSessionService,
@@ -31,6 +32,7 @@ import {
   ApiProductsRepository,
   ProductGroupsRepository,
   ProductsRepository,
+  provideCatalogueDisplay,
 } from './features/catalogue/public-api';
 
 export const appConfig: ApplicationConfig = {
@@ -39,12 +41,18 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(withEventReplay(), withI18nSupport()),
     provideHttpClient(
       withFetch(),
-      withInterceptors([loadingInterceptor, apiErrorInterceptor, authInterceptor]),
+      withInterceptors([
+        apiLocaleInterceptor,
+        loadingInterceptor,
+        apiErrorInterceptor,
+        authInterceptor,
+      ]),
     ),
     provideRouter(routes),
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
     { provide: ProductGroupsRepository, useClass: ApiProductGroupsRepository },
     { provide: ProductsRepository, useClass: ApiProductsRepository },
+    provideCatalogueDisplay(),
     provideAppInitializer(() => {
       if (!isPlatformBrowser(inject(PLATFORM_ID))) return of(null);
 

@@ -176,7 +176,11 @@
                     <ul class="order-lines" i18n-aria-label="@@orderItems" aria-label="Order items">
                       @for (line of entry.order.lines; track line.productId) {
                         <li class="order-line">
-                          <img class="line-image" [src]="line.imageUrl" [alt]="line.name" />
+                          <img
+                            class="line-image"
+                            [src]="line.imageUrl"
+                            [alt]="line.displayName ?? line.name"
+                          />
                           <div class="line-copy">
                             @if (categoryOf(line.groupId); as category) {
                               <span class="label line-category">{{ category }}</span>
@@ -184,7 +188,7 @@
                             <a
                               class="line-name"
                               [routerLink]="['/products', line.groupId, line.productId]"
-                              >{{ line.name }}</a
+                              >{{ line.displayName ?? line.name }}</a
                             >
                           </div>
                           <span class="line-quantity" i18n="@@quantityCount"

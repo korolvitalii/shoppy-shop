@@ -24,29 +24,47 @@ describe('normalizeError', () => {
     expect(error.userMessage).toBe('Something went wrong. Please try again.');
   });
 
-  it('surfaces the API-provided detail for a 4xx ProblemDetails response', () => {
+  it('translates a stable API code without displaying server prose', () => {
     const error = normalizeError(
-      new HttpErrorResponse({ status: 401, error: { detail: 'Invalid email or password.' } }),
+      new HttpErrorResponse({
+        status: 401,
+        error: { code: 'auth.invalid_credentials', detail: 'Untranslated server prose' },
+      }),
     );
 
     expect(error.userMessage).toBe('Invalid email or password.');
   });
 
-  it('flattens field-level validation errors from a ProblemDetails response', () => {
+  it('preserves specific guidance from structured validation issue codes', () => {
     const error = normalizeError(
       new HttpErrorResponse({
         status: 400,
         error: {
-          errors: {
-            PasswordTooShort: ['Passwords must be at least 10 characters.'],
-            PasswordRequiresUpper: ["Passwords must have at least one uppercase ('A'-'Z')."],
-          },
+          validationIssues: [
+            { field: 'password', code: 'identity.PasswordTooShort', parameters: { minimum: 10 } },
+            { field: 'password', code: 'identity.PasswordRequiresUpper' },
+          ],
         },
       }),
     );
 
     expect(error.userMessage).toBe(
-      "Passwords must be at least 10 characters. Passwords must have at least one uppercase ('A'-'Z').",
+      'Passwords must contain at least 10 characters. Include an uppercase letter in your password.',
+    );
+  });
+
+  it('uses the 400 fallback when the API omits the password minimum', () => {
+    const error = normalizeError(
+      new HttpErrorResponse({
+        status: 400,
+        error: {
+          validationIssues: [{ field: 'password', code: 'identity.PasswordTooShort' }],
+        },
+      }),
+    );
+
+    expect(error.userMessage).toBe(
+      'Some information was not accepted. Check your details and try again.',
     );
   });
 
@@ -58,5 +76,16 @@ describe('normalizeError', () => {
     expect(error.userMessage).toBe(
       'Our service is temporarily unavailable. Please try again shortly.',
     );
+  });
+  it('uses a localized fallback for unrecognized codes and legacy English errors', () => {
+    for (const body of [
+      { detail: 'English server prose' },
+      { code: 'future.code', errors: { password: ['English rule'] } },
+    ]) {
+      const error = normalizeError(new HttpErrorResponse({ status: 400, error: body }));
+      expect(error.userMessage).toBe(
+        'Some information was not accepted. Check your details and try again.',
+      );
+    }
   });
 });

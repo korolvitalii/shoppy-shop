@@ -14,6 +14,7 @@ import { CheckoutSummaryBar } from '../../components/checkout-summary-bar/checko
 import { CheckoutTotals } from '../../components/checkout-totals/checkout-totals';
 import { CheckoutFacade } from '../../data-access/checkout.facade';
 import { createDemoPaymentToken } from '../../domain/payment-token';
+import { deliveryCountryLabel } from '../../models/delivery-countries';
 
 @Component({
   selector: 'app-payment-page',
@@ -23,6 +24,7 @@ import { createDemoPaymentToken } from '../../domain/payment-token';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaymentPage {
+  protected readonly countryLabel = deliveryCountryLabel;
   protected readonly facade = inject(CheckoutFacade);
   protected readonly editingPayment = signal(this.facade.paymentToken() === null);
   protected readonly submitted = signal(false);

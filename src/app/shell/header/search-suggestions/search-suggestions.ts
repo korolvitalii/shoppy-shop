@@ -14,6 +14,8 @@ export class SearchSuggestions {
   readonly activeIndex = input.required<number>();
   readonly products = input.required<readonly Product[]>();
   readonly query = input.required<string>();
+  /** Category names by ID, in the selected language. */
+  readonly categoryNames = input.required<ReadonlyMap<string, string>>();
   readonly activeIndexChange = output<number>();
   readonly productSelected = output<Product>();
 

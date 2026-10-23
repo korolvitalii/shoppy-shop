@@ -13,7 +13,9 @@
     <img [src]="product.imageUrl" alt="" width="64" height="52" />
     <span class="suggestion-copy">
       <strong>{{ product.name }}</strong>
-      <span>{{ product.brand }} · {{ product.groupId }}</span>
+      <span
+        >{{ product.brand }} · {{ categoryNames().get(product.groupId) ?? product.groupId }}</span
+      >
     </span>
     <span class="suggestion-price">
       {{ product.salePrice ?? product.price | currency: 'GBP' }}

@@ -33,6 +33,7 @@ import { AuthenticationSessionService } from '../../../auth/public-api';
 import { FavoritesService } from '../../../favorites/public-api';
 import { CatalogueFilters } from '../../components/catalogue-filters/catalogue-filters';
 import catalogue from '../../data/catalogue.json';
+import { BundledCatalogueDisplay } from '../../data-access/bundled-catalogue-display';
 import { ProductGroupsRepository } from '../../data-access/product-groups.repository';
 import { ProductsRepository } from '../../data-access/products.repository';
 import {
@@ -68,6 +69,7 @@ export class ProductListingPage {
   private readonly refresh = new BehaviorSubject(0);
   private readonly seo = inject(SeoService);
   private readonly session = inject(AuthenticationSessionService);
+  private readonly catalogueDisplay = inject(BundledCatalogueDisplay);
   private readonly loadMoreRequests = new Subject<void>();
 
   /**
@@ -279,9 +281,10 @@ export class ProductListingPage {
 
     const group = catalogue.groups.find((item) => item.id === groupId);
     if (!group) return;
-    const description = $localize`:@@seoCategoryDescription:Browse selected products from ${group.name}:categoryName: at ShoppyShop.`;
+    const name = this.catalogueDisplay.categoryName(group.id);
+    const description = $localize`:@@seoCategoryDescription:Browse selected products from ${name}:categoryName: at ShoppyShop.`;
     this.seo.apply({
-      title: `${group.name}${search ? ` – ${search}` : ''}`,
+      title: `${name}${search ? ` – ${search}` : ''}`,
       description,
       path: `/products/${group.id}`,
       image: group.imageUrl,
@@ -290,10 +293,10 @@ export class ProductListingPage {
         ? {
             '@context': 'https://schema.org',
             '@graph': [
-              { '@type': 'CollectionPage', name: group.name, description },
+              { '@type': 'CollectionPage', name, description },
               this.seo.breadcrumbStructuredData([
-                { name: 'Products', path: '/products' },
-                { name: group.name, path: `/products/${group.id}` },
+                { name: $localize`:@@products:Products`, path: '/products' },
+                { name, path: `/products/${group.id}` },
               ]),
             ],
           }

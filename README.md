@@ -65,6 +65,24 @@ Concurrent `401 Unauthorized` responses share a single refresh request. This pre
 
 ### Internationalization and themes
 
+Catalogue translations are owned by the API and keyed by entity ID and locale. The frontend uses
+the selected locale from `src/locale/locales.json` for opted-in API requests. Two generated files
+serve different consumers: `catalogue.names.json` supplies browser display names for categories and
+saved basket lines; `catalogue.translations.json` supplies full text to server-only prerendering
+repositories. Adding a language requires locale
+configuration and translation data; it does not require language-specific columns or components.
+
+After editing API catalogue translations, refresh both frontend snapshots from the sibling API repo:
+
+```bash
+node scripts/export-catalogue-translations.mjs
+node scripts/export-catalogue-translations.mjs --check
+```
+
+UI messages use Angular extraction and locale files. Structured API error codes are translated by
+the frontend; unknown server messages use a localized status fallback. Existing basket names and
+historical order snapshots retain their original identity when no matching translation exists.
+
 The application supports:
 
 - English

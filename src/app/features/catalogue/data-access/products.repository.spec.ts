@@ -1,5 +1,6 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { LOCALE_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
 import { apiErrorInterceptor } from '../../../core/errors/api-error.interceptor';
@@ -7,10 +8,12 @@ import { APP_ERROR_CODES, AppError } from '../../../core/errors/app-error';
 import { SKIP_ERROR_NOTIFICATION } from '../../../core/errors/error-context';
 import { ErrorNotificationService } from '../../../core/errors/error-notification.service';
 import { SKIP_GLOBAL_LOADING } from '../../../core/loading/loading-context';
+import { apiLocaleInterceptor } from '../../../core/locale/api-locale.interceptor';
 import { prerender, shipWithPage } from '../../../core/prerender/prerender-snapshot.testing';
 import { type Product } from '../../../shared/domain/product';
 import { type ProductPage, type ProductSearchQuery } from '../models/product';
-import { ApiProductsRepository, StaticProductsRepository } from './products.repository';
+import { ApiProductsRepository } from './products.repository';
+import { StaticProductsRepository } from './static-products.repository';
 
 const baseQuery: ProductSearchQuery = {
   search: '',
@@ -365,5 +368,50 @@ describe('StaticProductsRepository', () => {
 
     expect(ids.length).toBe(15);
     expect(new Set(ids).size).toBe(15);
+  });
+});
+
+describe('Catalogue requests on the Polish site', () => {
+  beforeEach(() =>
+    TestBed.configureTestingModule({
+      providers: [
+        ApiProductsRepository,
+        StaticProductsRepository,
+        { provide: LOCALE_ID, useValue: 'pl' },
+        provideHttpClient(withInterceptors([apiLocaleInterceptor])),
+        provideHttpClientTesting(),
+      ],
+    }),
+  );
+
+  it('asks the API for Polish content on listing and product reads', () => {
+    const repository = TestBed.inject(ApiProductsRepository);
+    const http = TestBed.inject(HttpTestingController);
+
+    repository.search('beauty', baseQuery).subscribe();
+    repository.getById('beauty', 'beauty-1').subscribe();
+
+    const listing = http.expectOne(
+      (request) => request.url === '/api/product-groups/beauty/products',
+    );
+    const product = http.expectOne('/api/product-groups/beauty/products/beauty-1?locale=pl');
+    expect(listing.request.params.get('locale')).toBe('pl');
+    listing.flush({ items: [], nextCursor: null, totalCount: 0 } satisfies ProductPage);
+    product.flush(null);
+    http.verify();
+  });
+
+  it('prerenders and searches the translated catalogue text', () => {
+    const repository = TestBed.inject(StaticProductsRepository);
+    let found: readonly string[] = [];
+    let name = '';
+
+    repository
+      .search('all', { ...baseQuery, search: 'skórzana kurtka' })
+      .subscribe((page) => (found = page.items.map((product) => product.id)));
+    repository.getById('fashion', 'fashion-1').subscribe((product) => (name = product?.name ?? ''));
+
+    expect(found).toContain('fashion-1');
+    expect(name).toBe('Skórzana kurtka motocyklowa');
   });
 });

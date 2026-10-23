@@ -7,7 +7,11 @@ import { apiErrorInterceptor } from '../../../core/errors/api-error.interceptor'
 import { ErrorNotificationService } from '../../../core/errors/error-notification.service';
 import { loadingInterceptor } from '../../../core/loading/loading.interceptor';
 import { LoadingService } from '../../../core/loading/loading.service';
-import { ApiProductsRepository, ProductsRepository } from '../../../features/catalogue/public-api';
+import {
+  ApiProductsRepository,
+  ProductsRepository,
+  provideCatalogueDisplay,
+} from '../../../features/catalogue/public-api';
 import { type Product } from '../../../shared/domain/product';
 import { HeaderSearch } from './header-search';
 
@@ -34,6 +38,7 @@ describe('HeaderSearch', () => {
     await TestBed.configureTestingModule({
       imports: [HeaderSearch],
       providers: [
+        provideCatalogueDisplay(),
         provideRouter([]),
         provideHttpClient(withInterceptors([loadingInterceptor, apiErrorInterceptor])),
         provideHttpClientTesting(),
@@ -104,6 +109,24 @@ describe('HeaderSearch', () => {
     expect(TestBed.inject(ErrorNotificationService).current()).toBeNull();
     expect(listbox()).toBeNull();
     expect(input.getAttribute('aria-expanded')).toBe('false');
+  });
+
+  it('shows the category name in suggestions and the category selector', async () => {
+    await type('perfume');
+    suggestionRequest().flush({
+      items: [{ ...product, id: 'beauty-1', groupId: 'beauty' }],
+      nextCursor: null,
+      totalCount: 1,
+    });
+    fixture.detectChanges();
+
+    const element = fixture.nativeElement as HTMLElement;
+    expect(
+      element.querySelector('.suggestion-copy > span')?.textContent?.replace(/\s+/g, ' ').trim(),
+    ).toBe('Sonic Studio · Beauty & fragrance');
+    expect(element.querySelector('option[value="beauty"]')?.textContent?.trim()).toBe(
+      'Beauty & fragrance',
+    );
   });
 
   it('closes the suggestions on Escape', async () => {

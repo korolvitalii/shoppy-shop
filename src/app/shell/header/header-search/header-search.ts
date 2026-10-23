@@ -26,8 +26,8 @@ import {
   DEFAULT_PRODUCT_SEARCH_QUERY,
   ProductsRepository,
 } from '../../../features/catalogue/public-api';
+import { CatalogueDisplay } from '../../../shared/domain/catalogue-display';
 import { type Product } from '../../../shared/domain/product';
-import { HEADER_CATEGORIES } from '../header-categories';
 import { SearchSuggestions } from '../search-suggestions/search-suggestions';
 
 const MIN_QUERY_LENGTH = 2;
@@ -43,7 +43,10 @@ const SUGGESTION_LIMIT = 6;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderSearch {
-  protected readonly categories = HEADER_CATEGORIES;
+  protected readonly categories = inject(CatalogueDisplay).categories;
+  protected readonly categoryNames: ReadonlyMap<string, string> = new Map(
+    this.categories.map((category) => [category.id, category.name]),
+  );
   protected readonly activeSuggestionIndex = signal(-1);
   protected readonly searchForm = new FormGroup({
     query: new FormControl('', { nonNullable: true }),

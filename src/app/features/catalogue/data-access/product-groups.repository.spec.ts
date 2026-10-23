@@ -1,5 +1,6 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { LOCALE_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
 import { SKIP_ERROR_NOTIFICATION } from '../../../core/errors/error-context';
@@ -7,10 +8,14 @@ import { SKIP_GLOBAL_LOADING } from '../../../core/loading/loading-context';
 import { prerender, shipWithPage } from '../../../core/prerender/prerender-snapshot.testing';
 import catalogue from '../data/catalogue.json';
 import { type ProductGroup } from '../models/product-group';
-import {
-  ApiProductGroupsRepository,
-  StaticProductGroupsRepository,
-} from './product-groups.repository';
+import { ApiProductGroupsRepository } from './product-groups.repository';
+import { StaticProductGroupsRepository } from './static-product-groups.repository';
+
+// The prerendered groups: counted from the products, as the API counts them.
+const prerenderedGroups = catalogue.groups.map((group) => ({
+  ...group,
+  itemCount: catalogue.products.filter((product) => product.groupId === group.id).length,
+}));
 
 describe('ApiProductGroupsRepository', () => {
   let repository: ApiProductGroupsRepository;
@@ -88,14 +93,14 @@ describe('ApiProductGroupsRepository on a prerendered page', () => {
     const live = catalogue.groups.slice(0, 2);
 
     repository.getAll().subscribe((groups) => emitted.push(groups));
-    expect(emitted).toEqual([catalogue.groups]);
+    expect(emitted).toEqual([prerenderedGroups]);
 
     const request = http.expectOne('/api/product-groups');
     expect(request.request.context.get(SKIP_ERROR_NOTIFICATION)).toBe(true);
     expect(request.request.context.get(SKIP_GLOBAL_LOADING)).toBe(true);
     request.flush(live);
 
-    expect(emitted).toEqual([catalogue.groups, live]);
+    expect(emitted).toEqual([prerenderedGroups, live]);
     http.verify();
   });
 });
@@ -108,5 +113,19 @@ describe('StaticProductGroupsRepository', () => {
     let ids: readonly string[] = [];
     repository.getAll().subscribe((groups) => (ids = groups.map((group) => group.id)));
     expect(ids).toEqual(['beauty', 'electronics', 'fashion', 'home', 'accessories', 'gifts']);
+  });
+});
+
+describe('StaticProductGroupsRepository on the Polish site', () => {
+  it('prerenders translated categories with their real product counts', () => {
+    TestBed.configureTestingModule({
+      providers: [StaticProductGroupsRepository, { provide: LOCALE_ID, useValue: 'pl' }],
+    });
+    let groups: readonly ProductGroup[] = [];
+    TestBed.inject(StaticProductGroupsRepository)
+      .getAll()
+      .subscribe((result) => (groups = result));
+
+    expect(groups[0]).toMatchObject({ id: 'beauty', name: 'Uroda i zapachy', itemCount: 15 });
   });
 });

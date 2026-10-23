@@ -8,7 +8,12 @@
     <div>
       <p class="eyebrow" i18n="@@savedForLater">Saved for later</p>
       <h1 i18n="@@myFavourites">My favourites</h1>
-      <p i18n="@@favouritesSavedCount">{{ favorites.count() }} products saved</p>
+      <p>
+        <ng-container i18n="@@favouritesSavedPlural">{favorites.count(), plural,
+          =1 {1 product saved}
+          other {{{ favorites.count() }} products saved}
+        }</ng-container>
+      </p>
     </div>
     @if (favorites.count() > 0) {
       <button type="button" (click)="favorites.clear()" i18n="@@clearAll">Clear all</button>

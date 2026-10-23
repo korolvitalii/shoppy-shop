@@ -5,6 +5,7 @@ import { provideRouter, Router } from '@angular/router';
 import { App } from './app';
 import { ConfigService } from './core/config/config.service';
 import { ProductsRepository } from './features/catalogue/data-access/products.repository';
+import { provideCatalogueDisplay } from './features/catalogue/public-api';
 
 @Component({ template: '<main><h1>Routed page</h1></main>' })
 class RoutedPage {}
@@ -14,6 +15,7 @@ describe('App', () => {
     await TestBed.configureTestingModule({
       imports: [App],
       providers: [
+        provideCatalogueDisplay(),
         provideRouter([{ path: 'test-page', component: RoutedPage }]),
         { provide: ProductsRepository, useValue: { search: vi.fn(), getById: vi.fn() } },
       ],
@@ -54,6 +56,7 @@ describe('App', () => {
     await TestBed.configureTestingModule({
       imports: [App],
       providers: [
+        provideCatalogueDisplay(),
         provideRouter([]),
         { provide: ProductsRepository, useValue: { search: vi.fn(), getById: vi.fn() } },
         { provide: ConfigService, useValue: { assistantEnabled: signal(false) } },

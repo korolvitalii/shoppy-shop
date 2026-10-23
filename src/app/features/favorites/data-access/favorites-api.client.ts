@@ -1,7 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { type Observable } from 'rxjs';
 
+import { LOCALIZED_CONTENT } from '../../../core/locale/locale-context';
 import { type Product } from '../../../shared/domain/product';
 
 @Injectable({ providedIn: 'root' })
@@ -9,7 +10,9 @@ export class FavoritesApiClient {
   private readonly http = inject(HttpClient);
 
   getAll(): Observable<readonly Product[]> {
-    return this.http.get<readonly Product[]>('/api/favorites');
+    return this.http.get<readonly Product[]>('/api/favorites', {
+      context: new HttpContext().set(LOCALIZED_CONTENT, true),
+    });
   }
 
   add(productId: string): Observable<void> {
