@@ -7,6 +7,7 @@ import { CheckoutStepper } from '../../components/checkout-stepper/checkout-step
 import { CheckoutSummaryBar } from '../../components/checkout-summary-bar/checkout-summary-bar';
 import { CheckoutTotals } from '../../components/checkout-totals/checkout-totals';
 import { CheckoutFacade } from '../../data-access/checkout.facade';
+import { deliveryCountries } from '../../models/delivery-countries';
 @Component({
   selector: 'app-delivery-page',
   imports: [
@@ -22,6 +23,7 @@ import { CheckoutFacade } from '../../data-access/checkout.facade';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeliveryPage {
+  protected readonly countries = deliveryCountries;
   protected readonly facade = inject(CheckoutFacade);
   private readonly router = inject(Router);
   readonly form = new FormGroup({

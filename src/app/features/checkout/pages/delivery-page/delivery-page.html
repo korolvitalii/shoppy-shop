@@ -106,13 +106,9 @@
               <div class="field">
                 <label for="country" i18n="@@country">Country</label>
                 <select id="country" autocomplete="country-name" formControlName="country">
-                  <option value="United Kingdom" i18n="@@countryUnitedKingdom">
-                    United Kingdom
-                  </option>
-                  <option value="Ireland" i18n="@@countryIreland">Ireland</option>
-                  <option value="France" i18n="@@countryFrance">France</option>
-                  <option value="Germany" i18n="@@countryGermany">Germany</option>
-                  <option value="Spain" i18n="@@countrySpain">Spain</option>
+                  @for (country of countries; track country.value) {
+                    <option [value]="country.value">{{ country.label }}</option>
+                  }
                 </select>
               </div>
             </div>

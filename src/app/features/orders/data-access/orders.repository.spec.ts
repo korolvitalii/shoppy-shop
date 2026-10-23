@@ -1,7 +1,9 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { LOCALE_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
+import { apiLocaleInterceptor } from '../../../core/locale/api-locale.interceptor';
 import { ApiOrdersRepository } from './orders.repository';
 
 describe('ApiOrdersRepository', () => {
@@ -53,5 +55,29 @@ describe('ApiOrdersRepository', () => {
     );
     expect(request.request.method).toBe('GET');
     request.flush([]);
+  });
+});
+
+describe('ApiOrdersRepository on the Polish site', () => {
+  it('asks for line names in the storefront language on every order response', () => {
+    TestBed.configureTestingModule({
+      providers: [
+        ApiOrdersRepository,
+        { provide: LOCALE_ID, useValue: 'pl' },
+        provideHttpClient(withInterceptors([apiLocaleInterceptor])),
+        provideHttpClientTesting(),
+      ],
+    });
+    const repository = TestBed.inject(ApiOrdersRepository);
+    const http = TestBed.inject(HttpTestingController);
+
+    repository.createOrder({} as never, 'key-123').subscribe();
+    repository.getOrders().subscribe();
+    repository.getOrderById('ORD-00003').subscribe();
+
+    http.expectOne({ method: 'POST', url: '/api/orders?locale=pl' }).flush({});
+    http.expectOne({ method: 'GET', url: '/api/orders?locale=pl' }).flush([]);
+    http.expectOne('/api/orders/ORD-00003?locale=pl').flush(null);
+    http.verify();
   });
 });

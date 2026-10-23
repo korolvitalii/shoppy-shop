@@ -7,6 +7,7 @@ import { CheckoutStepper } from '../../components/checkout-stepper/checkout-step
 import { CheckoutSummaryBar } from '../../components/checkout-summary-bar/checkout-summary-bar';
 import { CheckoutTotals } from '../../components/checkout-totals/checkout-totals';
 import { CheckoutFacade } from '../../data-access/checkout.facade';
+import { deliveryCountryLabel } from '../../models/delivery-countries';
 @Component({
   selector: 'app-review-page',
   imports: [CheckoutStepper, CheckoutSummaryBar, CheckoutTotals, CurrencyPipe, RouterLink],
@@ -15,6 +16,7 @@ import { CheckoutFacade } from '../../data-access/checkout.facade';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReviewPage {
+  protected readonly countryLabel = deliveryCountryLabel;
   protected readonly facade = inject(CheckoutFacade);
   private readonly router = inject(Router);
   readonly submitting = signal(false);

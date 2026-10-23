@@ -1,14 +1,15 @@
-import { CurrencyPipe, TitleCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { CurrencyPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { ConfirmationService } from '../../../../core/confirmation/confirmation.service';
+import { CatalogueDisplay } from '../../../../shared/domain/catalogue-display';
 import { BasketService } from '../../data-access/basket.service';
 import { type BasketItem } from '../../models/basket-item';
 
 @Component({
   selector: 'app-basket-page',
-  imports: [CurrencyPipe, TitleCasePipe, RouterLink],
+  imports: [CurrencyPipe, RouterLink],
   templateUrl: './basket-page.html',
   styleUrl: './basket-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -16,6 +17,11 @@ import { type BasketItem } from '../../models/basket-item';
 export class BasketPage {
   protected readonly basket = inject(BasketService);
   private readonly confirmation = inject(ConfirmationService);
+  protected readonly catalogueDisplay = inject(CatalogueDisplay);
+  // Lines keep the name saved with them; the page shows it in the selected language.
+  protected readonly items = computed(() =>
+    this.catalogueDisplay.withProductNames(this.basket.items()),
+  );
 
   protected removeLabel(item: BasketItem): string {
     return $localize`:@@removeProductLabel:Remove ${item.name}:productName:`;

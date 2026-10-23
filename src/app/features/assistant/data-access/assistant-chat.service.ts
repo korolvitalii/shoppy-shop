@@ -1,7 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { catchError, of } from 'rxjs';
 
+import { LOCALIZED_CONTENT } from '../../../core/locale/locale-context';
 import {
   type AssistantChatMessage,
   type AssistantChatRequest,
@@ -51,7 +52,10 @@ export class AssistantChatService {
 
     const request: AssistantChatRequest = { message: trimmed, history };
     this.http
-      .post<AssistantChatResponse>('/api/assistant/chat', request)
+      .post<AssistantChatResponse>('/api/assistant/chat', request, {
+        // Product results come back in the storefront's language.
+        context: new HttpContext().set(LOCALIZED_CONTENT, true),
+      })
       .pipe(
         catchError(() => {
           // The global api-error interceptor already surfaces a toast for the failure — just

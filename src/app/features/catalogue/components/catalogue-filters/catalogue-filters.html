@@ -48,7 +48,7 @@
           [checked]="query().price === '50-200'"
           (change)="priceChange.emit('50-200')"
         />
-        <span>£50–£200</span>
+        <span i18n="@@priceFilterChip50To200">£50–£200</span>
       </label>
       <label class="segmented-option" [class.active]="query().price === '200+'">
         <input

@@ -9,7 +9,7 @@ import {
   AuthenticationSessionService,
 } from '../../features/auth/public-api';
 import { BasketService } from '../../features/basket/public-api';
-import { ProductsRepository } from '../../features/catalogue/public-api';
+import { ProductsRepository, provideCatalogueDisplay } from '../../features/catalogue/public-api';
 import { FavoritesService } from '../../features/favorites/public-api';
 import { type Product } from '../../shared/domain/product';
 import { AppHeader } from './app-header';
@@ -39,6 +39,7 @@ describe('AppHeader', () => {
   afterEach(() => vi.useRealTimers());
 
   beforeEach(async () => {
+    basket.itemCount.set(3);
     authenticated.set(false);
     session.end.mockReset();
     authenticationService.logout.mockReset();
@@ -50,6 +51,7 @@ describe('AppHeader', () => {
     await TestBed.configureTestingModule({
       imports: [AppHeader],
       providers: [
+        provideCatalogueDisplay(),
         provideRouter([]),
         { provide: BasketService, useValue: basket },
         { provide: AuthenticationSessionService, useValue: session },
@@ -191,6 +193,24 @@ describe('AppHeader', () => {
     input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
 
     expect(navigate).toHaveBeenCalledWith(['/products', 'electronics', 'electronics-1']);
+  });
+
+  it('shows the singular basket count in the mobile menu', () => {
+    authenticated.set(true);
+    basket.itemCount.set(1);
+    const fixture = TestBed.createComponent(AppHeader);
+    fixture.detectChanges();
+    (
+      fixture.nativeElement.querySelector(
+        '[aria-controls="mobile-navigation"]',
+      ) as HTMLButtonElement
+    ).click();
+    fixture.detectChanges();
+
+    const count = fixture.nativeElement.querySelector(
+      '#mobile-navigation a[href="/basket"] span:last-child',
+    ) as HTMLElement;
+    expect(count.textContent?.trim()).toBe('1 item');
   });
 
   it('exposes an accessible mobile-menu state', () => {

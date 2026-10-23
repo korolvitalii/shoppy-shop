@@ -1,7 +1,10 @@
 export interface OrderLine {
   productId: string;
   groupId: string;
+  /** The name recorded at purchase. It never changes. */
   name: string;
+  /** The API's name for this line in the requested language; absent from older API versions. */
+  displayName?: string;
   imageUrl: string;
   unitPrice: number;
   quantity: number;

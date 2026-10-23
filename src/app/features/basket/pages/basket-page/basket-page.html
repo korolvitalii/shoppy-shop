@@ -1,5 +1,5 @@
 <main class="basket-page">
-  @if (basket.items().length === 0) {
+  @if (items().length === 0) {
     <section class="empty-state">
       <p class="eyebrow" i18n="@@yourSelection">Your selection</p>
       <h1 i18n="@@emptyBasket">Your basket is empty</h1>
@@ -40,13 +40,13 @@
             <span i18n="@@total">Total</span>
           </div>
 
-          @for (item of basket.items(); track item.productId) {
+          @for (item of items(); track item.productId) {
             <article class="item">
               <a class="image" [routerLink]="['/products', item.groupId, item.productId]">
                 <img [src]="item.imageUrl" [alt]="item.name" />
               </a>
               <div class="details">
-                <p class="category">{{ item.groupId | titlecase }}</p>
+                <p class="category">{{ catalogueDisplay.categoryName(item.groupId) }}</p>
                 <a [routerLink]="['/products', item.groupId, item.productId]"
                   ><h2>{{ item.name }}</h2></a
                 >

@@ -16,7 +16,7 @@
       <h2>{{ group().name }}</h2>
       <p>{{ group().description }}</p>
       <span class="card-meta">
-        {{ productCount() }}
+        {{ group().itemCount | i18nPlural: productCountMessages }}
         <span class="arrow" aria-hidden="true">→</span>
       </span>
     </div>

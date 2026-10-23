@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
 import { ConfirmationService } from '../../../../core/confirmation/confirmation.service';
+import { provideCatalogueDisplay } from '../../../catalogue/public-api';
 import { BasketService } from '../../data-access/basket.service';
 import { type BasketItem } from '../../models/basket-item';
 import { BasketPage } from './basket-page';
@@ -32,6 +33,7 @@ describe('BasketPage', () => {
     await TestBed.configureTestingModule({
       imports: [BasketPage],
       providers: [
+        provideCatalogueDisplay(),
         provideRouter([]),
         { provide: BasketService, useValue: basket },
         { provide: ConfirmationService, useValue: confirmation },
@@ -81,6 +83,28 @@ describe('BasketPage', () => {
       expect.objectContaining({ title: 'Remove Studio headphones?', tone: 'danger' }),
     );
     expect(basket.remove).toHaveBeenCalledWith('headphones');
+  });
+
+  it('renders a Polish saved line with the English product and category names', () => {
+    items.set([
+      {
+        productId: 'fashion-1',
+        groupId: 'fashion',
+        name: 'Skórzana kurtka motocyklowa',
+        imageUrl: '/images/jacket.jpg',
+        unitPrice: 199,
+        quantity: 1,
+      },
+    ]);
+    basket.itemCount.set(1);
+    const fixture = TestBed.createComponent(BasketPage);
+    fixture.detectChanges();
+
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('.item h2')?.textContent?.trim()).toBe('Leather Biker Jacket');
+    expect(element.querySelector('.item .category')?.textContent?.trim()).toBe('Fashion');
+    expect(element.querySelector('.item img')?.getAttribute('alt')).toBe('Leather Biker Jacket');
+    expect(items()[0].name).toBe('Skórzana kurtka motocyklowa');
   });
 
   it('keeps an item when removal is cancelled', async () => {

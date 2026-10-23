@@ -1,4 +1,4 @@
-import { CurrencyPipe, TitleCasePipe, UpperCasePipe } from '@angular/common';
+import { CurrencyPipe, UpperCasePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -18,6 +18,7 @@ import { AuthenticationSessionService } from '../../../auth/public-api';
 import { BasketService } from '../../../basket/public-api';
 import { FavoritesService } from '../../../favorites/public-api';
 import { ProductInformation } from '../../components/product-information/product-information';
+import { BundledCatalogueDisplay } from '../../data-access/bundled-catalogue-display';
 import {
   type ProductDetailsEvent,
   ProductDetailsLoader,
@@ -32,14 +33,7 @@ interface ProductSelection {
 
 @Component({
   selector: 'app-product-details-page',
-  imports: [
-    CurrencyPipe,
-    TitleCasePipe,
-    UpperCasePipe,
-    ProductCard,
-    ProductInformation,
-    RouterLink,
-  ],
+  imports: [CurrencyPipe, UpperCasePipe, ProductCard, ProductInformation, RouterLink],
   providers: [ProductDetailsLoader],
   templateUrl: './product-details-page.html',
   styleUrl: './product-details-page.scss',
@@ -48,6 +42,7 @@ interface ProductSelection {
 export class ProductDetailsPage {
   private readonly loader = inject(ProductDetailsLoader);
   private readonly basket = inject(BasketService);
+  private readonly catalogueDisplay = inject(BundledCatalogueDisplay);
   private readonly destroyRef = inject(DestroyRef);
   readonly favorites = inject(FavoritesService);
   private readonly route = inject(ActivatedRoute);
@@ -57,6 +52,9 @@ export class ProductDetailsPage {
   private selectedProduct: ProductSelection | null = null;
 
   readonly product = signal<Product | null>(null);
+  readonly category = computed(() =>
+    this.catalogueDisplay.categoryName(this.product()?.groupId ?? ''),
+  );
   readonly related = signal<readonly Product[]>([]);
   readonly relatedTotal = signal<number | null>(null);
   readonly status = signal<DetailStatus>('loading');

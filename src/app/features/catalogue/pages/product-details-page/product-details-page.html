@@ -20,7 +20,7 @@
       @if (product(); as item) {
         <nav class="breadcrumbs" aria-label="Breadcrumb" i18n-aria-label="@@breadcrumbLabel">
           <a routerLink="/products" i18n="@@products">Products</a><span>/</span
-          ><a [routerLink]="['/products', item.groupId]">{{ item.groupId }}</a
+          ><a [routerLink]="['/products', item.groupId]">{{ category() }}</a
           ><span>/</span><span>{{ item.name }}</span>
         </nav>
         <div class="panel">
@@ -134,7 +134,7 @@
                   </tr>
                   <tr>
                     <th scope="row" i18n="@@category">Category</th>
-                    <td>{{ item.groupId | titlecase }}</td>
+                    <td>{{ category() }}</td>
                   </tr>
                   <tr>
                     <th scope="row" i18n="@@productCode">Product code</th>
@@ -163,9 +163,7 @@
             <section class="related" aria-labelledby="related-title">
               <header>
                 <h2 id="related-title">
-                  <ng-container i18n="@@moreInCategory"
-                    >More in {{ item.groupId | titlecase }}</ng-container
-                  >
+                  <ng-container i18n="@@moreInCategory">More in {{ category() }}</ng-container>
                 </h2>
                 @if (relatedTotal(); as total) {
                   <a [routerLink]="['/products', item.groupId]" class="view-all">
@@ -186,7 +184,7 @@
           }
         </div>
 
-        <app-product-information [product]="item" />
+        <app-product-information [product]="item" [categoryLabel]="category()" />
       }
     }
   }

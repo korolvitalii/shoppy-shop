@@ -161,7 +161,10 @@
         </a>
         <a routerLink="/basket" routerLinkActive="active">
           <span i18n="@@basket">Basket</span>
-          <span i18n="@@itemCount">{{ basket.itemCount() }} items</span>
+          <span i18n="@@itemCountPlural">{basket.itemCount(), plural,
+            =1 {1 item}
+            other {{{ basket.itemCount() }} items}
+          }</span>
         </a>
         <a routerLink="/orders" routerLinkActive="active" i18n="@@purchaseHistory"
           >Purchase history</a
